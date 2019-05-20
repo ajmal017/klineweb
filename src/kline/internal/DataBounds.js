@@ -15,6 +15,8 @@ class DataBounds {
     this.dataSpace = 0
     // 每条数据之间的距离比例
     this.dataMarginSpaceRate = 0.2
+    // 当前数据的位置
+    this.currentDataPos = 0
   }
 
   /**
@@ -22,6 +24,15 @@ class DataBounds {
    */
   space () {
     this.dataSpace = (this.viewPortHandler.contentRight() - this.viewPortHandler.contentLeft()) / this.range
+  }
+
+  moveToLast () {
+    if (this.dataList.length > this.range) {
+      this.min = this.dataList.length - this.range
+      this.currentDataPos = this.dataList.length - 1
+    } else {
+      this.min = 0
+    }
   }
 }
 

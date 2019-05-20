@@ -16,8 +16,21 @@ class ViewPortHandler {
    * @param height
    */
   setChartDimens (width, height) {
-    this.contentRect.right = width
-    this.contentRect.bottom = height
+    this.viewWidth = width
+    this.viewHeight = height
+    this.restrainViewPort(
+      this.contentLeft(),
+      this.contentTop(),
+      width - this.contentRight(),
+      height - this.contentBottom()
+    )
+  }
+
+  restrainViewPort (offsetLeft, offsetTop, offsetRight, offsetBottom) {
+    this.contentRect.left = offsetLeft
+    this.contentRect.right = this.viewWidth - offsetRight
+    this.contentRect.top = offsetTop
+    this.contentRect.bottom = this.viewHeight - offsetBottom
   }
 
   contentTop () {
@@ -36,6 +49,9 @@ class ViewPortHandler {
     return this.contentRect.bottom
   }
 
+  /**
+   * 获取中间点坐标
+   */
   getContentCenter () {
     let point = {}
     point.x = (this.contentRect.left + this.contentRect.right) / 2
