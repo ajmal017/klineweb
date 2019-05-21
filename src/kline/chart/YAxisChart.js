@@ -116,7 +116,7 @@ class YAxisChart extends AxisChart {
         canvas.stroke()
       }
     }
-    canvas.setLineDash(null)
+    canvas.setLineDash([])
   }
 
   /**

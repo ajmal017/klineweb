@@ -32,6 +32,7 @@ class KLine {
     this.xAxisChart = new XAxisChart(this.xAxis, this.dataBounds, this.viewPortHandler)
     this.tooltipChart = new TooltipChart(
       this.tooltip,
+      this.candle,
       this.indicator,
       this.yAxis,
       this.candleChart,
@@ -156,6 +157,7 @@ class KLine {
     this.candleChart.draw(this.canvas)
     this.volChart.draw(this.canvas)
     this.indicatorChart.draw(this.canvas)
+    this.tooltipChart.draw(this.canvas)
   }
 
   /**

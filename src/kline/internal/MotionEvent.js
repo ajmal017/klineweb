@@ -21,8 +21,10 @@ class MotionEvent {
       return
     }
     this.eventMode = DRAG
-    this.mouseDownPoint.x = point.x
-    this.mouseDownPoint.y = point.y
+    this.mouseDownPoint.x = e.x
+    this.mouseDownPoint.y = e.y
+    this.kline.tooltipChart.setCross(point.y, false)
+    this.kline.freshen()
   }
 
   /**
@@ -30,25 +32,13 @@ class MotionEvent {
    * @param e
    */
   mouseUp (e) {
+    let point = this.getCanvasPoint(e)
+    if (!this.isValidEvent(point)) {
+      return
+    }
     this.eventMode = CROSS
-    this.mouseDownPoint.x = 0
-    this.mouseDownPoint.y = 0
-  }
-
-  /**
-   * 鼠标移入时事件
-   * @param e
-   */
-  mouseEnter (e) {}
-
-  /**
-   * 鼠标移出时事件
-   * @param e
-   */
-  mouseLeave (e) {
-    this.eventMode = CROSS
-    this.mouseDownPoint.x = 0
-    this.mouseDownPoint.y = 0
+    this.kline.tooltipChart.setCross(point.y, true)
+    this.kline.freshen()
   }
 
   /**
@@ -58,16 +48,18 @@ class MotionEvent {
   mouseMove (e) {
     let point = this.getCanvasPoint(e)
     if (!this.isValidEvent(point)) {
+      this.kline.tooltipChart.setCross(point.y, false)
+      this.kline.freshen()
       return
     }
     if (this.eventMode === DRAG) {
-      let moveDist = point.x - this.mouseDownPoint.x
+      let moveDist = e.x - this.mouseDownPoint.x
       if (moveDist > this.dataBounds.dataSpace / 2) {
         if (this.dataBounds.min === 0 || this.dataBounds.dataList.length < this.dataBounds.range) {
           return false
         }
 
-        this.mouseDownPoint.x = point.x
+        this.mouseDownPoint.x = e.x
 
         let moveRange = +Math.abs(moveDist / this.dataBounds.dataSpace).toFixed(0)
         if (moveRange === 0) {
@@ -99,7 +91,7 @@ class MotionEvent {
       }
     } else if (this.eventMode === CROSS) {
       this.dataBounds.calcCurrentDataIndex(point.x)
-      this.kline.tooltipChart().setCross(point.y, true)
+      this.kline.tooltipChart.setCross(point.y, true)
       this.kline.freshen()
     }
   }
@@ -154,8 +146,7 @@ class MotionEvent {
     return !(point.x < this.viewPortHandler.contentLeft() ||
       point.x > this.viewPortHandler.contentRight() ||
       point.y < this.viewPortHandler.contentTop() ||
-      point.y > this.viewPortHandler.contentBottom());
-
+      point.y > this.viewPortHandler.contentBottom())
   }
 
   /**
@@ -167,7 +158,7 @@ class MotionEvent {
     let rect = this.kline.canvasDom.getBoundingClientRect()
     let x = Math.round(e.clientX - rect.left)
     let y = Math.round(e.clientY - rect.top)
-    return { x, y }
+    return { x: x * 2, y: y * 2 }
   }
 }
 
