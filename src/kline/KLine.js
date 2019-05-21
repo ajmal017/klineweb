@@ -7,12 +7,15 @@ import YAxis from './component/YAxis'
 import XAxis from './component/XAxis'
 import Candle from './component/Candle'
 import Indicator from './component/Indicator'
+import MotionEvent from './internal/MotionEvent'
 import Type from './constant/Type'
 
 class KLine {
   constructor () {
     this.canvas = null
     this.canvasDom = null
+    this.canvasDomWidth = 0
+    this.canvasDomHeight = 0
     this.viewPortHandler = new ViewPortHandler()
     this.dataBounds = new DataBounds(this.viewPortHandler)
     this.yAxis = new YAxis()
@@ -23,6 +26,7 @@ class KLine {
     this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.indicatorChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.xAxisChart = new XAxisChart(this.xAxis, this.dataBounds, this.viewPortHandler)
+    this.motionEvent = new MotionEvent(this, this.dataBounds, this.viewPortHandler)
   }
 
   /**
@@ -33,6 +37,13 @@ class KLine {
     let domWidth = dom.offsetWidth
     let domHeight = dom.offsetHeight
     this.canvasDom = document.createElement('canvas')
+    this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
+    this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
+    this.canvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
+    // IE9, Chrome, Safari, Opera
+    this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
+    // Firefox
+    this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
     dom.appendChild(this.canvasDom)
     this.resize(domWidth, domHeight)
   }
@@ -105,13 +116,19 @@ class KLine {
    * @param height
    */
   resize (width, height) {
-    this.canvasDom.width = width * 2
-    this.canvasDom.height = height * 2
+    this.canvasDomWidth = width * 2
+    this.canvasDomHeight = height * 2
     this.canvasDom.style.width = width + 'px'
     this.canvasDom.style.height = height + 'px'
+    this.freshen()
+  }
+
+  freshen () {
+    this.canvasDom.width = this.canvasDomWidth
+    this.canvasDom.height = this.canvasDomHeight
     this.canvas = this.canvasDom.getContext('2d')
-    this.viewPortHandler.setChartDimens(width * 2, height * 2)
-    this.calcChartHeight(height * 2)
+    this.viewPortHandler.setChartDimens(this.canvasDomWidth, this.canvasDomHeight)
+    this.calcChartHeight(this.canvasDomHeight)
     this.calcOffsets()
     this.draw()
   }
