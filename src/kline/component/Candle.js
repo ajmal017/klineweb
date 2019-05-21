@@ -15,7 +15,7 @@ class Candle {
     /**
      * 蜡烛图样式
      */
-    this.candleStyle = Type.CandleStyle.SOLID
+    this.candleStyle = Type.CandleStyle.OHLC
 
     /**
      * 图类型

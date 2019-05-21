@@ -111,13 +111,13 @@ class CandleChart extends IndicatorChart {
 
         canvas.beginPath()
         canvas.moveTo(x, openY)
-        canvas.lineTo(rect[0], openY)
+        canvas.lineTo(startX, openY)
         canvas.closePath()
         canvas.stroke()
 
         canvas.beginPath()
         canvas.moveTo(x, closeY)
-        canvas.lineTo(rect[2], closeY)
+        canvas.lineTo(endX, closeY)
         canvas.closePath()
         canvas.stroke()
       }
