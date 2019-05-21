@@ -1,3 +1,5 @@
+import Type from '../constant/Type'
+
 class Candle {
   constructor () {
     /**
@@ -13,12 +15,12 @@ class Candle {
     /**
      * 蜡烛图样式
      */
-    this.candleStyle = 'solid'
+    this.candleStyle = Type.CandleStyle.SOLID
 
     /**
      * 图类型
      */
-    this.chartStyle = 'candle'
+    this.chartStyle = Type.ChartStyle.CANDLE
 
     /**
      * 是否显示最大价格标记
@@ -48,7 +50,7 @@ class Candle {
     /**
      * 最新价标记线样式
      */
-    this.lastPriceMarkLineStyle = 'dash'
+    this.lastPriceMarkLineStyle = Type.LineStyle.DASH
 
     /**
      * 最新价标记线尺寸

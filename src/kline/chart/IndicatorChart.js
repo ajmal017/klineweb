@@ -1,10 +1,12 @@
 import Chart from './Chart'
 import YAxisChart from './YAxisChart'
+import Type from '../constant/Type'
 
 class IndicatorChart extends Chart {
   constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler) {
-    super(viewPortHandler)
+    super(dataBounds, viewPortHandler)
     this.yAxisChart = new YAxisChart(yAxis, dataBounds, viewPortHandler)
+    this.indicatorType = Type.IndicatorType.NO
   }
 
   setChartDimens (height, top) {

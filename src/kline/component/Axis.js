@@ -1,3 +1,5 @@
+import Type from '../constant/Type'
+
 class Axis {
   constructor () {
     /**
@@ -58,7 +60,7 @@ class Axis {
     /**
      * 分割线类型
      */
-    this.separatorLineStyle = 'dash'
+    this.separatorLineStyle = Type.LineStyle.DASH
 
     /**
      * 文字的margin

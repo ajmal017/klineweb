@@ -15,24 +15,20 @@ class AxisChart extends Chart {
    */
   computeAxisValues (min, max) {
     let span = max - min
-    let interval = utils.nice(span / 5.0)
+    if (span < 0) {
+      this.values = []
+      this.valueCount = 0
+      return
+    }
+    let interval = +utils.nice(span / 5.0)
     let precision = utils.getIntervalPrecision(interval)
-    let yMin = utils.round(Math.ceil(min / interval) * interval, precision)
-    let yMax = utils.round(Math.floor(max / interval) * interval, precision)
-
+    let first = +utils.round(Math.ceil(min / interval) * interval, precision)
+    let last = +utils.round(Math.floor(max / interval) * interval, precision)
     let n = 0
-    let first = 0
-    if (first !== 0) {
-      first = yMin
-    }
-    let last = 0
-    if (last !== 0) {
-      last = yMax
-    }
     let f = first
 
     if (interval !== 0) {
-      while (f <= last) {
+      while (f <= (+last)) {
         ++n
         f += interval
       }

@@ -19,18 +19,18 @@ class XAxis extends Axis {
    * @return number
    */
   getRequiredHeightSpace () {
-    let height = this.tickTextSize + this.textMarginSpace
+    let height = this.tickTextSize * 2 + this.textMarginSpace * 2
     if (this.displayTickLine) {
-      height += this.tickLineSize
+      height += this.tickLineSize * 2
     }
     if (this.displayAxisLine) {
       height += this.axisLineSize
     }
     let maxHeight = height
     if (this.xAxisMaxHeight > 0) {
-      maxHeight = this.xAxisMaxHeight
+      maxHeight = this.xAxisMaxHeight * 2
     }
-    height = Math.max(this.xAxisMinHeight, Math.min(height, maxHeight))
+    height = Math.max(this.xAxisMinHeight * 2, Math.min(height, maxHeight))
 
     return height
   }

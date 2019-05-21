@@ -58,6 +58,19 @@ class ViewPortHandler {
     point.y = (this.contentRect.top + this.contentRect.bottom) / 2
     return point
   }
+
+  isInBoundsX (x) {
+    return this.isInBoundsLeft(x) && this.isInBoundsRight(x)
+  }
+
+  isInBoundsLeft (x) {
+    return this.contentRect.left <= x + 1
+  }
+
+  isInBoundsRight (x) {
+    let tx = (parseInt(x * 100)) / 100
+    return this.contentRect.right >= tx - 1
+  }
 }
 
 export default ViewPortHandler

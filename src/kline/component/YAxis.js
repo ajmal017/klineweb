@@ -1,6 +1,7 @@
 import Axis from './Axis'
 
 import utils from '../utils/utils'
+import Type from '../constant/Type'
 
 class YAxis extends Axis {
   constructor () {
@@ -8,22 +9,22 @@ class YAxis extends Axis {
     /**
      * 是否绘制文字在轴线外
      */
-    this.yAxisTextPosition = 'inside'
+    this.yAxisTextPosition = Type.YAxisTextPosition.OUTSIDE
 
     /**
      * y轴位置
      */
-    this.yAxisPosition = 'right'
+    this.yAxisPosition = Type.YAxisPosition.RIGHT
 
     /**
      * y轴最大宽度
      */
-    this.yAxisMaxWidth = 20
+    this.yAxisMaxWidth = 80
 
     /**
      * y轴最小宽度
      */
-    this.yAxisMinWidth = 20
+    this.yAxisMinWidth = 40
   }
 
   /**
@@ -39,10 +40,10 @@ class YAxis extends Axis {
    */
   getRequiredWidthSpace () {
     let width = 0
-    if (this.yAxisTextPosition === 'outside') {
-      width += utils.calcTextWidth(this.tickTextSize, '0000000') + this.textMarginSpace
+    if (this.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
+      width += utils.calcTextWidth(this.tickTextSize * 2, '0000000') + this.textMarginSpace * 2
       if (this.displayTickLine) {
-        width += this.tickLineSize
+        width += this.tickLineSize * 2
       }
     }
 
@@ -51,10 +52,10 @@ class YAxis extends Axis {
     }
 
     let maxWidth = width
-    if (this.yAxisMaxWidth > 0) {
-      maxWidth = this.yAxisMaxWidth
+    if (maxWidth > 0) {
+      maxWidth = this.yAxisMaxWidth * 2
+      width = Math.min(maxWidth, Math.max(width, this.yAxisMinWidth * 2))
     }
-    width = Math.min(maxWidth, Math.max(width, this.yAxisMinWidth))
     return width
   }
 }

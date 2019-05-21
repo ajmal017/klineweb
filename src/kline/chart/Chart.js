@@ -16,6 +16,17 @@ class Chart {
     this.chartHeight = height
     this.chartTop = top
   }
+
+  /**
+   * 获取y点坐标
+   * @param yValue
+   * @param yMin
+   * @param interval
+   * @returns {number}
+   */
+  getY (yValue, yMin, interval) {
+    return this.chartTop + (1 - (yValue - yMin) / interval) * this.chartHeight
+  }
 }
 
 export default Chart

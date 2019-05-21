@@ -1,6 +1,18 @@
 const utils = {
   canvas: document.createElement('canvas').getContext('2d'),
 
+  formatDate (timestamp) {
+    let date = new Date(timestamp)
+    let month = (date.getMonth() + 1).toString()
+    let day = date.getDate().toString()
+    let hours = date.getHours().toString()
+    let minutes = date.getMinutes().toString()
+    return (month.length === 1 ? '0' + month : month) +
+      '-' + (day.length === 1 ? '0' + day : day) +
+      ' ' + (hours.length === 1 ? '0' + hours : hours) +
+      ':' + (minutes.length === 1 ? '0' + minutes : minutes)
+  },
+
   /**
    * 测量文字的宽度
    * @param font
