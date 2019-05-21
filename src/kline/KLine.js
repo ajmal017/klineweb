@@ -3,10 +3,13 @@ import DataBounds from './internal/DataBounds'
 import CandleChart from './chart/CandleChart'
 import IndicatorChart from './chart/IndicatorChart'
 import XAxisChart from './chart/XAxisChart'
+import TooltipChart from './chart/TooltipChart'
 import YAxis from './component/YAxis'
 import XAxis from './component/XAxis'
 import Candle from './component/Candle'
 import Indicator from './component/Indicator'
+import Tooltip from './component/Tooltip'
+
 import MotionEvent from './internal/MotionEvent'
 import Type from './constant/Type'
 
@@ -22,10 +25,21 @@ class KLine {
     this.xAxis = new XAxis()
     this.candle = new Candle()
     this.indicator = new Indicator()
+    this.tooltip = new Tooltip()
     this.candleChart = new CandleChart(this.candle, this.indicator, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.indicatorChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.xAxisChart = new XAxisChart(this.xAxis, this.dataBounds, this.viewPortHandler)
+    this.tooltipChart = new TooltipChart(
+      this.tooltip,
+      this.indicator,
+      this.yAxis,
+      this.candleChart,
+      this.volChart,
+      this.indicatorChart,
+      this.dataBounds,
+      this.viewPortHandler
+    )
     this.motionEvent = new MotionEvent(this, this.dataBounds, this.viewPortHandler)
   }
 

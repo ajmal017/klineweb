@@ -16,9 +16,13 @@ class MotionEvent {
    * @param e
    */
   mouseDown (e) {
+    let point = this.getCanvasPoint(e)
+    if (!this.isValidEvent(point)) {
+      return
+    }
     this.eventMode = DRAG
-    this.mouseDownPoint.x = e.x
-    this.mouseDownPoint.y = e.y
+    this.mouseDownPoint.x = point.x
+    this.mouseDownPoint.y = point.y
   }
 
   /**
@@ -52,14 +56,18 @@ class MotionEvent {
    * @param e
    */
   mouseMove (e) {
+    let point = this.getCanvasPoint(e)
+    if (!this.isValidEvent(point)) {
+      return
+    }
     if (this.eventMode === DRAG) {
-      let moveDist = e.x - this.mouseDownPoint.x
+      let moveDist = point.x - this.mouseDownPoint.x
       if (moveDist > this.dataBounds.dataSpace / 2) {
         if (this.dataBounds.min === 0 || this.dataBounds.dataList.length < this.dataBounds.range) {
           return false
         }
 
-        this.mouseDownPoint.x = e.x
+        this.mouseDownPoint.x = point.x
 
         let moveRange = +Math.abs(moveDist / this.dataBounds.dataSpace).toFixed(0)
         if (moveRange === 0) {
@@ -90,6 +98,9 @@ class MotionEvent {
         this.kline.freshen()
       }
     } else if (this.eventMode === CROSS) {
+      this.dataBounds.calcCurrentDataIndex(point.x)
+      this.kline.tooltipChart().setCross(point.y, true)
+      this.kline.freshen()
     }
   }
 
@@ -132,6 +143,19 @@ class MotionEvent {
       this.dataBounds.min = 0
     }
     this.kline.freshen()
+  }
+
+  /**
+   * 是否是有效事件
+   * @param point
+   * @returns {boolean}
+   */
+  isValidEvent (point) {
+    return !(point.x < this.viewPortHandler.contentLeft() ||
+      point.x > this.viewPortHandler.contentRight() ||
+      point.y < this.viewPortHandler.contentTop() ||
+      point.y > this.viewPortHandler.contentBottom());
+
   }
 
   /**

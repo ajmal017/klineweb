@@ -197,6 +197,26 @@ const Type = {
      * 停损转向操作点指标
      */
     SAR: 'SAR'
+  },
+
+  /**
+   * 指标提示显示规则
+   */
+  IndicatorDisplayRule: {
+    /**
+     * 总是显示
+     */
+    ALWAYS: 'always',
+
+    /**
+     * 跟随十字光标显示
+     */
+    FOLLOW_CROSS: 'follow_cross',
+
+    /**
+     * 一直不显示
+     */
+    NONE: 'none'
   }
 
 }

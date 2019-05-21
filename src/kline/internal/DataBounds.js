@@ -34,6 +34,24 @@ class DataBounds {
       this.min = 0
     }
   }
+
+  /**
+   * 计算当前数据的索引
+   * @param x
+   */
+  calcCurrentDataIndex (x) {
+    let startX = this.viewPortHandler.contentLeft()
+    let i = this.min
+    while (i < this.dataList.length && i < this.min + this.range) {
+      let endX = startX + this.dataSpace
+      if (x < endX) {
+        this.currentDataPos = i
+        break
+      }
+      startX = endX
+      ++i
+    }
+  }
 }
 
 export default DataBounds
