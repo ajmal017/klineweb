@@ -41,6 +41,12 @@ class MotionEvent {
     this.kline.freshen()
   }
 
+  mouseLeave (e) {
+    let point = this.getCanvasPoint(e)
+    this.kline.tooltipChart.setCross(point.y, false)
+    this.kline.freshen()
+  }
+
   /**
    * 鼠标移动时事件
    * @param e

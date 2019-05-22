@@ -165,8 +165,8 @@ class TooltipChart extends Chart {
     canvas.beginPath()
     canvas.moveTo(lineStartX, this.crossPoint.y)
     canvas.lineTo(lineEndX, this.crossPoint.y)
-    canvas.closePath()
     canvas.stroke()
+    canvas.closePath()
     canvas.setLineDash([])
 
     // 绘制y轴文字外的边框
@@ -251,8 +251,8 @@ class TooltipChart extends Chart {
     canvas.beginPath()
     canvas.moveTo(this.crossPoint.x, this.viewPortHandler.contentTop())
     canvas.lineTo(this.crossPoint.x, this.viewPortHandler.contentBottom())
-    canvas.closePath()
     canvas.stroke()
+    canvas.closePath()
     canvas.setLineDash([])
 
     let timestamp = kLineModel.timestamp

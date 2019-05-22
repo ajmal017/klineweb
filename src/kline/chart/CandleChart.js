@@ -5,6 +5,7 @@ class CandleChart extends IndicatorChart {
   constructor (candle, indicator, yAxis, dataBounds, viewPortHandler) {
     super(indicator, null, yAxis, dataBounds, viewPortHandler)
     this.candle = candle
+    this.indicatorType = Type.IndicatorType.BOLL
   }
 
   /**
@@ -16,6 +17,7 @@ class CandleChart extends IndicatorChart {
     this.yAxisChart.drawSeparatorLines(canvas)
     this.yAxisChart.drawTickLines(canvas)
     this.drawCandle(canvas)
+    this.drawIndicator(canvas)
     this.yAxisChart.drawAxisLine(canvas)
     this.yAxisChart.drawAxisLabels(canvas)
   }
@@ -68,14 +70,14 @@ class CandleChart extends IndicatorChart {
         canvas.beginPath()
         canvas.moveTo(x, highLine[0])
         canvas.lineTo(x, highLine[1])
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
 
         canvas.beginPath()
         canvas.moveTo(x, lowLine[0])
         canvas.lineTo(x, lowLine[1])
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
         switch (this.candle.candleStyle) {
           case Type.CandleStyle.SOLID: {
             canvas.fillRect(rect[0], rect[1], rect[2], rect[3])
@@ -106,20 +108,20 @@ class CandleChart extends IndicatorChart {
         canvas.beginPath()
         canvas.moveTo(x, lowY)
         canvas.lineTo(x, highY)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
 
         canvas.beginPath()
         canvas.moveTo(x, openY)
         canvas.lineTo(startX, openY)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
 
         canvas.beginPath()
         canvas.moveTo(x, closeY)
         canvas.lineTo(endX, closeY)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
       }
       startX += this.dataBounds.dataSpace
       ++i

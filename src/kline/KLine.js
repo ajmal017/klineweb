@@ -12,13 +12,15 @@ import Tooltip from './component/Tooltip'
 
 import MotionEvent from './internal/MotionEvent'
 import Type from './constant/Type'
+import * as IndicatorCalculation from './utils/indicatorCalculation'
 
 class KLine {
   constructor () {
+    this.rootDom = null
+    this.domWidth = 0
+    this.domHeight = 0
     this.canvas = null
     this.canvasDom = null
-    this.canvasDomWidth = 0
-    this.canvasDomHeight = 0
     this.viewPortHandler = new ViewPortHandler()
     this.dataBounds = new DataBounds(this.viewPortHandler)
     this.yAxis = new YAxis()
@@ -27,7 +29,7 @@ class KLine {
     this.indicator = new Indicator()
     this.tooltip = new Tooltip()
     this.candleChart = new CandleChart(this.candle, this.indicator, this.yAxis, this.dataBounds, this.viewPortHandler)
-    this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
+    this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler, Type.IndicatorType.VOL)
     this.indicatorChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.xAxisChart = new XAxisChart(this.xAxis, this.dataBounds, this.viewPortHandler)
     this.tooltipChart = new TooltipChart(
@@ -42,6 +44,10 @@ class KLine {
       this.viewPortHandler
     )
     this.motionEvent = new MotionEvent(this, this.dataBounds, this.viewPortHandler)
+    // 是否需要计算整个绘图区域的尺寸
+    this.isShouldCalcOffset = true
+    // 是否需要计算图的高度
+    this.isShouldCalcChartHeight = true
   }
 
   /**
@@ -49,18 +55,32 @@ class KLine {
    * @param dom
    */
   init (dom) {
-    let domWidth = dom.offsetWidth
-    let domHeight = dom.offsetHeight
+    this.rootDom = dom
     this.canvasDom = document.createElement('canvas')
     this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
     this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
     this.canvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
+    this.canvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
     // IE9, Chrome, Safari, Opera
     this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
     // Firefox
     this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
     dom.appendChild(this.canvasDom)
-    this.resize(domWidth, domHeight)
+    this.resize()
+  }
+
+  /**
+   * 改变尺寸
+   * @param width
+   * @param height
+   */
+  resize () {
+    this.isShouldCalcOffset = true
+    this.domWidth = this.rootDom.offsetWidth * 2
+    this.domHeight = this.rootDom.offsetHeight * 2
+    this.canvasDom.style.width = this.rootDom.offsetWidth + 'px'
+    this.canvasDom.style.height = this.rootDom.offsetHeight + 'px'
+    this.freshen()
   }
 
   /**
@@ -126,25 +146,21 @@ class KLine {
   }
 
   /**
-   * 改变尺寸
-   * @param width
-   * @param height
+   * 刷新
    */
-  resize (width, height) {
-    this.canvasDomWidth = width * 2
-    this.canvasDomHeight = height * 2
-    this.canvasDom.style.width = width + 'px'
-    this.canvasDom.style.height = height + 'px'
-    this.freshen()
-  }
-
   freshen () {
-    this.canvasDom.width = this.canvasDomWidth
-    this.canvasDom.height = this.canvasDomHeight
+    this.canvasDom.width = this.domWidth
+    this.canvasDom.height = this.domHeight
     this.canvas = this.canvasDom.getContext('2d')
-    this.viewPortHandler.setChartDimens(this.canvasDomWidth, this.canvasDomHeight)
-    this.calcChartHeight(this.canvasDomHeight)
-    this.calcOffsets()
+    if (this.isShouldCalcChartHeight) {
+      this.calcChartHeight(this.domHeight)
+      this.isShouldCalcChartHeight = false
+    }
+    if (this.isShouldCalcOffset) {
+      this.viewPortHandler.setChartDimens(this.domWidth, this.domHeight)
+      this.calcOffsets()
+      this.isShouldCalcOffset = false
+    }
     this.draw()
   }
 
@@ -161,21 +177,131 @@ class KLine {
   }
 
   /**
+   * 计算指标数据
+   * @param indicatorType Int
+   */
+  calcIndicator (indicatorType) {
+    switch (indicatorType) {
+      case Type.IndicatorType.MA: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMa(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.MACD: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.VOL: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationVol(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.BOLL: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.BIAS: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBias(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.BRAR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.CCI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationCci(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.CR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationCr(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.DMA: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationDma(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.DMI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.KDJ: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.KD: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.RSI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.PSY: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.TRIX: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.OBV: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationObv(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.VR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationVr(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.WR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationWr(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.MTM: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.EMV: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
+        break
+      }
+      case Type.IndicatorType.SAR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationSar(this.dataBounds.dataList)
+        break
+      }
+    }
+  }
+
+  /**
+   * 计算各图指标
+   */
+  calcChartIndicator () {
+    if (this.candleChart.isDisplayChart()) {
+      this.calcIndicator(this.candleChart.indicatorType)
+    }
+    if (this.isDisplayVolChart()) {
+      this.calcIndicator(Type.IndicatorType.VOL)
+    }
+    if (this.isDisplayIndicatorChart()) {
+      this.calcIndicator(this.indicatorChart.indicatorType)
+    }
+    this.freshen()
+  }
+
+  /**
    * 设置数据
    * @param dataList
    */
   setDataList (dataList) {
     this.dataBounds.dataList = dataList
     this.dataBounds.moveToLast()
-    this.draw()
+    this.calcChartIndicator()
+    this.freshen()
   }
 
   isDisplayVolChart () {
-    return this.volChart.indicatorType !== Type.IndicatorType.NO
+    return this.volChart.isDisplayChart()
   }
 
   isDisplayIndicatorChart () {
-    return this.indicatorChart.indicatorType !== Type.IndicatorType.NO
+    return this.indicatorChart.isDisplayChart()
   }
 }
 

@@ -24,8 +24,8 @@ class YAxisChart extends AxisChart {
       canvas.moveTo(this.viewPortHandler.contentRight(), this.chartTop)
       canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop + this.chartHeight)
     }
-    canvas.closePath()
     canvas.stroke()
+    canvas.closePath()
   }
 
   /**
@@ -112,8 +112,8 @@ class YAxisChart extends AxisChart {
         canvas.beginPath()
         canvas.moveTo(this.viewPortHandler.contentLeft(), y)
         canvas.lineTo(this.viewPortHandler.contentRight(), y)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
       }
     }
     canvas.setLineDash([])
@@ -153,8 +153,8 @@ class YAxisChart extends AxisChart {
         canvas.beginPath()
         canvas.moveTo(startX, y)
         canvas.lineTo(endX, y)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
       }
     }
   }
@@ -180,7 +180,7 @@ class YAxisChart extends AxisChart {
     let max = Math.min(min + this.dataBounds.range, dataList.length)
     let minMaxArray = [Number.MAX_VALUE, Number.MIN_VALUE]
     if (isTimeLine) {
-      for (let i = 0; i < max; i++) {
+      for (let i = min; i < max; i++) {
         let model = dataList[i]
         minMaxArray[0] = Math.min(model.averagePrice, minMaxArray[0])
         minMaxArray[0] = Math.min(model.close, minMaxArray[0])
@@ -188,7 +188,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.close, minMaxArray[1])
       }
     } else {
-      for (let i = 0; i < max; i++) {
+      for (let i = min; i < max; i++) {
         let model = dataList[i]
         this.calcIndexMinMax(model, indicatorType, minMaxArray)
         if (isMainChart) {
@@ -235,10 +235,10 @@ class YAxisChart extends AxisChart {
         break
       }
       case Type.IndicatorType.VOL: {
-        minMaxArray[0] = Math.min(model.vol.ma5, 0.0)
-        minMaxArray[0] = Math.min(model.vol.ma10, 0.0)
-        minMaxArray[0] = Math.min(model.vol.ma20, 0.0)
-        minMaxArray[0] = Math.min(model.vol.num, 0.0)
+        minMaxArray[0] = Math.min(model.vol.ma5, 0)
+        minMaxArray[0] = Math.min(model.vol.ma10, 0)
+        minMaxArray[0] = Math.min(model.vol.ma20, 0)
+        minMaxArray[0] = Math.min(model.vol.num, 0)
         minMaxArray[1] = Math.max(model.vol.ma5, minMaxArray[1])
         minMaxArray[1] = Math.max(model.vol.ma10, minMaxArray[1])
         minMaxArray[1] = Math.max(model.vol.ma20, minMaxArray[1])
@@ -249,11 +249,11 @@ class YAxisChart extends AxisChart {
         minMaxArray[0] = Math.min(model.boll.up, minMaxArray[0])
         minMaxArray[0] = Math.min(model.boll.mid, minMaxArray[0])
         minMaxArray[0] = Math.min(model.boll.dn, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.lowPrice, minMaxArray[0])
+        minMaxArray[0] = Math.min(model.low, minMaxArray[0])
         minMaxArray[1] = Math.max(model.boll.up, minMaxArray[1])
         minMaxArray[1] = Math.max(model.boll.mid, minMaxArray[1])
         minMaxArray[1] = Math.max(model.boll.dn, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.highPrice, minMaxArray[1])
+        minMaxArray[1] = Math.max(model.high, minMaxArray[1])
         break
       }
       case Type.IndicatorType.BIAS: {

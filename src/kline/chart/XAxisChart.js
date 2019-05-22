@@ -33,8 +33,8 @@ class XAxisChart extends AxisChart {
     canvas.beginPath()
     canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom())
     canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom())
-    canvas.closePath()
     canvas.stroke()
+    canvas.closePath()
   }
 
   /**
@@ -91,8 +91,8 @@ class XAxisChart extends AxisChart {
         canvas.beginPath()
         canvas.moveTo(x, this.viewPortHandler.contentTop())
         canvas.lineTo(x, this.viewPortHandler.contentBottom())
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
       }
     }
     canvas.setLineDash([])
@@ -120,8 +120,8 @@ class XAxisChart extends AxisChart {
         canvas.beginPath()
         canvas.moveTo(x, startY)
         canvas.lineTo(x, endY)
-        canvas.closePath()
         canvas.stroke()
+        canvas.closePath()
       }
     }
   }

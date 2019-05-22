@@ -210,7 +210,7 @@ export function calculationBoll (data) {
     }
     up = mb + 2 * md
     dn = mb - 2 * md
-    data[i].boll = { up, ma, dn }
+    data[i].boll = { up, mid: ma, dn }
   }
   return data
 }
@@ -569,14 +569,14 @@ export function calculationDmi (data) {
   // ADX: EXPMEMA(ABS(MDI-PDI)/(MDI+PDI)*100,MM);
   // ADXR:EXPMEMA(ADX,MM);
   // 公式含义：
-  // MTR赋值:最高价-最低价和最高价-昨收的绝对值的较大值和昨收-最低价的绝对值的较大值的N日指数平滑移动平均 
-  // HD赋值:最高价-昨日最高价 
-  // LD赋值:昨日最低价-最低价 
-  // DMP赋值:如果HD>0并且HD>LD,返回HD,否则返回0的N日指数平滑移动平均 
-  // DMM赋值:如果LD>0并且LD>HD,返回LD,否则返回0的N日指数平滑移动平均 
-  // 输出PDI: DMP*100/MTR 
-  // 输出MDI: DMM*100/MTR 
-  // 输出ADX: MDI-PDI的绝对值/(MDI+PDI)*100的MM日指数平滑移动平均 
+  // MTR赋值:最高价-最低价和最高价-昨收的绝对值的较大值和昨收-最低价的绝对值的较大值的N日指数平滑移动平均
+  // HD赋值:最高价-昨日最高价
+  // LD赋值:昨日最低价-最低价
+  // DMP赋值:如果HD>0并且HD>LD,返回HD,否则返回0的N日指数平滑移动平均
+  // DMM赋值:如果LD>0并且LD>HD,返回LD,否则返回0的N日指数平滑移动平均
+  // 输出PDI:DMP*100/MTR
+  // 输出MDI:DMM*100/MTR
+  // 输出ADX:MDI-PDI的绝对值/(MDI+PDI)*100的MM日指数平滑移动平均
   // 输出ADXR:ADX的MM日指数平滑移动平均
   let pdi = 0
   let mdi = 0
