@@ -86,7 +86,7 @@ class App extends PureComponent {
       },
       yAxis: {
         display: true,
-        position: Type.YAxisPosition.RIGHT,
+        position: Type.YAxisPosition.LEFT,
         color: '#707070',
         maxWidth: 40,
         minWidth: 20,

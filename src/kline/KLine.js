@@ -176,6 +176,7 @@ class KLine {
         this.yAxis.display = yAxis.display
         if (yAxis.position) {
           this.yAxis.yAxisPosition = yAxis.position
+          this.isShouldCalcOffset = true
         }
         if (this.yAxis.color) {
           this.yAxis.color = yAxis.color
