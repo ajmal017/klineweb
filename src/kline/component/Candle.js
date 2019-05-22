@@ -39,7 +39,7 @@ class Candle {
       /**
        * 蜡烛图样式
        */
-      candleStyle: Type.CandleStyle.SOLID,
+      candleStyle: Type.CandleStyle.OHLC,
       /**
        * 上涨颜色
        */

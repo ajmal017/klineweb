@@ -73,9 +73,14 @@ class YAxisChart extends AxisChart {
 
     let labelHeight = this.yAxis.tickText.size * 2
     let halfLabelHeight = labelHeight / 2
+
+    let formatter = this.yAxis.tickText.valueFormatter
     for (let i = 0; i < this.values.length; i++) {
       let labelY = this.getValueY(this.values[i])
       let label = this.values[i].toString()
+      if (formatter) {
+        label = formatter(this.values[i]) || '--'
+      }
       if (this.checkShowLabel(labelY, labelHeight)) {
         if ((this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT && this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) ||
           (this.yAxis.yAxisPosition === Type.YAxisPosition.RIGHT && this.yAxis.tickText.position !== Type.YAxisTextPosition.OUTSIDE)) {
@@ -87,6 +92,7 @@ class YAxisChart extends AxisChart {
         canvas.fillText(label, initX, startY)
       }
     }
+    canvas.textAlign = 'left'
   }
 
   /**
@@ -385,8 +391,8 @@ class YAxisChart extends AxisChart {
       case Type.IndicatorType.SAR: {
         minMaxArray[0] = Math.min(model.sar.sar, minMaxArray[0])
         minMaxArray[1] = Math.max(model.sar.sar, minMaxArray[1])
-        minMaxArray[0] = Math.min(model.lowPrice, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.highPrice, minMaxArray[1])
+        minMaxArray[0] = Math.min(model.low, minMaxArray[0])
+        minMaxArray[1] = Math.max(model.high, minMaxArray[1])
         break
       }
     }

@@ -5,7 +5,7 @@ class CandleChart extends IndicatorChart {
   constructor (candle, indicator, yAxis, dataBounds, viewPortHandler) {
     super(indicator, null, yAxis, dataBounds, viewPortHandler)
     this.candle = candle
-    this.indicatorType = Type.IndicatorType.MA
+    this.indicatorType = Type.IndicatorType.SAR
     // 最高价标记数据
     this.highestMarkData = {}
     // 最低价标记数据
@@ -23,7 +23,7 @@ class CandleChart extends IndicatorChart {
     this.yAxisChart.drawTickLines(canvas)
     if (!isTimeLineChart) {
       this.drawCandle(canvas)
-      this.drawIndicator(canvas)
+      this.drawIndicator(canvas, true)
       this.drawHighestPriceMark(canvas)
       this.drawLowestPriceMark(canvas)
     } else {
@@ -44,6 +44,7 @@ class CandleChart extends IndicatorChart {
     let startX = this.viewPortHandler.contentLeft()
     let i = this.dataBounds.min
     let candleSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate)
+    let halfSpace = candleSpace / 2
     let rect = []
     let markHighestPrice = Number.MIN_VALUE
     let markHighestPriceX = -1
@@ -138,23 +139,7 @@ class CandleChart extends IndicatorChart {
           }
         }
       } else {
-        canvas.beginPath()
-        canvas.moveTo(x, lowY)
-        canvas.lineTo(x, highY)
-        canvas.stroke()
-        canvas.closePath()
-
-        canvas.beginPath()
-        canvas.moveTo(x, openY)
-        canvas.lineTo(startX, openY)
-        canvas.stroke()
-        canvas.closePath()
-
-        canvas.beginPath()
-        canvas.moveTo(x, closeY)
-        canvas.lineTo(endX, closeY)
-        canvas.stroke()
-        canvas.closePath()
+        this.drawOhlcLines(canvas, halfSpace, x, openY, closeY, highY, lowY)
       }
       startX += this.dataBounds.dataSpace
       ++i
@@ -205,12 +190,14 @@ class CandleChart extends IndicatorChart {
    */
   drawLowestHighestPriceMark (canvas, x, price, color, textSize, valueFormatter, isHigh = false) {
     canvas.save()
+    canvas.beginPath()
     canvas.rect(
       this.viewPortHandler.contentLeft(),
       this.viewPortHandler.contentTop(),
       this.viewPortHandler.contentRight() - this.viewPortHandler.contentLeft(),
-      this.viewPortHandler.contentBottom() - this.viewPortHandler.contentTop()
+      this.chartTop + this.chartHeight
     )
+    canvas.closePath()
     canvas.clip()
     let priceY = this.getValueY(price)
     let startX = x

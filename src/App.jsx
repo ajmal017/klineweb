@@ -8,10 +8,6 @@ class App extends PureComponent {
     kline.init(document.getElementById('kline'))
     kline.setConfig({
       common: {
-        displayVolChart: true,
-        displayIndicatorChart: true,
-        mainIndicator: Type.IndicatorType.BOLL,
-        subIndicator: Type.IndicatorType.MACD,
         maxVisibleRange: 180,
         minVisibleRange: 20,
         defaultVisibleRange: 120
@@ -148,6 +144,7 @@ class App extends PureComponent {
         },
         indicatorData: {
           displayRule: Type.IndicatorDisplayRule.ALWAYS,
+          valueFormatter: null,
           text: {
             size: 12,
             margin: 20

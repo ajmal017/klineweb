@@ -4,7 +4,6 @@ class Chart {
     this.viewPortHandler = viewPortHandler
     this.chartTop = 0
     this.chartHeight = 0
-    this.chartWidth = 0
   }
 
   /**

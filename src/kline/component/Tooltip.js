@@ -8,11 +8,6 @@ class Tooltip {
     this.textSize = 12
 
     /**
-     * 文字间距
-     */
-    this.textMargin = 20
-
-    /**
      * 光标线配置
      */
     this.crossLine = {
@@ -22,10 +17,12 @@ class Tooltip {
       color: '#505050',
       text: {
         color: '#EDEDED',
-        size: 10,
+        size: 12,
         rectStrokeLineSize: 1,
         rectStrokeLineColor: '#EDEDED',
-        rectFillColor: '#505050'
+        rectFillColor: '#505050',
+        margin: 4,
+        valueFormatter: null
       }
     }
 
@@ -48,6 +45,7 @@ class Tooltip {
      */
     this.indicatorData = {
       displayRule: Type.IndicatorDisplayRule.ALWAYS,
+      valueFormatter: null,
       text: {
         size: 12,
         margin: 20

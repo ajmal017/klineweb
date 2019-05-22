@@ -56,6 +56,7 @@ class XAxisChart extends AxisChart {
     if (this.display && this.xAxis.tickLine.display) {
       startY += this.xAxis.tickLine.size * 2
     }
+    let formatter = this.xAxis.tickText.valueFormatter
     for (let i = 0; i < positions.length; i += 2) {
       let x = positions[i]
 
@@ -63,6 +64,9 @@ class XAxisChart extends AxisChart {
         let kLineModel = this.dataBounds.dataList[parseInt(this.values[i / 2])]
         let timestamp = kLineModel.timestamp
         let label = utils.formatDate(timestamp)
+        if (formatter) {
+          label = formatter(kLineModel)
+        }
         canvas.fillText(label, x, startY)
       }
     }

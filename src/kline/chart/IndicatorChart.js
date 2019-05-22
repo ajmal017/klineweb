@@ -3,7 +3,7 @@ import YAxisChart from './YAxisChart'
 import Type from '../constant/Type'
 
 class IndicatorChart extends Chart {
-  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = Type.IndicatorType.MACD) {
+  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = Type.IndicatorType.SAR) {
     super(dataBounds, viewPortHandler)
     this.indicator = indicator
     this.xAxis = xAxis
@@ -46,7 +46,7 @@ class IndicatorChart extends Chart {
    * 绘制指标
    * @param canvas
    */
-  drawIndicator (canvas) {
+  drawIndicator (canvas, isMainIndicator = false) {
     switch (this.indicatorType) {
       case Type.IndicatorType.MA: {
         this.drawLines(canvas, 'ma', ['ma5', 'ma10', 'ma20', 'ma60'])
@@ -88,7 +88,10 @@ class IndicatorChart extends Chart {
       }
 
       case Type.IndicatorType.BOLL: {
-        this.drawLines(canvas, 'boll', ['up', 'mid', 'dn'])
+        this.drawLines(canvas, 'boll', ['up', 'mid', 'dn'], (x, kLineModel) => {
+          let halfSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate)
+          this.drawOhlc(canvas, halfSpace, x, kLineModel, isMainIndicator)
+        })
         break
       }
 
@@ -173,9 +176,57 @@ class IndicatorChart extends Chart {
       }
 
       case Type.IndicatorType.SAR: {
-
+        this.drawSar(canvas, isMainIndicator)
       }
     }
+  }
+
+  /**
+   * 绘制Sar
+   * @param canvas
+   * @param isMainIndicator
+   */
+  drawSar (canvas, isMainIndicator) {
+    canvas.save()
+    canvas.beginPath()
+    canvas.rect(
+      this.viewPortHandler.contentLeft(),
+      this.chartTop,
+      this.viewPortHandler.contentRight() - this.viewPortHandler.contentLeft(),
+      this.viewPortHandler.contentBottom() - this.chartTop
+    )
+    canvas.closePath()
+    canvas.clip()
+    canvas.lineWidth = 1
+    let startX = this.viewPortHandler.contentLeft()
+    let dataSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate)
+    let halfBarSpace = dataSpace / 2
+    let i = this.dataBounds.min
+    while (i < this.dataBounds.dataList.length && i < this.dataBounds.min + this.dataBounds.range) {
+      let endX = startX + dataSpace
+      let x = (startX + endX) / 2
+      let kLineModel = this.dataBounds.dataList[i]
+
+      this.drawOhlc(canvas, halfBarSpace, x, kLineModel, isMainIndicator)
+
+      let data = kLineModel.sar
+      let sar = data.sar
+      if (sar || sar === 0) {
+        let dataY = this.getValueY(sar)
+        if (sar < (kLineModel.high + kLineModel.low) / 2) {
+          canvas.strokeStyle = this.indicator.increasingColor
+        } else {
+          canvas.strokeStyle = this.indicator.decreasingColor
+        }
+        canvas.beginPath()
+        canvas.arc(x, dataY, halfBarSpace, Math.PI * 2, 0, true)
+        canvas.stroke()
+        canvas.closePath()
+      }
+      startX += this.dataBounds.dataSpace
+      ++i
+    }
+    canvas.restore()
   }
 
   /**
@@ -244,7 +295,7 @@ class IndicatorChart extends Chart {
       let endX = startX + dataSpace
       let x = (startX + endX) / 2
       let kLineModel = this.dataBounds.dataList[i]
-      if (draw != null) {
+      if (draw) {
         draw(x, kLineModel)
       }
       let data = kLineModel[dataKey]
@@ -283,6 +334,54 @@ class IndicatorChart extends Chart {
         canvas.closePath()
       }
     }
+  }
+
+  /**
+   * 绘制指标图里面的开低高收价
+   */
+  drawOhlc (canvas, halfBarSpace, x, kLineModel, isMainIndicator) {
+    if (!isMainIndicator) {
+      let openY = this.getValueY(kLineModel.open)
+      let closeY = this.getValueY(kLineModel.close)
+      let highY = this.getValueY(kLineModel.high)
+      let lowY = this.getValueY(kLineModel.low)
+      if (kLineModel.close > kLineModel.open) {
+        canvas.strokeStyle = this.indicator.increasingColor
+      } else {
+        canvas.strokeStyle = this.indicator.decreasingColor
+      }
+      this.drawOhlcLines(canvas, halfBarSpace, x, openY, closeY, highY, lowY)
+    }
+  }
+
+  /**
+   * 绘制ohlc线
+   * @param canvas
+   * @param halfBarSpace
+   * @param x
+   * @param openY
+   * @param closeY
+   * @param highY
+   * @param lowY
+   */
+  drawOhlcLines (canvas, halfBarSpace, x, openY, closeY, highY, lowY) {
+    canvas.beginPath()
+    canvas.moveTo(x, highY)
+    canvas.lineTo(x, lowY)
+    canvas.stroke()
+    canvas.closePath()
+
+    canvas.beginPath()
+    canvas.moveTo(x - halfBarSpace, openY)
+    canvas.lineTo(x, openY)
+    canvas.stroke()
+    canvas.closePath()
+
+    canvas.beginPath()
+    canvas.moveTo(x + halfBarSpace, closeY)
+    canvas.lineTo(x, closeY)
+    canvas.stroke()
+    canvas.closePath()
   }
 
   /**

@@ -82,43 +82,30 @@ class TooltipChart extends Chart {
     let lineEndX = this.viewPortHandler.contentRight()
 
     let centerPoint = this.viewPortHandler.getContentCenter()
-    let crossTextMarginSpace = 6
 
-    if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
-      if (this.crossPoint.x > centerPoint.x) {
-        // 左边
-        if (!isDrawYAxisTextOutside) {
-          lineStartX = this.viewPortHandler.contentLeft() +
-            this.tooltip.crossLine.rectStrokeLineSize * 2 + crossTextMarginSpace * 3 + yAxisDataLabelWidth
-        }
-        labelStartX = lineStartX - crossTextMarginSpace * 2 - yAxisDataLabelWidth
+    let crossTextMarginSpace = this.tooltip.crossLine.text.margin
+    let rectStrokeLineSize = this.tooltip.crossLine.text.rectStrokeLineSize
+
+    if (isDrawYAxisTextOutside) {
+      if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
+        labelStartX = lineStartX - rectStrokeLineSize - crossTextMarginSpace * 2 - yAxisDataLabelWidth
       } else {
-        // 右边
-        lineEndX = this.viewPortHandler.contentRight() -
-          this.tooltip.crossLine.rectStrokeLineSize * 2 -
-          crossTextMarginSpace * 3 - yAxisDataLabelWidth
-        labelStartX = lineEndX + crossTextMarginSpace * 2
+        labelStartX = lineEndX + rectStrokeLineSize + crossTextMarginSpace * 2
       }
     } else {
       if (this.crossPoint.x > centerPoint.x) {
         // 左边
         lineStartX = this.viewPortHandler.contentLeft() +
-          this.tooltip.crossLine.rectStrokeLineSize * 2 +
-          crossTextMarginSpace * 3 + yAxisDataLabelWidth
-        labelStartX = this.viewPortHandler.contentLeft() +
-          crossTextMarginSpace + this.tooltip.crossLine.rectStrokeLineSize
+          rectStrokeLineSize * 2 + crossTextMarginSpace * 3 + yAxisDataLabelWidth
+        labelStartX = this.viewPortHandler.contentLeft() + rectStrokeLineSize + crossTextMarginSpace
       } else {
-        // 右边
-        if (!isDrawYAxisTextOutside) {
-          lineEndX = this.viewPortHandler.contentRight() -
-            this.tooltip.crossLine.rectStrokeLineSize * 2 -
-            crossTextMarginSpace * 3 - yAxisDataLabelWidth
-        }
-        labelStartX = lineEndX + crossTextMarginSpace * 2
+        lineEndX = this.viewPortHandler.contentRight() - rectStrokeLineSize * 2 - crossTextMarginSpace * 3 - yAxisDataLabelWidth
+        labelStartX = lineEndX + rectStrokeLineSize + crossTextMarginSpace * 2
       }
     }
 
-    if (this.crossPoint.x > centerPoint.x) {
+    if ((!isDrawYAxisTextOutside && this.crossPoint.x > centerPoint.x) ||
+      (isDrawYAxisTextOutside && this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT)) {
       // 左边
       this.yAxisLabelStrokePathPoints[0] = { x: lineStartX, y: this.crossPoint.y }
       this.yAxisLabelStrokePathPoints[1] = {
@@ -217,22 +204,31 @@ class TooltipChart extends Chart {
       let candleChartYAxisDataMax = candleChartYAxis.axisMaximum
       let yData = (1 - (eventY - candleChartTop) / candleChartHeight) * (candleChartYAxisDataMax - candleChartYAxisDataMin) + candleChartYAxisDataMin
       let text = yData.toFixed(2)
-
+      if (this.tooltip.crossLine.text.valueFormatter) {
+        text = this.tooltip.crossLine.text.valueFormatter('y', yData) || '--'
+      }
       return text
     } else if (eventY > volChartTop && eventY < volChartTop + volChartHeight) {
       let volIndicatorChartYAxisDataMin = volChartYAxis.axisMinimum
       let volIndicatorChartYAxisDataMax = volChartYAxis.axisMaximum
       let yData = (1 - (eventY - volChartTop) / volChartHeight) * (volIndicatorChartYAxisDataMax - volIndicatorChartYAxisDataMin) + volIndicatorChartYAxisDataMin
       let text = yData.toFixed(0)
+      if (this.tooltip.crossLine.text.valueFormatter) {
+        text = this.tooltip.crossLine.text.valueFormatter('y', yData) || '--'
+      }
       return text
     } else if (eventY > indicatorChartTop && eventY < indicatorChartTop + indicatorChartHeight) {
       let indicatorChartYAxisDataMin = indicatorChartYAxis.axisMinimum
       let indicatorChartYAxisDataMax = indicatorChartYAxis.axisMaximum
       let yData = (1 - (eventY - indicatorChartTop) / indicatorChartHeight) * (indicatorChartYAxisDataMax - indicatorChartYAxisDataMin) + indicatorChartYAxisDataMin
+      let text = yData.toFixed(2)
       if (this.indicatorChart.indicatorType === Type.IndicatorType.VOL) {
-        return yData.toFixed(0)
+        text = yData.toFixed(0)
       }
-      return yData.toFixed(2)
+      if (this.tooltip.crossLine.text.valueFormatter) {
+        text = this.tooltip.crossLine.text.valueFormatter('y', yData) || '--'
+      }
+      return text
     }
     return null
   }
@@ -259,24 +255,29 @@ class TooltipChart extends Chart {
 
     let timestamp = kLineModel.timestamp
     let label = utils.formatDate(timestamp)
-    let labelWidth = utils.calcTextWidth((this.tooltip.crossLine.text.size || this.tooltip.textSize) * 2 + 'px Arial', label)
+    if (this.tooltip.crossLine.text.valueFormatter) {
+      label = this.tooltip.crossLine.text.valueFormatter('x', kLineModel) || '--'
+    }
+    let textSize = this.tooltip.crossLine.text.size || this.tooltip.textSize
+    let labelWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', label)
     let xAxisLabelX = this.crossPoint.x - labelWidth / 2
-    let crossTextMarginSpace = 6
+    let crossTextMarginSpace = this.tooltip.crossLine.text.margin
+    let rectStrokeLineSize = this.tooltip.crossLine.text.rectStrokeLineSize
     // 保证整个x轴上的提示文字总是完全显示
-    if (xAxisLabelX < this.viewPortHandler.contentLeft() + crossTextMarginSpace + this.tooltip.crossLine.rectStrokeLineSize) {
+    if (xAxisLabelX < this.viewPortHandler.contentLeft() + crossTextMarginSpace + rectStrokeLineSize) {
       xAxisLabelX = this.viewPortHandler.contentLeft()
-    } else if (xAxisLabelX > this.viewPortHandler.contentRight() - labelWidth - this.tooltip.crossLine.rectStrokeLineSize) {
-      xAxisLabelX = this.viewPortHandler.contentRight() - labelWidth - this.tooltip.crossLine.rectStrokeLineSize
+    } else if (xAxisLabelX > this.viewPortHandler.contentRight() - labelWidth - rectStrokeLineSize) {
+      xAxisLabelX = this.viewPortHandler.contentRight() - labelWidth - rectStrokeLineSize
     }
 
-    let rectLeft = xAxisLabelX - this.tooltip.crossLine.rectStrokeLineSize - crossTextMarginSpace
+    let rectLeft = xAxisLabelX - rectStrokeLineSize - crossTextMarginSpace
     let rectTop = this.viewPortHandler.contentBottom()
-    let rectRight = xAxisLabelX + labelWidth + crossTextMarginSpace + this.tooltip.crossLine.rectStrokeLineSize
-    let rectBottom = this.viewPortHandler.contentBottom() + labelWidth + this.tooltip.crossLine.rectStrokeLineSize + crossTextMarginSpace * 2
-    canvas.fillStyle = this.tooltip.crossLine.rectFillColor
+    let rectRight = xAxisLabelX + labelWidth + crossTextMarginSpace + rectStrokeLineSize
+    let rectBottom = this.viewPortHandler.contentBottom() + textSize * 2 + rectStrokeLineSize + crossTextMarginSpace * 2
+    canvas.fillStyle = this.tooltip.crossLine.text.rectFillColor
     canvas.fillRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
 
-    canvas.lineWidth = this.tooltip.crossLine.rectStrokeLineSize
+    canvas.lineWidth = rectStrokeLineSize
     canvas.strokeStyle = this.tooltip.crossLine.rectStrokeLineColor
     canvas.strokeRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
 
@@ -285,7 +286,7 @@ class TooltipChart extends Chart {
     canvas.fillText(
       label,
       xAxisLabelX,
-      this.viewPortHandler.contentBottom() + labelWidth + this.tooltip.crossLine.rectStrokeLineSize + crossTextMarginSpace
+      this.viewPortHandler.contentBottom() + textSize * 2 + rectStrokeLineSize + crossTextMarginSpace
     )
   }
 
@@ -298,13 +299,46 @@ class TooltipChart extends Chart {
   drawGeneralDataTooltip (canvas, startX, kLineModel) {
     let textSize = this.tooltip.generalData.text.size || this.tooltip.textSize
     canvas.font = textSize * 2 + 'px Arial'
-    canvas.fillStyle = this.tooltip.generalData.text.color
-    let values = [utils.formatDate(kLineModel.timestamp), kLineModel.open.toFixed(2), kLineModel.close.toFixed(2), kLineModel.high.toFixed(2), kLineModel.low.toFixed(2)]
-    for (let i = 0; i < values.length; i++) {
-      let text = this.tooltip.generalData.labels[i] + ': ' + values[i]
+    let textColor = this.tooltip.generalData.text.color
+    let values = []
+    if (this.tooltip.generalData.values) {
+      values = this.tooltip.generalData.values(kLineModel) || []
+    } else {
+      let formatter = this.tooltip.generalData.valueFormatter
+      let time = utils.formatDate(kLineModel.timestamp)
+      let open = kLineModel.open.toFixed(2)
+      let close = kLineModel.close.toFixed(2)
+      let high = kLineModel.high.toFixed(2)
+      let low = kLineModel.low.toFixed(2)
+      if (formatter) {
+        time = formatter(0, kLineModel.timestamp) || '--'
+        open = formatter(1, kLineModel.open) || '--'
+        close = formatter(2, kLineModel.close) || '--'
+        high = formatter(3, kLineModel.high) || '--'
+        low = formatter(4, kLineModel.low) || '--'
+      }
+      values = [time, open, close, high, low]
+    }
+    let labels = this.tooltip.generalData.labels
+    for (let i = 0; i < labels.length; i++) {
+      let label = (labels[i] || '--') + ': '
+      let labelWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', label)
+      canvas.fillStyle = textColor
+      canvas.fillText(label, startX, textSize * 2 + 4)
+      startX += labelWidth
+
+      let value = values[i] || '--'
+      let text
+      if (typeof value === 'object') {
+        text = value.value || '--'
+        canvas.fillStyle = value.color || textColor
+      } else {
+        canvas.fillStyle = textColor
+        text = value
+      }
       let textWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', text)
       canvas.fillText(text, startX, textSize * 2 + 4)
-      startX += textWidth + this.tooltip.textMargin
+      startX += textWidth + this.tooltip.generalData.text.margin
     }
   }
 
@@ -555,12 +589,15 @@ class TooltipChart extends Chart {
           valueStr = value.toFixed(2)
         }
       }
+      if (this.tooltip.indicatorData.valueFormatter) {
+        valueStr = this.tooltip.indicatorData.valueFormatter(indicatorType, value) || '--'
+      }
 
       let text = labels[i] + ': ' + valueStr
       let textWidth = utils.calcTextWidth((this.tooltip.indicatorData.text.size || this.tooltip.textSize) * 2 + 'px Arial', text)
       canvas.fillStyle = this.indicator.lineColors[i]
       canvas.fillText(text, labelX, startY)
-      labelX += this.tooltip.textMargin + textWidth
+      labelX += this.tooltip.indicatorData.text.margin + textWidth
     }
   }
 

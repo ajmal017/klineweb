@@ -304,6 +304,52 @@ class KLine {
     this.freshen()
   }
 
+  /**
+   * 设置主指标类型
+   * @param indicatorType
+   */
+  setMainIndicatorType (indicatorType) {
+    if (this.candleChart.indicatorType !== indicatorType) {
+      this.candleChart.indicatorType = indicatorType
+      this.calcIndicator(indicatorType)
+      this.freshen()
+    }
+  }
+
+  /**
+   * 设置副指标类型
+   * @param indicatorType
+   */
+  setSubIndicatorType (indicatorType) {
+    if (this.indicatorChart.indicatorType !== indicatorType) {
+      let shouldCalcChartHeight = (this.isDisplayIndicatorChart() && indicatorType === Type.IndicatorType.NO) ||
+        (!this.isDisplayIndicatorChart() && indicatorType !== Type.IndicatorType.NO)
+      this.indicatorChart.indicatorType = indicatorType
+      if (shouldCalcChartHeight) {
+        this.isShouldCalcChartHeight = true
+      }
+      this.calcIndicator(indicatorType)
+      this.freshen()
+    }
+  }
+
+  /**
+   * 设置是否显示vol指标
+   * @param isShow Boolean
+   */
+  setShowVolIndicatorChart (isShow) {
+    if (this.isDisplayVolChart() !== isShow) {
+      if (isShow) {
+        this.volChart.indicatorType = Indicator.IndicatorType.VOL
+        this.calcIndicator(Indicator.IndicatorType.VOL)
+      } else {
+        this.volChart.indicatorType = Indicator.IndicatorType.NO
+      }
+      this.isShouldCalcChartHeight = true
+      this.freshen()
+    }
+  }
+
   isDisplayVolChart () {
     return this.volChart.isDisplayChart()
   }

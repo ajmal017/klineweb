@@ -27,7 +27,7 @@ class Axis {
       display: true,
       position: Type.YAxisTextPosition.OUTSIDE,
       color: '#707070',
-      size: 10,
+      size: 12,
       margin: 3,
       valueFormatter: null
     }
