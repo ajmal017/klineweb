@@ -5,7 +5,7 @@ class CandleChart extends IndicatorChart {
   constructor (candle, indicator, yAxis, dataBounds, viewPortHandler) {
     super(indicator, null, yAxis, dataBounds, viewPortHandler)
     this.candle = candle
-    this.indicatorType = Type.IndicatorType.SAR
+    this.indicatorType = Type.IndicatorType.MA
     // 最高价标记数据
     this.highestMarkData = {}
     // 最低价标记数据

@@ -8,9 +8,9 @@ class App extends PureComponent {
     kline.init(document.getElementById('kline'))
     kline.setConfig({
       common: {
-        maxVisibleRange: 180,
+        maxVisibleRange: 500,
         minVisibleRange: 20,
-        defaultVisibleRange: 120
+        defaultVisibleRange: 200
       },
       candle: {
         chartType: Type.ChartStyle.CANDLE,

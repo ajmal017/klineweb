@@ -88,7 +88,134 @@ class KLine {
    * @param config
    */
   setConfig (config) {
-
+    if (config) {
+      let common = config.common
+      if (common) {
+        if (common.minVisibleRange > 0) {
+          this.dataBounds.minRange = common.minVisibleRange
+        }
+        if (common.maxVisibleRange > 0 && common.maxVisibleRange > this.dataBounds.minRange) {
+          this.dataBounds.maxRange = common.maxVisibleRange
+        }
+        if (common.defaultVisibleRange > 0 &&
+          common.defaultVisibleRange > this.dataBounds.minRange - 1 &&
+          common.defaultVisibleRange < this.dataBounds.maxRange + 1) {
+          this.dataBounds.range = common.defaultVisibleRange
+        }
+      }
+      let candle = common.candle
+      if (candle) {
+        if (candle.chartType) {
+          this.candle.chartStyle = candle.chartType
+        }
+        if (candle.timeChart) {
+          this.candle.timeChart = { ...this.candle.timeChart, ...candle.timeChart }
+        }
+        if (candle.candleChart) {
+          this.candle.candleChart = { ...this.candle.candleChart, ...candle.candleChart }
+        }
+        if (candle.lowestHighestPriceMarkTextColor) {
+          this.candle.lowestHighestPriceMarkTextColor = candle.lowestHighestPriceMarkTextColor
+        }
+        if (candle.lowestHighestPriceMarkTextSize > 0) {
+          this.candle.lowestHighestPriceMarkTextSize = candle.lowestHighestPriceMarkTextSize
+        }
+        this.candle.lowestHighestValueFormatter = candle.lowestHighestValueFormatter
+        if (candle.highestPriceMark) {
+          this.candle.highestPriceMark = { ...this.candle.highestPriceMark, ...candle.highestPriceMark }
+        }
+        if (candle.lowestPriceMark) {
+          this.candle.lowestPriceMark = { ...this.candle.lowestPriceMark, ...candle.lowestPriceMark }
+        }
+        if (candle.lastPriceMark) {
+          this.candle.lastPriceMark = { ...this.candle.lastPriceMark, ...candle.lastPriceMark }
+        }
+      }
+      let indicator = config.indicator
+      if (indicator) {
+        if (indicator.lineSize > 0) {
+          this.indicator.lineSize = indicator.lineSize
+        }
+        if (indicator.increasingColor) {
+          this.indicator.increasingColor = indicator.increasingColor
+        }
+        if (indicator.decreasingColor) {
+          this.indicator.decreasingColor = indicator.decreasingColor
+        }
+        if (indicator.lineColors && indicator.lineColors.length > 4) {
+          this.indicator.lineColors = indicator.lineColors
+        }
+      }
+      let xAxis = config.xAxis
+      if (xAxis) {
+        this.xAxis.display = xAxis.display
+        if (this.xAxis.color) {
+          this.xAxis.color = xAxis.color
+        }
+        if (xAxis.minHeight >= 0) {
+          this.xAxis.xAxisMinHeight = xAxis.minHeight
+        }
+        if (xAxis.maxHeight >= 0 && xAxis.maxHeight >= this.xAxis.xAxisMinHeight) {
+          this.xAxis.xAxisMaxHeight = xAxis.maxHeight
+        }
+        if (xAxis.axisLine) {
+          this.xAxis.axisLine = { ...this.xAxis.axisLine, ...xAxis.axisLine }
+        }
+        if (xAxis.tickText) {
+          this.xAxis.tickText = { ...this.xAxis.tickText, ...xAxis.tickText }
+        }
+        if (xAxis.tickLine) {
+          this.xAxis.tickLine = { ...this.xAxis.tickLine, ...xAxis.tickLine }
+        }
+        if (xAxis.separatorLine) {
+          this.xAxis.separatorLine = { ...this.xAxis.separatorLine, ...xAxis.separatorLine }
+        }
+      }
+      let yAxis = config.yAxis
+      if (yAxis) {
+        this.yAxis.display = yAxis.display
+        if (yAxis.position) {
+          this.yAxis.yAxisPosition = yAxis.position
+        }
+        if (this.yAxis.color) {
+          this.yAxis.color = yAxis.color
+        }
+        if (yAxis.minWidth >= 0) {
+          this.yAxis.yAxisMinWidth = yAxis.minWidth
+        }
+        if (yAxis.maxWidth >= 0 && yAxis.maxWidth >= this.yAxis.yAxisMinWidth) {
+          this.yAxis.yAxisMaxWidth = yAxis.maxWidth
+        }
+        if (yAxis.axisLine) {
+          this.yAxis.axisLine = { ...this.yAxis.axisLine, ...yAxis.axisLine }
+        }
+        if (yAxis.tickText) {
+          this.yAxis.tickText = { ...this.yAxis.tickText, ...yAxis.tickText }
+        }
+        if (yAxis.tickLine) {
+          this.yAxis.tickLine = { ...this.yAxis.tickLine, ...yAxis.tickLine }
+        }
+        if (yAxis.separatorLine) {
+          this.yAxis.separatorLine = { ...this.yAxis.separatorLine, ...yAxis.separatorLine }
+        }
+      }
+      let tooltip = config.tooltip
+      if (tooltip) {
+        if (tooltip.textSize > 0) {
+          this.tooltip.textSize = tooltip.textSize
+        }
+        if (tooltip.crossLine > 0) {
+          this.tooltip.crossLine = { ...this.tooltip.crossLine, ...tooltip.crossLine }
+        }
+        if (tooltip.generalData > 0) {
+          this.tooltip.generalData = { ...this.tooltip.generalData, ...tooltip.generalData }
+        }
+        if (tooltip.indicatorData > 0) {
+          this.tooltip.indicatorData = { ...this.tooltip.indicatorData, ...tooltip.indicatorData }
+        }
+      }
+      this.freshen()
+    }
   }
 
   /**

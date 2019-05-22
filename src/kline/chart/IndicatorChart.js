@@ -3,7 +3,7 @@ import YAxisChart from './YAxisChart'
 import Type from '../constant/Type'
 
 class IndicatorChart extends Chart {
-  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = Type.IndicatorType.SAR) {
+  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = Type.IndicatorType.MACD) {
     super(dataBounds, viewPortHandler)
     this.indicator = indicator
     this.xAxis = xAxis
@@ -45,6 +45,7 @@ class IndicatorChart extends Chart {
   /**
    * 绘制指标
    * @param canvas
+   * @param isMainIndicator
    */
   drawIndicator (canvas, isMainIndicator = false) {
     switch (this.indicatorType) {
@@ -89,7 +90,7 @@ class IndicatorChart extends Chart {
 
       case Type.IndicatorType.BOLL: {
         this.drawLines(canvas, 'boll', ['up', 'mid', 'dn'], (x, kLineModel) => {
-          let halfSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate)
+          let halfSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2
           this.drawOhlc(canvas, halfSpace, x, kLineModel, isMainIndicator)
         })
         break
