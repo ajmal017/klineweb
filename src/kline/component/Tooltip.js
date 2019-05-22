@@ -53,6 +53,21 @@ class Tooltip {
     this.decreasingColor = '#FF4A4A'
 
     /**
+     * 基础数据文字大小
+     */
+    this.generalDataTextSize = 10
+
+    /**
+     * 基础数据文字颜色
+     */
+    this.generalDataTextColor = '#898989'
+
+    /**
+     * 基础数据label
+     */
+    this.generalDataLabels = ['时间', '开', '收', '高', '低']
+
+    /**
      * 指标提示规则
      */
     this.indicatorDisplayRule = Type.IndicatorDisplayRule.ALWAYS
@@ -60,7 +75,7 @@ class Tooltip {
     /**
      * 提示文字大小
      */
-    this.tooltipTextSize = 10
+    this.indicatorTextSize = 10
   }
 }
 

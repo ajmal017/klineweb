@@ -15,7 +15,7 @@ class Candle {
     /**
      * 蜡烛图样式
      */
-    this.candleStyle = Type.CandleStyle.OHLC
+    this.candleStyle = Type.CandleStyle.SOLID
 
     /**
      * 图类型
@@ -75,7 +75,7 @@ class Candle {
     /**
      * 分时线填充色
      */
-    this.timeLineFillColor = '#20D8D8D8'
+    this.timeLineFillColor = '#f4f4f4'
 
     /**
      * 分时均线颜色

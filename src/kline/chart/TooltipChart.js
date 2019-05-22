@@ -30,19 +30,19 @@ class TooltipChart extends Chart {
 
         this.drawCrossHorizontalLine(canvas)
         this.drawCrossVerticalLine(canvas, kLineModel)
-        // this.drawGeneralDataTooltip(canvas, kLineModel)
       }
 
       if (this.tooltip.indicatorDisplayRule === Type.IndicatorDisplayRule.ALWAYS ||
         (this.tooltip.indicatorDisplayRule === Type.IndicatorDisplayRule.FOLLOW_CROSS && this.displayCross)) {
-        let textHeight = this.tooltip.tooltipTextSize * 2
+        let textHeight = this.tooltip.indicatorTextSize * 2
         let startX = this.viewPortHandler.contentLeft() + 6
-        canvas.font = this.tooltip.tooltipTextSize * 2 + 'px Arial'
+        canvas.font = this.tooltip.indicatorTextSize * 2 + 'px Arial'
+        this.drawGeneralDataTooltip(canvas, startX, kLineModel)
         if (this.candle.chartStyle !== Type.ChartStyle.TIME_LINE) {
           // 绘制主图的指标提示文字
           this.drawIndicatorTooltip(
             canvas, startX,
-            this.candleChart.chartTop + 4 + textHeight,
+            this.candleChart.chartTop + 4 + textHeight + 4 + this.tooltip.generalDataTextSize * 2,
             kLineModel, this.candleChart.indicatorType
           )
         }
@@ -285,6 +285,24 @@ class TooltipChart extends Chart {
       xAxisLabelX,
       this.viewPortHandler.contentBottom() + labelWidth + this.tooltip.crossTextRectStrokeLineSize + crossTextMarginSpace
     )
+  }
+
+  /**
+   * 绘制基础数据提示
+   * @param canvas
+   * @param startX
+   * @param kLineModel
+   */
+  drawGeneralDataTooltip (canvas, startX, kLineModel) {
+    canvas.font = this.tooltip.generalDataTextSize * 2 + 'px Arial'
+    canvas.fillStyle = this.tooltip.generalDataTextColor
+    let values = [utils.formatDate(kLineModel.timestamp), kLineModel.open.toFixed(2), kLineModel.close.toFixed(2), kLineModel.high.toFixed(2), kLineModel.low.toFixed(2)]
+    for (let i = 0; i < values.length; i++) {
+      let text = this.tooltip.generalDataLabels[i] + ': ' + values[i]
+      let textWidth = utils.calcTextWidth(this.tooltip.generalDataTextSize * 2 + 'px Arial', text)
+      canvas.fillText(text, startX, this.tooltip.generalDataTextSize * 2)
+      startX += textWidth + 6
+    }
   }
 
   /**
