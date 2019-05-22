@@ -3,79 +3,56 @@ import Type from '../constant/Type'
 class Tooltip {
   constructor () {
     /**
-     * 线样式
+     * 文字大小
      */
-    this.crossLineStyle = Type.LineStyle.SOLID
+    this.textSize = 12
 
     /**
-     * 十字光标线尺寸
+     * 文字间距
      */
-    this.crossLineSize = 1
+    this.textMargin = 20
 
     /**
-     * 十字光标线颜色
+     * 光标线配置
      */
-    this.crossLineColor = '#505050'
+    this.crossLine = {
+      style: Type.LineStyle.SOLID,
+      dashValue: [8, 8],
+      size: 1,
+      color: '#505050',
+      text: {
+        color: '#EDEDED',
+        size: 10,
+        rectStrokeLineSize: 1,
+        rectStrokeLineColor: '#EDEDED',
+        rectFillColor: '#505050'
+      }
+    }
 
     /**
-     * 十字光标显示的文字框的线尺寸
+     * 基础数据显示配置
      */
-    this.crossTextRectStrokeLineSize = 1
+    this.generalData = {
+      labels: ['时间', '开', '收', '高', '低'],
+      values: null,
+      valueFormatter: null,
+      text: {
+        size: 12,
+        color: '#898989',
+        margin: 20
+      }
+    }
 
     /**
-     * 十字光标显示的文字框的线颜色
+     * 指标数据显示配置
      */
-    this.crossTextRectStrokeLineColor = '#EDEDED'
-
-    /**
-     * 十字光标显示的文字框的填充颜色
-     */
-    this.crossTextRectFillColor = '#505050'
-
-    /**
-     * 十字光标文字颜色
-     */
-    this.crossTextColor = '#EDEDED'
-
-    /**
-     * 十字光标文字大小
-     */
-    this.crossTextSize = 10
-
-    /**
-     * 上涨颜色
-     */
-    this.increasingColor = '#5DB300'
-
-    /**
-     * 下跌颜色
-     */
-    this.decreasingColor = '#FF4A4A'
-
-    /**
-     * 基础数据文字大小
-     */
-    this.generalDataTextSize = 10
-
-    /**
-     * 基础数据文字颜色
-     */
-    this.generalDataTextColor = '#898989'
-
-    /**
-     * 基础数据label
-     */
-    this.generalDataLabels = ['时间', '开', '收', '高', '低']
-
-    /**
-     * 指标提示规则
-     */
-    this.indicatorDisplayRule = Type.IndicatorDisplayRule.ALWAYS
-
-    /**
-     * 提示文字大小
-     */
-    this.indicatorTextSize = 10
+    this.indicatorData = {
+      displayRule: Type.IndicatorDisplayRule.ALWAYS,
+      text: {
+        size: 12,
+        margin: 20
+      }
+    }
   }
 }
 

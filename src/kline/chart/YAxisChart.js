@@ -11,11 +11,11 @@ class YAxisChart extends AxisChart {
   }
 
   drawAxisLine (canvas) {
-    if (!this.yAxis.displayAxisLine) {
+    if (!this.yAxis.display || !this.yAxis.axisLine.display) {
       return
     }
-    canvas.strokeStyle = this.yAxis.axisLineColor
-    canvas.lineWidth = this.yAxis.axisLineSize
+    canvas.strokeStyle = this.yAxis.axisLine.color || this.yAxis.color
+    canvas.lineWidth = this.yAxis.axisLine.size
     canvas.beginPath()
     if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
       canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
@@ -33,52 +33,52 @@ class YAxisChart extends AxisChart {
    * @param canvas
    */
   drawAxisLabels (canvas) {
-    if (!this.yAxis.displayTickText) {
+    if (!this.yAxis.display || !this.yAxis.tickText.display) {
       return
     }
 
     let initX
     if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
-      if (this.yAxis.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
-        if (this.yAxis.displayTickLine) {
-          initX = this.viewPortHandler.contentLeft() - this.yAxis.tickLineSize * 2 - this.yAxis.textMarginSpace * 2
+      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+        if (this.yAxis.display && this.yAxis.tickLine.display) {
+          initX = this.viewPortHandler.contentLeft() - this.yAxis.tickLine.size * 2 - this.yAxis.tickText.margin * 2
         } else {
-          initX = this.viewPortHandler.contentLeft() - this.yAxis.textMarginSpace * 2
+          initX = this.viewPortHandler.contentLeft() - this.yAxis.tickText.margin * 2
         }
       } else {
-        if (this.yAxis.displayTickLine) {
-          initX = this.viewPortHandler.contentLeft() + this.yAxis.tickLineSize * 2 + this.yAxis.textMarginSpace * 2
+        if (this.yAxis.display && this.yAxis.tickLine.display) {
+          initX = this.viewPortHandler.contentLeft() + this.yAxis.tickLine.size * 2 + this.yAxis.tickText.margin * 2
         } else {
-          initX = this.viewPortHandler.contentLeft() + this.yAxis.textMarginSpace * 2
+          initX = this.viewPortHandler.contentLeft() + this.yAxis.tickText.margin * 2
         }
       }
     } else {
-      if (this.yAxis.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
-        if (this.yAxis.displayTickLine) {
-          initX = this.viewPortHandler.contentRight() + this.yAxis.tickLineSize * 2 + this.yAxis.textMarginSpace * 2
+      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+        if (this.yAxis.display && this.yAxis.tickLine.display) {
+          initX = this.viewPortHandler.contentRight() + this.yAxis.tickLine.size * 2 + this.yAxis.tickText.margin * 2
         } else {
-          initX = this.viewPortHandler.contentRight() + this.yAxis.textMarginSpace * 2
+          initX = this.viewPortHandler.contentRight() + this.yAxis.tickText.margin * 2
         }
       } else {
-        if (this.yAxis.displayTickLine) {
-          initX = this.viewPortHandler.contentRight() - this.yAxis.tickLineSize * 2 - this.yAxis.textMarginSpace * 2
+        if (this.yAxis.display && this.yAxis.tickLine.display) {
+          initX = this.viewPortHandler.contentRight() - this.yAxis.tickLine.size * 2 - this.yAxis.tickText.margin * 2
         } else {
-          initX = this.viewPortHandler.contentRight() - this.yAxis.textMarginSpace * 2
+          initX = this.viewPortHandler.contentRight() - this.yAxis.tickText.margin * 2
         }
       }
     }
 
-    canvas.font = this.yAxis.tickTextSize * 2 + 'px Arial'
-    canvas.fillStyle = this.yAxis.tickTextColor
+    canvas.font = this.yAxis.tickText.size * 2 + 'px Arial'
+    canvas.fillStyle = this.yAxis.tickText.color || this.yAxis.color
 
-    let labelHeight = this.yAxis.tickTextSize * 2
+    let labelHeight = this.yAxis.tickText.size * 2
     let halfLabelHeight = labelHeight / 2
     for (let i = 0; i < this.values.length; i++) {
       let labelY = this.getValueY(this.values[i])
       let label = this.values[i].toString()
       if (this.checkShowLabel(labelY, labelHeight)) {
-        if ((this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT && this.yAxis.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) ||
-          (this.yAxis.yAxisPosition === Type.YAxisPosition.RIGHT && this.yAxis.yAxisTextPosition !== Type.YAxisTextPosition.OUTSIDE)) {
+        if ((this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT && this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) ||
+          (this.yAxis.yAxisPosition === Type.YAxisPosition.RIGHT && this.yAxis.tickText.position !== Type.YAxisTextPosition.OUTSIDE)) {
           canvas.textAlign = 'right'
         } else {
           canvas.textAlign = 'left'
@@ -94,16 +94,16 @@ class YAxisChart extends AxisChart {
    * @param canvas
    */
   drawSeparatorLines (canvas) {
-    if (!this.yAxis.displaySeparatorLine) {
+    if (!this.yAxis.display || !this.yAxis.separatorLine.display) {
       return
     }
-    canvas.strokeStyle = this.yAxis.separatorLineColor
-    canvas.lineWidth = this.yAxis.separatorLineSize
+    canvas.strokeStyle = this.yAxis.separatorLine.color || this.yAxis.color
+    canvas.lineWidth = this.yAxis.separatorLine.size
 
-    let labelHeight = this.yAxis.tickTextSize * 2
+    let labelHeight = this.yAxis.tickText.size * 2
 
-    if (this.xAxis.separatorLineStyle === Type.LineStyle.DASH) {
-      canvas.setLineDash([8, 8])
+    if (this.xAxis.separatorLine.style === Type.LineStyle.DASH) {
+      canvas.setLineDash(this.xAxis.separatorLine.dashValue)
     }
 
     for (let i = 0; i < this.values.length; i++) {
@@ -124,27 +124,27 @@ class YAxisChart extends AxisChart {
    * @param canvas
    */
   drawTickLines (canvas) {
-    if (!this.yAxis.displayTickLine) {
+    if (!this.yAxis.display || !this.yAxis.tickLine.display) {
       return
     }
     canvas.lineWidth = 1
-    canvas.strokeStyle = this.yAxis.axisLineColor
-    let labelHeight = this.yAxis.tickTextSize * 2
+    canvas.strokeStyle = this.yAxis.axisLine.color || this.yAxis.color
+    let labelHeight = this.yAxis.tickText.size * 2
     let startX
     let endX
     if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
       startX = this.viewPortHandler.contentLeft()
-      if (this.yAxis.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
-        endX = startX - this.yAxis.tickLineSize * 2
+      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+        endX = startX - this.yAxis.tickLine.size * 2
       } else {
-        endX = startX + this.yAxis.tickLineSize * 2
+        endX = startX + this.yAxis.tickLine.size * 2
       }
     } else {
       startX = this.viewPortHandler.contentRight()
-      if (this.yAxis.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
-        endX = startX + this.yAxis.tickLineSize * 2
+      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+        endX = startX + this.yAxis.tickLine.size * 2
       } else {
-        endX = startX - this.yAxis.tickLineSize * 2
+        endX = startX - this.yAxis.tickLine.size * 2
       }
     }
     for (let i = 0; i < this.values.length; i++) {

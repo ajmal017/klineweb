@@ -7,11 +7,6 @@ class YAxis extends Axis {
   constructor () {
     super()
     /**
-     * 是否绘制文字在轴线外
-     */
-    this.yAxisTextPosition = Type.YAxisTextPosition.OUTSIDE
-
-    /**
      * y轴位置
      */
     this.yAxisPosition = Type.YAxisPosition.RIGHT
@@ -32,7 +27,8 @@ class YAxis extends Axis {
    * @return Boolean
    */
   needsOffset () {
-    return ((this.displayTickText || this.displayTickLine || this.textMarginSpace > 0) && this.yAxisTextPosition === 'outside') || this.displayAxisLine
+    return (((this.tickText.display || this.tickLine.display || this.tickText.margin > 0) && this.tickText.position === Type.YAxisTextPosition.OUTSIDE) ||
+      this.axisLine.display) && this.display
   }
   /**
    * 获取y轴需要的宽度
@@ -40,15 +36,15 @@ class YAxis extends Axis {
    */
   getRequiredWidthSpace () {
     let width = 0
-    if (this.yAxisTextPosition === Type.YAxisTextPosition.OUTSIDE) {
-      width += utils.calcTextWidth(this.tickTextSize * 2, '0000000') + this.textMarginSpace * 2
-      if (this.displayTickLine) {
-        width += this.tickLineSize * 2
+    if (this.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+      width += utils.calcTextWidth(this.tickText.size * 2, '0000000') + this.tickText.margin * 2
+      if (this.display && this.tickLine.display) {
+        width += this.tickLine.size * 2
       }
     }
 
-    if (this.displayAxisLine) {
-      width += this.axisLineSize
+    if (this.display && this.axisLine.display) {
+      width += this.axisLine.size
     }
 
     let maxWidth = width

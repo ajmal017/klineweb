@@ -71,14 +71,14 @@ class CandleChart extends IndicatorChart {
       let highY = this.getValueY(high)
       let lowY = this.getValueY(low)
       if (model.close > model.open) {
-        canvas.strokeStyle = this.candle.increasingColor
-        canvas.fillStyle = this.candle.increasingColor
+        canvas.strokeStyle = this.candle.candleChart.increasingColor
+        canvas.fillStyle = this.candle.candleChart.increasingColor
       } else {
-        canvas.strokeStyle = this.candle.decreasingColor
-        canvas.fillStyle = this.candle.decreasingColor
+        canvas.strokeStyle = this.candle.candleChart.decreasingColor
+        canvas.fillStyle = this.candle.candleChart.decreasingColor
       }
 
-      if (this.candle.candleStyle !== Type.CandleStyle.OHLC) {
+      if (this.candle.candleChart.candleStyle !== Type.CandleStyle.OHLC) {
         let highLine = []
         let lowLine = []
         if (openY > closeY) {
@@ -111,7 +111,7 @@ class CandleChart extends IndicatorChart {
         canvas.lineTo(x, lowLine[1])
         canvas.stroke()
         canvas.closePath()
-        switch (this.candle.candleStyle) {
+        switch (this.candle.candleChart.candleStyle) {
           case Type.CandleStyle.SOLID: {
             canvas.fillRect(rect[0], rect[1], rect[2], rect[3])
             break
@@ -169,10 +169,13 @@ class CandleChart extends IndicatorChart {
    */
   drawHighestPriceMark (canvas) {
     let price = this.highestMarkData.price
-    if (price === Number.MIN_VALUE || !this.candle.displayHighestPriceMark) {
+    if (price === Number.MIN_VALUE || !this.candle.highestPriceMark.display) {
       return
     }
-    this.drawLowestHighestPriceMark(canvas, this.highestMarkData.x, price, true)
+    let color = this.candle.highestPriceMark.color || this.candle.lowestHighestPriceMarkTextColor
+    let textSize = this.candle.highestPriceMark.textSize || this.candle.lowestHighestPriceMarkTextSize
+    let valueFormatter = this.candle.highestPriceMark.valueFormatter || this.candle.lowestHighestValueFormatter
+    this.drawLowestHighestPriceMark(canvas, this.highestMarkData.x, price, color, textSize, valueFormatter, true)
   }
 
   /**
@@ -181,10 +184,13 @@ class CandleChart extends IndicatorChart {
    */
   drawLowestPriceMark (canvas) {
     let price = this.lowestMarkData.price
-    if (price === Number.MAX_VALUE || !this.candle.displayLowestPriceMark) {
+    if (price === Number.MAX_VALUE || !this.candle.lowestPriceMark.display) {
       return
     }
-    this.drawLowestHighestPriceMark(canvas, this.lowestMarkData.x, price)
+    let color = this.candle.lowestPriceMark.color || this.candle.lowestHighestPriceMarkTextColor
+    let textSize = this.candle.lowestPriceMark.textSize || this.candle.lowestHighestPriceMarkTextSize
+    let valueFormatter = this.candle.lowestPriceMark.valueFormatter || this.candle.lowestHighestValueFormatter
+    this.drawLowestHighestPriceMark(canvas, this.lowestMarkData.x, price, color, textSize, valueFormatter)
   }
 
   /**
@@ -192,9 +198,12 @@ class CandleChart extends IndicatorChart {
    * @param canvas
    * @param x
    * @param price
+   * @param color
+   * @param textSize
+   * @param valueFormatter
    * @param isHigh
    */
-  drawLowestHighestPriceMark (canvas, x, price, isHigh = false) {
+  drawLowestHighestPriceMark (canvas, x, price, color, textSize, valueFormatter, isHigh = false) {
     canvas.save()
     canvas.rect(
       this.viewPortHandler.contentLeft(),
@@ -208,8 +217,8 @@ class CandleChart extends IndicatorChart {
     let startY = priceY + (isHigh ? -4 : 4)
     canvas.textAlign = 'left'
     canvas.lineWidth = 1
-    canvas.strokeStyle = this.candle.lowestHighestPriceMarkTextColor
-    canvas.fillStyle = this.candle.lowestHighestPriceMarkTextColor
+    canvas.strokeStyle = color
+    canvas.fillStyle = color
     canvas.beginPath()
     canvas.moveTo(startX, startY)
     canvas.lineTo(startX - 4, startY + (isHigh ? -4 : 4))
@@ -235,8 +244,12 @@ class CandleChart extends IndicatorChart {
     canvas.stroke()
     canvas.closePath()
 
-    canvas.font = this.candle.lowestHighestPriceMarkTextSize * 2 + 'px Arial'
-    canvas.fillText(price.toFixed(2), startX + 14, priceY + (isHigh ? -this.candle.lowestHighestPriceMarkTextSize : this.candle.lowestHighestPriceMarkTextSize * 2))
+    canvas.font = textSize * 2 + 'px Arial'
+    let value = price.toFixed(2)
+    if (valueFormatter) {
+      value = valueFormatter(price) + ''
+    }
+    canvas.fillText(value, startX + 14, priceY + (isHigh ? -textSize : textSize * 2))
     canvas.restore()
   }
 
@@ -245,7 +258,7 @@ class CandleChart extends IndicatorChart {
    * @param canvas
    */
   drawLastPriceMark (canvas) {
-    if (!this.candle.displayLastPriceMark || this.dataBounds.dataList.length === 0) {
+    if (!this.candle.lastPriceMark.display || this.dataBounds.dataList.length === 0) {
       return
     }
 
@@ -253,10 +266,10 @@ class CandleChart extends IndicatorChart {
     let priceY = this.getValueY(lastPrice)
     priceY = Math.max(this.chartTop + this.chartHeight * 0.05, Math.min(priceY, this.chartTop + this.chartHeight * 0.98))
 
-    canvas.strokeStyle = this.candle.lastPriceMarkLineColor
-    canvas.lineWidth = this.candle.lastPriceMarkLineSize
-    if (this.candle.lastPriceMarkLineStyle === Type.LineStyle.DASH) {
-      canvas.setLineDash([8, 8])
+    canvas.strokeStyle = this.candle.lastPriceMark.lineColor
+    canvas.lineWidth = this.candle.lastPriceMark.lineSize
+    if (this.candle.lastPriceMark.lineStyle === Type.LineStyle.DASH) {
+      canvas.setLineDash(this.candle.lastPriceMark.dashValue)
     }
     canvas.beginPath()
     canvas.moveTo(this.viewPortHandler.contentLeft(), priceY)
@@ -275,7 +288,7 @@ class CandleChart extends IndicatorChart {
     let timeLineAreaPoints = [{ x: this.viewPortHandler.contentLeft(), y: this.chartTop + this.chartHeight }]
     let averageLinePoints = []
 
-    canvas.lineWidth = this.candle.timeLineSize
+    canvas.lineWidth = this.candle.timeChart.timeLineSize
 
     let kLineDataList = this.dataBounds.dataList
     let startX = this.viewPortHandler.contentLeft()
@@ -309,7 +322,7 @@ class CandleChart extends IndicatorChart {
     }
     if (timeLinePoints.length > 0) {
       // 绘制分时线
-      canvas.strokeStyle = this.candle.timeLineColor
+      canvas.strokeStyle = this.candle.timeChart.timeLineColor
       canvas.beginPath()
       canvas.moveTo(timeLinePoints[0].x, timeLinePoints[0].y)
       for (let i = 1; i < timeLinePoints.length; i++) {
@@ -321,7 +334,7 @@ class CandleChart extends IndicatorChart {
 
     if (timeLineAreaPoints.length > 0) {
       // 绘制分时线填充区域
-      canvas.fillStyle = this.candle.timeLineFillColor
+      canvas.fillStyle = this.candle.timeChart.timeLineFillColor
       canvas.beginPath()
       canvas.moveTo(timeLineAreaPoints[0].x, timeLineAreaPoints[0].y)
       for (let i = 1; i < timeLineAreaPoints.length; i++) {
@@ -333,7 +346,7 @@ class CandleChart extends IndicatorChart {
 
     if (averageLinePoints.length > 0) {
       // 绘制均线
-      canvas.strokeStyle = this.candle.timeAverageLineColor
+      canvas.strokeStyle = this.candle.timeChart.timeAverageLineColor
       canvas.beginPath()
       canvas.moveTo(averageLinePoints[0].x, averageLinePoints[0].y)
       for (let i = 1; i < averageLinePoints.length; i++) {

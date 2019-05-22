@@ -84,6 +84,14 @@ class KLine {
   }
 
   /**
+   * 设置配置
+   * @param config
+   */
+  setConfig (config) {
+
+  }
+
+  /**
    * 计算图表高度
    */
   calcChartHeight (domHeight) {

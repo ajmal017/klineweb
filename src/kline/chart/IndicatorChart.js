@@ -33,8 +33,8 @@ class IndicatorChart extends Chart {
    * @param canvas
    */
   drawChartHorizontalSeparatorLine (canvas) {
-    canvas.lineWidth = this.xAxis.axisLineSize
-    canvas.strokeStyle = this.xAxis.axisLineColor
+    canvas.lineWidth = this.xAxis.axisLine.size
+    canvas.strokeStyle = this.xAxis.axisLine.color
     canvas.beginPath()
     canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
     canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop)

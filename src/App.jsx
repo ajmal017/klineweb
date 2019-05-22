@@ -1,10 +1,160 @@
 import React, { PureComponent } from 'react'
 import KLine from './kline/KLine'
+import Type from './kline/constant/Type'
 
 class App extends PureComponent {
   componentDidMount () {
     let kline = new KLine()
     kline.init(document.getElementById('kline'))
+    kline.setConfig({
+      common: {
+        displayVolChart: true,
+        displayIndicatorChart: true,
+        mainIndicator: Type.IndicatorType.BOLL,
+        subIndicator: Type.IndicatorType.MACD,
+        maxVisibleRange: 180,
+        minVisibleRange: 20,
+        defaultVisibleRange: 120
+      },
+      candle: {
+        chartType: Type.ChartStyle.CANDLE,
+        timeChart: {
+          timeLineSize: 1,
+          timeLineColor: '#D8D8D8',
+          timeLineFillColor: '#f4f4f4',
+          timeAverageLineColor: '#F5A623'
+        },
+        candleChart: {
+          candleStyle: Type.CandleStyle.SOLID,
+          increasingColor: '#5DB300',
+          decreasingColor: '#FF4A4A'
+        },
+        lowestHighestPriceMarkTextColor: '#898989',
+        lowestHighestPriceMarkTextSize: 10,
+        lowestHighestValueFormatter: null,
+        highestPriceMark: {
+          display: true,
+          color: '#898989',
+          textSize: 10,
+          valueFormatter: null
+        },
+        lowestPriceMark: {
+          display: true,
+          color: '#898989',
+          textSize: 10,
+          valueFormatter: null
+        },
+        lastPriceMark: {
+          display: true,
+          lineStyle: Type.LineStyle.DASH,
+          dashValue: [8, 8],
+          lineSize: 1,
+          lineColor: '#B9B9B9'
+        }
+      },
+      indicator: {
+        lineSize: 1,
+        increasingColor: '#5DB300',
+        decreasingColor: '#FF4A4A',
+        lineColors: ['#898989', '#F5A623', '#F601FF', '#1587DD', '#50A300']
+      },
+      xAxis: {
+        display: true,
+        color: '#707070',
+        maxHeight: 40,
+        minHeight: 20,
+        axisLine: {
+          display: true,
+          color: '#707070',
+          size: 1
+        },
+        tickText: {
+          display: true,
+          color: '#707070',
+          size: 10,
+          margin: 3,
+          valueFormatter: null
+        },
+        tickLine: {
+          display: true,
+          size: 3,
+          color: '#707070'
+        },
+        separatorLine: {
+          display: false,
+          size: 1,
+          color: '#B8B8B8',
+          style: Type.LineStyle.DASH,
+          dashValue: [8, 8]
+        }
+      },
+      yAxis: {
+        display: true,
+        position: Type.YAxisPosition.RIGHT,
+        color: '#707070',
+        maxWidth: 40,
+        minWidth: 20,
+        axisLine: {
+          display: true,
+          color: '#707070',
+          size: 1
+        },
+        tickText: {
+          display: true,
+          position: Type.YAxisTextPosition.OUTSIDE,
+          color: '#707070',
+          size: 10,
+          margin: 3,
+          valueFormatter: null
+        },
+        tickLine: {
+          display: true,
+          size: 3,
+          color: '#707070'
+        },
+        separatorLine: {
+          display: false,
+          size: 1,
+          color: '#B8B8B8',
+          style: Type.LineStyle.DASH,
+          dashValue: [8, 8]
+        }
+      },
+      tooltip: {
+        textSize: 12,
+        textMargin: 20,
+        crossLine: {
+          style: Type.LineStyle.SOLID,
+          dashValue: [8, 8],
+          size: 1,
+          color: '#505050',
+          text: {
+            color: '#EDEDED',
+            size: 10,
+            rectStrokeLineSize: 1,
+            rectStrokeLineColor: '#EDEDED',
+            rectFillColor: '#505050'
+          }
+        },
+        generalData: {
+          labels: ['时间', '开', '收', '高', '低'],
+          values: null,
+          valueFormatter: null,
+          text: {
+            size: 12,
+            color: '#898989',
+            margin: 20
+          }
+        },
+        indicatorData: {
+          displayRule: Type.IndicatorDisplayRule.ALWAYS,
+          text: {
+            size: 12,
+            margin: 20
+          }
+        }
+      }
+    })
     kline.setDataList(this.getData())
   }
 

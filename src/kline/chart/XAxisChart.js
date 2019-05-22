@@ -25,11 +25,11 @@ class XAxisChart extends AxisChart {
    * @param canvas
    */
   drawAxisLine (canvas) {
-    if (!this.xAxis.displayAxisLine) {
+    if (!this.xAxis.display || !this.xAxis.axisLine.display) {
       return
     }
-    canvas.strokeStyle = this.xAxis.axisLineColor
-    canvas.lineWidth = this.xAxis.axisLineSize
+    canvas.strokeStyle = this.xAxis.axisLine.color || this.xAxis.color
+    canvas.lineWidth = this.xAxis.axisLine.size
     canvas.beginPath()
     canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom())
     canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom())
@@ -42,19 +42,19 @@ class XAxisChart extends AxisChart {
    * @param canvas Canvas
    */
   drawAxisLabels (canvas) {
-    if (!this.xAxis.displayTickText) {
+    if (!this.xAxis.display || !this.xAxis.tickText.display) {
       return
     }
 
-    canvas.font = this.xAxis.tickTextSize * 2 + 'px Arial'
+    canvas.font = this.xAxis.tickText.size * 2 + 'px Arial'
     canvas.textAlign = 'center'
-    canvas.fillStyle = this.xAxis.tickTextColor
+    canvas.fillStyle = this.xAxis.tickText.color || this.xAxis.color
 
     let positions = this.pointValuesToPixel()
-    let labelHeight = this.xAxis.tickTextSize * 2
-    let startY = this.viewPortHandler.contentBottom() + this.xAxis.textMarginSpace * 2 + labelHeight
-    if (this.xAxis.displayTickLine) {
-      startY += this.xAxis.tickLineSize * 2
+    let labelHeight = this.xAxis.tickText.size * 2
+    let startY = this.viewPortHandler.contentBottom() + this.xAxis.tickText.margin * 2 + labelHeight
+    if (this.display && this.xAxis.tickLine.display) {
+      startY += this.xAxis.tickLine.size * 2
     }
     for (let i = 0; i < positions.length; i += 2) {
       let x = positions[i]
@@ -73,14 +73,14 @@ class XAxisChart extends AxisChart {
    * @param canvas Canvas
    */
   drawSeparatorLines (canvas) {
-    if (!this.xAxis.displaySeparatorLine) {
+    if (!this.xAxis.display || !this.xAxis.separatorLine.display) {
       return
     }
-    canvas.strokeStyle = this.xAxis.separatorLineColor
-    canvas.lineWidth = this.xAxis.separatorLineSize
+    canvas.strokeStyle = this.xAxis.separatorLine.color || this.xAxis.color
+    canvas.lineWidth = this.xAxis.separatorLine.size
 
-    if (this.xAxis.separatorLineStyle === Type.LineStyle.DASH) {
-      canvas.setLineDash([8, 8])
+    if (this.xAxis.separatorLine.style === Type.LineStyle.DASH) {
+      canvas.setLineDash(this.xAxis.separatorLine.dashValue)
     }
     let positions = this.pointValuesToPixel()
 
@@ -103,15 +103,15 @@ class XAxisChart extends AxisChart {
    * @param canvas Canvas
    */
   drawTickLines (canvas) {
-    if (!this.xAxis.displayTickLine) {
+    if (!this.xAxis.display || !this.xAxis.tickLine.display) {
       return
     }
     canvas.lineWidth = 1
-    canvas.strokeStyle = this.xAxis.axisLineColor
+    canvas.strokeStyle = this.xAxis.axisLine.color || this.xAxis.color
     let positions = this.pointValuesToPixel()
 
     let startY = this.viewPortHandler.contentBottom()
-    let endY = startY + this.xAxis.tickLineSize * 2
+    let endY = startY + this.xAxis.tickLine.size * 2
 
     for (let i = 0; i < positions.length; i += 2) {
       let x = positions[i]

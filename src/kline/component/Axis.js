@@ -3,69 +3,54 @@ import Type from '../constant/Type'
 class Axis {
   constructor () {
     /**
-     * 是否显示轴线
+     * 是否显示整个轴
      */
-    this.displayAxisLine = true
+    this.display = true
+    /**
+     * 整个轴的颜色
+     */
+    this.color = '#707070'
 
     /**
-     * 轴线的颜色
+     * 轴线配置
      */
-    this.axisLineColor = '#707070'
+    this.axisLine = {
+      display: true,
+      color: '#707070',
+      size: 1
+    }
 
     /**
-     * 轴线的尺寸
+     * 分割文字配置
      */
-    this.axisLineSize = 1
+    this.tickText = {
+      display: true,
+      position: Type.YAxisTextPosition.OUTSIDE,
+      color: '#707070',
+      size: 10,
+      margin: 3,
+      valueFormatter: null
+    }
 
     /**
-     * 是否显示轴线上的文字
+     * 分割tick线配置
      */
-    this.displayTickText = true
+    this.tickLine = {
+      display: true,
+      size: 3,
+      color: '#707070'
+    }
 
     /**
-     * 分割文字颜色
+     * 分割线配置
      */
-    this.tickTextColor = '#707070'
-
-    /**
-     * 分割文字的大小
-     */
-    this.tickTextSize = 10
-
-    /**
-     * 是否显示tick线
-     */
-    this.displayTickLine = true
-
-    /**
-     * 轴线上文字线的高度
-     */
-    this.tickLineSize = 3
-
-    /**
-     * 是否显示分割线
-     */
-    this.displaySeparatorLine = false
-
-    /**
-     * 分割线的尺寸
-     */
-    this.separatorLineSize = 1
-
-    /**
-     * 分割线颜色
-     */
-    this.separatorLineColor = '#B8B8B8'
-
-    /**
-     * 分割线类型
-     */
-    this.separatorLineStyle = Type.LineStyle.DASH
-
-    /**
-     * 文字的margin
-     */
-    this.textMarginSpace = 3
+    this.separatorLine = {
+      display: false,
+      size: 1,
+      color: '#B8B8B8',
+      style: Type.LineStyle.DASH,
+      dashValue: [8, 8]
+    }
   }
 }
 
