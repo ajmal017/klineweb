@@ -1,7 +1,7 @@
 const CROSS = 'cross'
 const DRAG = 'drag'
 
-class MotionEvent {
+class MouseEvent {
   constructor (kline, dataBounds, viewPortHandler) {
     this.kline = kline
     this.dataBounds = dataBounds
@@ -168,4 +168,4 @@ class MotionEvent {
   }
 }
 
-export default MotionEvent
+export default MouseEvent

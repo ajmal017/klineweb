@@ -12,8 +12,11 @@ import Indicator, { IndicatorType } from '../component/Indicator'
 import Tooltip from '../component/Tooltip'
 import Grid from '../component/Grid'
 
-import MotionEvent from '../internal/MotionEvent'
+import MouseEvent from '../internal/MouseEvent'
+import TouchEvent from '../internal/TouchEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
+
+const isMobile = /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)
 
 class KLineChart {
   constructor (dom) {
@@ -46,7 +49,9 @@ class KLineChart {
       this.dataBounds,
       this.viewPortHandler
     )
-    this.motionEvent = new MotionEvent(this, this.dataBounds, this.viewPortHandler)
+    this.motionEvent = isMobile
+      ? new TouchEvent(this, this.dataBounds, this.viewPortHandler)
+      : new MouseEvent(this, this.dataBounds, this.viewPortHandler)
     // 是否需要计算整个绘图区域的尺寸
     this.isShouldCalcOffset = true
     // 是否需要计算图的高度
@@ -60,14 +65,22 @@ class KLineChart {
    */
   init () {
     this.canvasDom = document.createElement('canvas')
-    this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
-    this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
-    this.canvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
-    this.canvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
-    // IE9, Chrome, Safari, Opera
-    this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
-    // Firefox
-    this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
+    try {
+      if (isMobile) {
+        this.canvasDom.addEventListener('touchstart', (e) => { this.motionEvent.touchStart(e) }, false)
+        this.canvasDom.addEventListener('touchmove', (e) => { this.motionEvent.touchMove(e) }, false)
+        this.canvasDom.addEventListener('touchend', (e) => { this.motionEvent.touchEnd(e) }, false)
+      } else {
+        this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
+        this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
+        this.canvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
+        this.canvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
+        // IE9, Chrome, Safari, Opera
+        this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
+        // Firefox
+        this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
+      }
+    } catch (e) {}
     this.rootDom.appendChild(this.canvasDom)
     this.resize()
   }
