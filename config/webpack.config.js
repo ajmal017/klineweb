@@ -16,23 +16,22 @@ module.exports = function() {
     mode: 'production',
     bail: true,
     devtool: 'source-map',
-    entry: [
-
-      paths.appIndexJs
-
-    ].filter(Boolean),
+    entry: {
+      'kline.production': paths.appIndexJs,
+      'kline.development': paths.appIndexJs
+    },
     output: {
       path: paths.appBuild,
-      pathinfo: false,
-      filename: 'kline.min.js',
-      futureEmitAssets: true,
+      // libraryExport: 'default',
+      filename: '[name].js',
       libraryTarget: 'umd',
-      publicPath: '/'
+      umdNamedDefine: true
     },
     optimization: {
       minimize: true,
       minimizer: [
         new TerserPlugin({
+          test: /\.production\.js$/,
           terserOptions: {
             parse: {
               ecma: 8,

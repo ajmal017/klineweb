@@ -127,7 +127,7 @@ class KLineChart {
           this.grid.lineColor = grid.lineColor
         }
       }
-      let candle = common.candle
+      let candle = config.candle
       if (candle) {
         if (candle.chartType) {
           this.candle.chartStyle = candle.chartType
