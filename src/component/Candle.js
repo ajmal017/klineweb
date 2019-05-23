@@ -84,7 +84,7 @@ class Candle {
       /**
        * 蜡烛图样式
        */
-      candleStyle: CandleStyle.OHLC,
+      candleStyle: CandleStyle.SOLID,
       /**
        * 上涨颜色
        */

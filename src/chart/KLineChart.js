@@ -16,7 +16,7 @@ import MouseEvent from '../internal/event/MouseEvent'
 import TouchEvent from '../internal/event/TouchEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
 
-const isMobile = /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)
+const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|UCBrowser/i.test(navigator.userAgent)
 
 class KLineChart {
   constructor (dom) {
@@ -87,8 +87,6 @@ class KLineChart {
 
   /**
    * 改变尺寸
-   * @param width
-   * @param height
    */
   resize () {
     this.isShouldCalcOffset = true
