@@ -4,6 +4,9 @@ import kline, { ChartStyle, LineStyle, CandleStyle, YAxisPosition, YAxisTextPosi
 class App extends PureComponent {
   componentDidMount () {
     let chart = kline.init(document.getElementById('kline'))
+    window.onresize = () => {
+      chart.resize()
+    }
     chart.setConfig({
       common: {
         maxVisibleRange: 500,
@@ -116,7 +119,6 @@ class App extends PureComponent {
       },
       tooltip: {
         textSize: 12,
-        textMargin: 20,
         crossLine: {
           style: LineStyle.SOLID,
           dashValue: [8, 8],

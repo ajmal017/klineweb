@@ -219,13 +219,22 @@ class KLineChart {
         if (tooltip.textSize > 0) {
           this.tooltip.textSize = tooltip.textSize
         }
-        if (tooltip.crossLine > 0) {
+        if (tooltip.crossLine) {
+          if (tooltip.crossLine.text) {
+            tooltip.crossLine.text = { ...this.tooltip.crossLine.text, ...tooltip.crossLine.text }
+          }
           this.tooltip.crossLine = { ...this.tooltip.crossLine, ...tooltip.crossLine }
         }
-        if (tooltip.generalData > 0) {
+        if (tooltip.generalData) {
+          if (tooltip.generalData.text) {
+            tooltip.generalData.text = { ...this.tooltip.generalData.text, ...tooltip.generalData.text }
+          }
           this.tooltip.generalData = { ...this.tooltip.generalData, ...tooltip.generalData }
         }
-        if (tooltip.indicatorData > 0) {
+        if (tooltip.indicatorData) {
+          if (tooltip.indicatorData.text) {
+            tooltip.indicatorData.text = { ...this.tooltip.indicatorData.text, ...tooltip.indicatorData.text }
+          }
           this.tooltip.indicatorData = { ...this.tooltip.indicatorData, ...tooltip.indicatorData }
         }
       }
