@@ -1,6 +1,17 @@
 {
   "name": "kline",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "A kline library for browser",
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liihuu/klineweb"
+  },
+  "keywords": [
+    "canvas", "component", "kline", "time-line"
+  ],
+  "author": "liihuu",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@babel/core": "7.4.3",

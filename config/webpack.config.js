@@ -26,6 +26,7 @@ module.exports = function() {
       pathinfo: false,
       filename: 'kline.min.js',
       futureEmitAssets: true,
+      libraryTarget: 'umd',
       publicPath: '/'
     },
     optimization: {
