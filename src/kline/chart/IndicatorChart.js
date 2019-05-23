@@ -1,9 +1,9 @@
 import Chart from './Chart'
 import YAxisChart from './YAxisChart'
-import Type from '../constant/Type'
+import { IndicatorType } from '../component/Indicator'
 
 class IndicatorChart extends Chart {
-  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = Type.IndicatorType.MACD) {
+  constructor (indicator, xAxis, yAxis, dataBounds, viewPortHandler, indicatorType = IndicatorType.MACD) {
     super(dataBounds, viewPortHandler)
     this.indicator = indicator
     this.xAxis = xAxis
@@ -49,12 +49,12 @@ class IndicatorChart extends Chart {
    */
   drawIndicator (canvas, isMainIndicator = false) {
     switch (this.indicatorType) {
-      case Type.IndicatorType.MA: {
+      case IndicatorType.MA: {
         this.drawLines(canvas, 'ma', ['ma5', 'ma10', 'ma20', 'ma60'])
         break
       }
 
-      case Type.IndicatorType.MACD: {
+      case IndicatorType.MACD: {
         this.drawBarLines(canvas, 'macd', 'macd', ['diff', 'dea'], (kLineModel, preKLineModel, barBuffer) => {
           let macd = (kLineModel.macd || {}).macd
           let preMacd = ((preKLineModel || {}).macd || {}).macd
@@ -74,7 +74,7 @@ class IndicatorChart extends Chart {
         break
       }
 
-      case Type.IndicatorType.VOL: {
+      case IndicatorType.VOL: {
         this.drawBarLines(canvas, 'vol', 'num', ['ma5', 'ma10', 'ma20'], (kLineModel, preKLineModel, barBuffer) => {
           let close = kLineModel.close
           let preClose = (preKLineModel || {}).close
@@ -88,7 +88,7 @@ class IndicatorChart extends Chart {
         break
       }
 
-      case Type.IndicatorType.BOLL: {
+      case IndicatorType.BOLL: {
         this.drawLines(canvas, 'boll', ['up', 'mid', 'dn'], (x, kLineModel) => {
           let halfSpace = this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2
           this.drawOhlc(canvas, halfSpace, x, kLineModel, isMainIndicator)
@@ -96,87 +96,87 @@ class IndicatorChart extends Chart {
         break
       }
 
-      case Type.IndicatorType.BIAS: {
+      case IndicatorType.BIAS: {
         this.drawLines(canvas, 'bias', ['bias1', 'bias2', 'bias3'])
         break
       }
 
-      case Type.IndicatorType.BRAR: {
+      case IndicatorType.BRAR: {
         this.drawLines(canvas, 'brar', ['br', 'ar'])
         break
       }
 
-      case Type.IndicatorType.CCI: {
+      case IndicatorType.CCI: {
         this.drawLines(canvas, 'cci', ['cci'])
         break
       }
 
-      case Type.IndicatorType.CR: {
+      case IndicatorType.CR: {
         this.drawLines(canvas, 'cr', ['cr', 'ma1', 'ma2', 'ma3', 'ma4'])
         break
       }
 
-      case Type.IndicatorType.DMA: {
+      case IndicatorType.DMA: {
         this.drawLines(canvas, 'dma', ['dif', 'difMa'])
         break
       }
 
-      case Type.IndicatorType.DMI: {
+      case IndicatorType.DMI: {
         this.drawLines(canvas, 'dmi', ['mdi', 'pdi', 'adx', 'adxr'])
         break
       }
 
-      case Type.IndicatorType.KDJ: {
+      case IndicatorType.KDJ: {
         this.drawLines(canvas, 'kdj', ['k', 'd', 'j'])
         break
       }
 
-      case Type.IndicatorType.KD: {
+      case IndicatorType.KD: {
         this.drawLines(canvas, 'kd', ['k', 'd'])
         break
       }
 
-      case Type.IndicatorType.RSI: {
+      case IndicatorType.RSI: {
         this.drawLines(canvas, 'rsi', ['rsi1', 'rsi2', 'rsi3'])
         break
       }
 
-      case Type.IndicatorType.PSY: {
+      case IndicatorType.PSY: {
         this.drawLines(canvas, 'psy', ['psy'])
         break
       }
 
-      case Type.IndicatorType.TRIX: {
+      case IndicatorType.TRIX: {
         this.drawLines(canvas, 'trix', ['trix', 'maTrix'])
         break
       }
 
-      case Type.IndicatorType.OBV: {
+      case IndicatorType.OBV: {
         this.drawLines(canvas, 'obv', ['obv', 'maObv'])
         break
       }
 
-      case Type.IndicatorType.VR: {
+      case IndicatorType.VR: {
         this.drawLines(canvas, 'vr', ['vr', 'maVr'])
         break
       }
 
-      case Type.IndicatorType.WR: {
+      case IndicatorType.WR: {
         this.drawLines(canvas, 'wr', ['wr1', 'wr2', 'wr3'])
         break
       }
 
-      case Type.IndicatorType.MTM: {
+      case IndicatorType.MTM: {
         this.drawLines(canvas, 'mtm', ['mtm', 'mtmMa'])
         break
       }
 
-      case Type.IndicatorType.EMV: {
+      case IndicatorType.EMV: {
         this.drawLines(canvas, 'emv', ['emv', 'maEmv'])
         break
       }
 
-      case Type.IndicatorType.SAR: {
+      case IndicatorType.SAR: {
         this.drawSar(canvas, isMainIndicator)
       }
     }
@@ -398,7 +398,7 @@ class IndicatorChart extends Chart {
    * @returns {boolean}
    */
   isDisplayChart () {
-    return this.indicatorType !== Type.IndicatorType.NO
+    return this.indicatorType !== IndicatorType.NO
   }
 }
 

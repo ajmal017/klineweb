@@ -1,7 +1,34 @@
 import Axis from './Axis'
 
 import utils from '../utils/utils'
-import Type from '../constant/Type'
+
+/**
+ * y轴位置
+ */
+export const YAxisPosition = {
+  /**
+   * 左边
+   */
+  LEFT: 'left',
+  /**
+   * 右边
+   */
+  RIGHT: 'right'
+}
+
+/**
+ * y轴上文字位置
+ */
+export const YAxisTextPosition = {
+  /**
+   * 外部
+   */
+  OUTSIDE: 'outside',
+  /**
+   * 内部
+   */
+  INSIDE: 'inside'
+}
 
 class YAxis extends Axis {
   constructor () {
@@ -9,7 +36,7 @@ class YAxis extends Axis {
     /**
      * y轴位置
      */
-    this.yAxisPosition = Type.YAxisPosition.RIGHT
+    this.yAxisPosition = YAxisPosition.RIGHT
 
     /**
      * y轴最大宽度
@@ -27,7 +54,7 @@ class YAxis extends Axis {
    * @return Boolean
    */
   needsOffset () {
-    return (((this.tickText.display || this.tickLine.display || this.tickText.margin > 0) && this.tickText.position === Type.YAxisTextPosition.OUTSIDE) ||
+    return (((this.tickText.display || this.tickLine.display || this.tickText.margin > 0) && this.tickText.position === YAxisTextPosition.OUTSIDE) ||
       this.axisLine.display) && this.display
   }
   /**
@@ -36,7 +63,7 @@ class YAxis extends Axis {
    */
   getRequiredWidthSpace () {
     let width = 0
-    if (this.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+    if (this.tickText.position === YAxisTextPosition.OUTSIDE) {
       width += utils.calcTextWidth(this.tickText.size * 2, '0000000') + this.tickText.margin * 2
       if (this.display && this.tickLine.display) {
         width += this.tickLine.size * 2

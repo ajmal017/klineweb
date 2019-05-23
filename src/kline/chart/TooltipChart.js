@@ -1,6 +1,9 @@
 import Chart from './Chart'
-import Type from '../constant/Type'
-
+import { IndicatorDisplayRule } from '../component/Tooltip'
+import { ChartStyle } from '../component/Candle'
+import { YAxisPosition, YAxisTextPosition } from '../component/YAxis'
+import { LineStyle } from '../component/Component'
+import { IndicatorType } from '../component/Indicator'
 import utils from '../utils/utils'
 
 class TooltipChart extends Chart {
@@ -32,13 +35,13 @@ class TooltipChart extends Chart {
         this.drawCrossVerticalLine(canvas, kLineModel)
       }
 
-      if (this.tooltip.indicatorData.displayRule === Type.IndicatorDisplayRule.ALWAYS ||
-        (this.tooltip.indicatorData.displayRule === Type.IndicatorDisplayRule.FOLLOW_CROSS && this.displayCross)) {
+      if (this.tooltip.indicatorData.displayRule === IndicatorDisplayRule.ALWAYS ||
+        (this.tooltip.indicatorData.displayRule === IndicatorDisplayRule.FOLLOW_CROSS && this.displayCross)) {
         let textHeight = (this.tooltip.indicatorData.text.size || this.tooltip.textSize) * 2
         let startX = this.viewPortHandler.contentLeft() + 10
         canvas.font = textHeight + 'px Arial'
         this.drawGeneralDataTooltip(canvas, startX, kLineModel)
-        if (this.candle.chartStyle !== Type.ChartStyle.TIME_LINE) {
+        if (this.candle.chartStyle !== ChartStyle.TIME_LINE) {
           // 绘制主图的指标提示文字
           this.drawIndicatorTooltip(
             canvas, startX,
@@ -71,7 +74,7 @@ class TooltipChart extends Chart {
     if (yAxisDataLabel == null) {
       return
     }
-    let isDrawYAxisTextOutside = this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE
+    let isDrawYAxisTextOutside = this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE
     let textSize = this.tooltip.crossLine.text.size || this.tooltip.textSize
     let yAxisDataLabelWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', yAxisDataLabel)
     let halfLabelHeight = textSize
@@ -87,7 +90,7 @@ class TooltipChart extends Chart {
     let rectStrokeLineSize = this.tooltip.crossLine.text.rectStrokeLineSize
 
     if (isDrawYAxisTextOutside) {
-      if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
+      if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
         labelStartX = lineStartX - rectStrokeLineSize - crossTextMarginSpace * 2 - yAxisDataLabelWidth
       } else {
         labelStartX = lineEndX + rectStrokeLineSize + crossTextMarginSpace * 2
@@ -105,7 +108,7 @@ class TooltipChart extends Chart {
     }
 
     if ((!isDrawYAxisTextOutside && this.crossPoint.x > centerPoint.x) ||
-      (isDrawYAxisTextOutside && this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT)) {
+      (isDrawYAxisTextOutside && this.yAxis.yAxisPosition === YAxisPosition.LEFT)) {
       // 左边
       this.yAxisLabelStrokePathPoints[0] = { x: lineStartX, y: this.crossPoint.y }
       this.yAxisLabelStrokePathPoints[1] = {
@@ -148,7 +151,7 @@ class TooltipChart extends Chart {
     // 绘制十字光标垂直线
     canvas.lineWidth = this.tooltip.crossLine.size
     canvas.strokeStyle = this.tooltip.crossLine.color
-    if (this.tooltip.crossLine.style === Type.LineStyle.DASH) {
+    if (this.tooltip.crossLine.style === LineStyle.DASH) {
       canvas.setLineDash(this.tooltip.crossLine.dashValue)
     }
     canvas.beginPath()
@@ -222,7 +225,7 @@ class TooltipChart extends Chart {
       let indicatorChartYAxisDataMax = indicatorChartYAxis.axisMaximum
       let yData = (1 - (eventY - indicatorChartTop) / indicatorChartHeight) * (indicatorChartYAxisDataMax - indicatorChartYAxisDataMin) + indicatorChartYAxisDataMin
       let text = yData.toFixed(2)
-      if (this.indicatorChart.indicatorType === Type.IndicatorType.VOL) {
+      if (this.indicatorChart.indicatorType === IndicatorType.VOL) {
         text = yData.toFixed(0)
       }
       if (this.tooltip.crossLine.text.valueFormatter) {
@@ -242,7 +245,7 @@ class TooltipChart extends Chart {
     canvas.lineWidth = this.tooltip.crossLine.size
     canvas.strokeStyle = this.tooltip.crossLine.color
 
-    if (this.tooltip.crossLine.style === Type.LineStyle.DASH) {
+    if (this.tooltip.crossLine.style === LineStyle.DASH) {
       canvas.setLineDash(this.tooltip.crossLine.dashValue)
     }
 
@@ -352,215 +355,215 @@ class TooltipChart extends Chart {
    */
   drawIndicatorTooltip (canvas, startX, startY, kLineModel, indicatorType) {
     switch (indicatorType) {
-      case Type.IndicatorType.MA: {
+      case IndicatorType.MA: {
         let maData = kLineModel.ma
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [maData.ma5, maData.ma10, maData.ma20, maData.ma60],
           ['MA5', 'MA10', 'MA20', 'MA60'],
-          kLineModel, Type.IndicatorType.MA
+          kLineModel, IndicatorType.MA
         )
         break
       }
-      case Type.IndicatorType.MACD: {
+      case IndicatorType.MACD: {
         let macdData = kLineModel.macd
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [macdData.diff, macdData.dea, macdData.macd],
           ['DIFF', 'DEA', 'MACD'],
-          kLineModel, Type.IndicatorType.MACD
+          kLineModel, IndicatorType.MACD
         )
         break
       }
-      case Type.IndicatorType.VOL: {
+      case IndicatorType.VOL: {
         let volData = kLineModel.vol
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [volData.ma5, volData.ma10, volData.ma20, volData.num],
           ['MA5', 'MA10', 'MA20', 'VOLUME'],
-          kLineModel, Type.IndicatorType.VOL
+          kLineModel, IndicatorType.VOL
         )
         break
       }
-      case Type.IndicatorType.BOLL: {
+      case IndicatorType.BOLL: {
         let bollData = kLineModel.boll
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [bollData.up, bollData.mid, bollData.dn],
           ['UP', 'MID', 'DN'],
-          kLineModel, Type.IndicatorType.BOLL
+          kLineModel, IndicatorType.BOLL
         )
         break
       }
-      case Type.IndicatorType.BIAS: {
+      case IndicatorType.BIAS: {
         let biasData = kLineModel.bias
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [biasData.bias1, biasData.bias2, biasData.bias3],
           ['BIAS6', 'BIAS12', 'BIAS24'],
-          kLineModel, Type.IndicatorType.BIAS
+          kLineModel, IndicatorType.BIAS
         )
         break
       }
-      case Type.IndicatorType.BRAR: {
+      case IndicatorType.BRAR: {
         let brarData = kLineModel.brar
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [brarData.br, brarData.ar],
           ['BR', 'AR'],
-          kLineModel, Type.IndicatorType.BRAR
+          kLineModel, IndicatorType.BRAR
         )
         break
       }
-      case Type.IndicatorType.CCI: {
+      case IndicatorType.CCI: {
         let cciData = kLineModel.cci
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [cciData.cci],
           ['CCI'],
-          kLineModel, Type.IndicatorType.CCI
+          kLineModel, IndicatorType.CCI
         )
         break
       }
-      case Type.IndicatorType.CR: {
+      case IndicatorType.CR: {
         let crData = kLineModel.cr
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [crData.cr, crData.ma1, crData.ma2, crData.ma3, crData.ma4],
           ['CR', 'MA1', 'MA2', 'MA3', 'MA4'],
-          kLineModel, Type.IndicatorType.CR
+          kLineModel, IndicatorType.CR
         )
         break
       }
-      case Type.IndicatorType.DMA: {
+      case IndicatorType.DMA: {
         let dmaData = kLineModel.dma
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [dmaData.dif, dmaData.difMa],
           ['DIF', 'DIFMA'],
-          kLineModel, Type.IndicatorType.DMA
+          kLineModel, IndicatorType.DMA
         )
         break
       }
-      case Type.IndicatorType.DMI: {
+      case IndicatorType.DMI: {
         let dmiData = kLineModel.dmi
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [dmiData.mdi, dmiData.pdi, dmiData.adx, dmiData.adxr],
           ['MDI', 'PDI', 'ADX', 'ADXR'],
-          kLineModel, Type.IndicatorType.DMI
+          kLineModel, IndicatorType.DMI
         )
         break
       }
-      case Type.IndicatorType.KDJ: {
+      case IndicatorType.KDJ: {
         let kdjData = kLineModel.kdj
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [kdjData.k, kdjData.d, kdjData.j],
           ['K', 'D', 'J'],
-          kLineModel, Type.IndicatorType.KDJ
+          kLineModel, IndicatorType.KDJ
         )
         break
       }
-      case Type.IndicatorType.KD: {
+      case IndicatorType.KD: {
         let kdjData = kLineModel.kdj
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [kdjData.k, kdjData.d],
           ['K', 'D'],
-          kLineModel, Type.IndicatorType.KDJ
+          kLineModel, IndicatorType.KDJ
         )
         break
       }
-      case Type.IndicatorType.RSI: {
+      case IndicatorType.RSI: {
         let rsiData = kLineModel.rsi
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [rsiData.rsi1, rsiData.rsi2, rsiData.rsi3],
           ['RSI6', 'RSI12', 'RSI24'],
-          kLineModel, Type.IndicatorType.RSI
+          kLineModel, IndicatorType.RSI
         )
         break
       }
-      case Type.IndicatorType.PSY: {
+      case IndicatorType.PSY: {
         let psyData = kLineModel.psy
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [psyData.psy],
           ['PSY'],
-          kLineModel, Type.IndicatorType.PSY
+          kLineModel, IndicatorType.PSY
         )
         break
       }
-      case Type.IndicatorType.TRIX: {
+      case IndicatorType.TRIX: {
         let trixData = kLineModel.trix
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [trixData.trix, trixData.maTrix],
           ['TRIX', 'MATRIX'],
-          kLineModel, Type.IndicatorType.TRIX
+          kLineModel, IndicatorType.TRIX
         )
         break
       }
-      case Type.IndicatorType.OBV: {
+      case IndicatorType.OBV: {
         let obvData = kLineModel.obv
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [obvData.obv, obvData.maObv],
           ['OBV', 'MAOBV'],
-          kLineModel, Type.IndicatorType.OBV
+          kLineModel, IndicatorType.OBV
         )
         break
       }
-      case Type.IndicatorType.VR: {
+      case IndicatorType.VR: {
         let vrModel = kLineModel.vr
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [vrModel.vr, vrModel.maVr],
           ['VR', 'MAVR'],
-          kLineModel, Type.IndicatorType.VR
+          kLineModel, IndicatorType.VR
         )
         break
       }
-      case Type.IndicatorType.WR: {
+      case IndicatorType.WR: {
         let wrModel = kLineModel.wr
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [wrModel.wr1, wrModel.wr2, wrModel.wr3],
           ['WR1', 'WR2', 'WR3'],
-          kLineModel, Type.IndicatorType.WR
+          kLineModel, IndicatorType.WR
         )
         break
       }
-      case Type.IndicatorType.MTM: {
+      case IndicatorType.MTM: {
         let mtmModel = kLineModel.mtm
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [mtmModel.mtm, mtmModel.mtmMa],
           ['MTM', 'MTMMA'],
-          kLineModel, Type.IndicatorType.MTM
+          kLineModel, IndicatorType.MTM
         )
         break
       }
 
-      case Type.IndicatorType.EMV: {
+      case IndicatorType.EMV: {
         let emvModel = kLineModel.emv
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [emvModel.emv, emvModel.maEmv],
           ['EMV', 'MAEMV'],
-          kLineModel, Type.IndicatorType.EMV
+          kLineModel, IndicatorType.EMV
         )
         break
       }
 
-      case Type.IndicatorType.SAR: {
+      case IndicatorType.SAR: {
         let sarModel = kLineModel.sar
         this.drawIndicatorTooltipLabels(
           canvas, startX, startY,
           [sarModel.sar],
           ['SAR'],
-          kLineModel, Type.IndicatorType.SAR
+          kLineModel, IndicatorType.SAR
         )
         break
       }
@@ -583,7 +586,7 @@ class TooltipChart extends Chart {
       let value = values[i]
       let valueStr = '--'
       if (value || value === 0) {
-        if (indicatorType === Type.IndicatorType.VOL) {
+        if (indicatorType === IndicatorType.VOL) {
           valueStr = value.toFixed(0)
         } else {
           valueStr = value.toFixed(2)

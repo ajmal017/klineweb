@@ -1,5 +1,7 @@
 import AxisChart from './AxisChart'
-import Type from '../constant/Type'
+import { IndicatorType } from '../component/Indicator'
+import { YAxisPosition, YAxisTextPosition } from '../component/YAxis'
+import { LineStyle } from '../component/Component'
 
 class YAxisChart extends AxisChart {
   constructor (yAxis, dataBounds, viewPortHandler) {
@@ -17,7 +19,7 @@ class YAxisChart extends AxisChart {
     canvas.strokeStyle = this.yAxis.axisLine.color || this.yAxis.color
     canvas.lineWidth = this.yAxis.axisLine.size
     canvas.beginPath()
-    if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
+    if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
       canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
       canvas.lineTo(this.viewPortHandler.contentLeft(), this.chartTop + this.chartHeight)
     } else {
@@ -38,8 +40,8 @@ class YAxisChart extends AxisChart {
     }
 
     let initX
-    if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
-      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+    if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
+      if (this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE) {
         if (this.yAxis.display && this.yAxis.tickLine.display) {
           initX = this.viewPortHandler.contentLeft() - this.yAxis.tickLine.size * 2 - this.yAxis.tickText.margin * 2
         } else {
@@ -53,7 +55,7 @@ class YAxisChart extends AxisChart {
         }
       }
     } else {
-      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+      if (this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE) {
         if (this.yAxis.display && this.yAxis.tickLine.display) {
           initX = this.viewPortHandler.contentRight() + this.yAxis.tickLine.size * 2 + this.yAxis.tickText.margin * 2
         } else {
@@ -82,8 +84,8 @@ class YAxisChart extends AxisChart {
         label = formatter(this.values[i]) || '--'
       }
       if (this.checkShowLabel(labelY, labelHeight)) {
-        if ((this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT && this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) ||
-          (this.yAxis.yAxisPosition === Type.YAxisPosition.RIGHT && this.yAxis.tickText.position !== Type.YAxisTextPosition.OUTSIDE)) {
+        if ((this.yAxis.yAxisPosition === YAxisPosition.LEFT && this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE) ||
+          (this.yAxis.yAxisPosition === YAxisPosition.RIGHT && this.yAxis.tickText.position !== YAxisTextPosition.OUTSIDE)) {
           canvas.textAlign = 'right'
         } else {
           canvas.textAlign = 'left'
@@ -108,7 +110,7 @@ class YAxisChart extends AxisChart {
 
     let labelHeight = this.yAxis.tickText.size * 2
 
-    if (this.xAxis.separatorLine.style === Type.LineStyle.DASH) {
+    if (this.xAxis.separatorLine.style === LineStyle.DASH) {
       canvas.setLineDash(this.xAxis.separatorLine.dashValue)
     }
 
@@ -138,16 +140,16 @@ class YAxisChart extends AxisChart {
     let labelHeight = this.yAxis.tickText.size * 2
     let startX
     let endX
-    if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
+    if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
       startX = this.viewPortHandler.contentLeft()
-      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+      if (this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE) {
         endX = startX - this.yAxis.tickLine.size * 2
       } else {
         endX = startX + this.yAxis.tickLine.size * 2
       }
     } else {
       startX = this.viewPortHandler.contentRight()
-      if (this.yAxis.tickText.position === Type.YAxisTextPosition.OUTSIDE) {
+      if (this.yAxis.tickText.position === YAxisTextPosition.OUTSIDE) {
         endX = startX + this.yAxis.tickLine.size * 2
       } else {
         endX = startX - this.yAxis.tickLine.size * 2
@@ -220,7 +222,7 @@ class YAxisChart extends AxisChart {
    */
   calcIndexMinMax (model, indexType, minMaxArray) {
     switch (indexType) {
-      case Type.IndicatorType.MA: {
+      case IndicatorType.MA: {
         minMaxArray[0] = Math.min(model.ma.ma5, minMaxArray[0])
         minMaxArray[0] = Math.min(model.ma.ma10, minMaxArray[0])
         minMaxArray[0] = Math.min(model.ma.ma20, minMaxArray[0])
@@ -231,7 +233,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.ma.ma60, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.MACD: {
+      case IndicatorType.MACD: {
         minMaxArray[0] = Math.min(model.macd.dea, minMaxArray[0])
         minMaxArray[0] = Math.min(model.macd.diff, minMaxArray[0])
         minMaxArray[0] = Math.min(model.macd.macd, minMaxArray[0])
@@ -240,7 +242,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.macd.macd, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.VOL: {
+      case IndicatorType.VOL: {
         minMaxArray[0] = Math.min(model.vol.ma5, 0)
         minMaxArray[0] = Math.min(model.vol.ma10, 0)
         minMaxArray[0] = Math.min(model.vol.ma20, 0)
@@ -251,7 +253,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.vol.num, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.BOLL: {
+      case IndicatorType.BOLL: {
         minMaxArray[0] = Math.min(model.boll.up, minMaxArray[0])
         minMaxArray[0] = Math.min(model.boll.mid, minMaxArray[0])
         minMaxArray[0] = Math.min(model.boll.dn, minMaxArray[0])
@@ -262,7 +264,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.high, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.BIAS: {
+      case IndicatorType.BIAS: {
         minMaxArray[0] = Math.min(model.bias.bias1, minMaxArray[0])
         minMaxArray[0] = Math.min(model.bias.bias2, minMaxArray[0])
         minMaxArray[0] = Math.min(model.bias.bias3, minMaxArray[0])
@@ -271,19 +273,19 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.bias.bias3, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.BRAR: {
+      case IndicatorType.BRAR: {
         minMaxArray[0] = Math.min(model.brar.br, minMaxArray[0])
         minMaxArray[0] = Math.min(model.brar.ar, minMaxArray[0])
         minMaxArray[1] = Math.max(model.brar.br, minMaxArray[1])
         minMaxArray[1] = Math.max(model.brar.ar, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.CCI: {
+      case IndicatorType.CCI: {
         minMaxArray[0] = Math.min(model.cci.cci, minMaxArray[0])
         minMaxArray[1] = Math.max(model.cci.cci, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.CR: {
+      case IndicatorType.CR: {
         minMaxArray[0] = Math.min(model.cr.cr, minMaxArray[0])
         minMaxArray[0] = Math.min(model.cr.ma1, minMaxArray[0])
         minMaxArray[0] = Math.min(model.cr.ma2, minMaxArray[0])
@@ -296,14 +298,14 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.cr.ma4, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.DMA: {
+      case IndicatorType.DMA: {
         minMaxArray[0] = Math.min(model.dma.dif, minMaxArray[0])
         minMaxArray[0] = Math.min(model.dma.difMa, minMaxArray[0])
         minMaxArray[1] = Math.max(model.dma.dif, minMaxArray[1])
         minMaxArray[1] = Math.max(model.dma.difMa, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.DMI: {
+      case IndicatorType.DMI: {
         minMaxArray[0] = Math.min(model.dmi.pdi, minMaxArray[0])
         minMaxArray[0] = Math.min(model.dmi.mdi, minMaxArray[0])
         minMaxArray[0] = Math.min(model.dmi.adx, minMaxArray[0])
@@ -314,7 +316,7 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.dmi.adxr, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.KDJ: {
+      case IndicatorType.KDJ: {
         minMaxArray[0] = Math.min(model.kdj.k, minMaxArray[0])
         minMaxArray[0] = Math.min(model.kdj.d, minMaxArray[0])
         minMaxArray[0] = Math.min(model.kdj.j, minMaxArray[0])
@@ -323,14 +325,14 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.kdj.j, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.KD: {
+      case IndicatorType.KD: {
         minMaxArray[0] = Math.min(model.kdj.k, minMaxArray[0])
         minMaxArray[0] = Math.min(model.kdj.d, minMaxArray[0])
         minMaxArray[1] = Math.max(model.kdj.k, minMaxArray[1])
         minMaxArray[1] = Math.max(model.kdj.d, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.RSI: {
+      case IndicatorType.RSI: {
         minMaxArray[0] = Math.min(model.rsi.rsi1, minMaxArray[0])
         minMaxArray[0] = Math.min(model.rsi.rsi2, minMaxArray[0])
         minMaxArray[0] = Math.min(model.rsi.rsi3, minMaxArray[0])
@@ -339,33 +341,33 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.rsi.rsi3, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.PSY: {
+      case IndicatorType.PSY: {
         minMaxArray[0] = Math.min(model.psy.psy, minMaxArray[0])
         minMaxArray[1] = Math.max(model.psy.psy, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.TRIX: {
+      case IndicatorType.TRIX: {
         minMaxArray[0] = Math.min(model.trix.trix, minMaxArray[0])
         minMaxArray[0] = Math.min(model.trix.maTrix, minMaxArray[0])
         minMaxArray[1] = Math.max(model.trix.trix, minMaxArray[1])
         minMaxArray[1] = Math.max(model.trix.maTrix, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.OBV: {
+      case IndicatorType.OBV: {
         minMaxArray[0] = Math.min(model.obv.obv, minMaxArray[0])
         minMaxArray[0] = Math.min(model.obv.maObv, minMaxArray[0])
         minMaxArray[1] = Math.max(model.obv.obv, minMaxArray[1])
         minMaxArray[1] = Math.max(model.obv.maObv, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.VR: {
+      case IndicatorType.VR: {
         minMaxArray[0] = Math.min(model.vr.vr, minMaxArray[0])
         minMaxArray[0] = Math.min(model.vr.maVr, minMaxArray[0])
         minMaxArray[1] = Math.max(model.vr.vr, minMaxArray[1])
         minMaxArray[1] = Math.max(model.vr.maVr, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.WR: {
+      case IndicatorType.WR: {
         minMaxArray[0] = Math.min(model.wr.wr1, minMaxArray[0])
         minMaxArray[0] = Math.min(model.wr.wr2, minMaxArray[0])
         minMaxArray[0] = Math.min(model.wr.wr3, minMaxArray[0])
@@ -374,21 +376,21 @@ class YAxisChart extends AxisChart {
         minMaxArray[1] = Math.max(model.wr.wr3, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.MTM: {
+      case IndicatorType.MTM: {
         minMaxArray[0] = Math.min(model.mtm.mtm, minMaxArray[0])
         minMaxArray[0] = Math.min(model.mtm.mtmMa, minMaxArray[0])
         minMaxArray[1] = Math.max(model.mtm.mtm, minMaxArray[1])
         minMaxArray[1] = Math.max(model.mtm.mtmMa, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.EMV: {
+      case IndicatorType.EMV: {
         minMaxArray[0] = Math.min(model.emv.emv, minMaxArray[0])
         minMaxArray[0] = Math.min(model.emv.maEmv, minMaxArray[0])
         minMaxArray[1] = Math.max(model.emv.emv, minMaxArray[1])
         minMaxArray[1] = Math.max(model.emv.maEmv, minMaxArray[1])
         break
       }
-      case Type.IndicatorType.SAR: {
+      case IndicatorType.SAR: {
         minMaxArray[0] = Math.min(model.sar.sar, minMaxArray[0])
         minMaxArray[1] = Math.max(model.sar.sar, minMaxArray[1])
         minMaxArray[0] = Math.min(model.low, minMaxArray[0])

@@ -1,6 +1,6 @@
 import AxisChart from './AxisChart'
+import { LineStyle } from '../component/Component'
 import utils from '../utils/utils'
-import Type from '../constant/Type'
 
 class XAxisChart extends AxisChart {
   constructor (xAxis, dataBounds, viewPortHandler) {
@@ -83,7 +83,7 @@ class XAxisChart extends AxisChart {
     canvas.strokeStyle = this.xAxis.separatorLine.color || this.xAxis.color
     canvas.lineWidth = this.xAxis.separatorLine.size
 
-    if (this.xAxis.separatorLine.style === Type.LineStyle.DASH) {
+    if (this.xAxis.separatorLine.style === LineStyle.DASH) {
       canvas.setLineDash(this.xAxis.separatorLine.dashValue)
     }
     let positions = this.pointValuesToPixel()

@@ -1,19 +1,17 @@
 import React, { PureComponent } from 'react'
-import KLine from './kline/KLine'
-import Type from './kline/constant/Type'
+import kline, { ChartStyle, LineStyle, CandleStyle, YAxisPosition, YAxisTextPosition, IndicatorDisplayRule } from './kline/kline'
 
 class App extends PureComponent {
   componentDidMount () {
-    let kline = new KLine()
-    kline.init(document.getElementById('kline'))
-    kline.setConfig({
+    let chart = kline.init(document.getElementById('kline'))
+    chart.setConfig({
       common: {
         maxVisibleRange: 500,
         minVisibleRange: 20,
         defaultVisibleRange: 200
       },
       candle: {
-        chartType: Type.ChartStyle.CANDLE,
+        chartType: ChartStyle.CANDLE,
         timeChart: {
           timeLineSize: 1,
           timeLineColor: '#D8D8D8',
@@ -21,7 +19,7 @@ class App extends PureComponent {
           timeAverageLineColor: '#F5A623'
         },
         candleChart: {
-          candleStyle: Type.CandleStyle.SOLID,
+          candleStyle: CandleStyle.SOLID,
           increasingColor: '#5DB300',
           decreasingColor: '#FF4A4A'
         },
@@ -42,7 +40,7 @@ class App extends PureComponent {
         },
         lastPriceMark: {
           display: true,
-          lineStyle: Type.LineStyle.DASH,
+          lineStyle: LineStyle.DASH,
           dashValue: [8, 8],
           lineSize: 1,
           lineColor: '#B9B9B9'
@@ -80,13 +78,13 @@ class App extends PureComponent {
           display: false,
           size: 1,
           color: '#B8B8B8',
-          style: Type.LineStyle.DASH,
+          style: LineStyle.DASH,
           dashValue: [8, 8]
         }
       },
       yAxis: {
         display: true,
-        position: Type.YAxisPosition.LEFT,
+        position: YAxisPosition.LEFT,
         color: '#707070',
         maxWidth: 40,
         minWidth: 20,
@@ -97,7 +95,7 @@ class App extends PureComponent {
         },
         tickText: {
           display: true,
-          position: Type.YAxisTextPosition.OUTSIDE,
+          position: YAxisTextPosition.OUTSIDE,
           color: '#707070',
           size: 10,
           margin: 3,
@@ -112,7 +110,7 @@ class App extends PureComponent {
           display: false,
           size: 1,
           color: '#B8B8B8',
-          style: Type.LineStyle.DASH,
+          style: LineStyle.DASH,
           dashValue: [8, 8]
         }
       },
@@ -120,7 +118,7 @@ class App extends PureComponent {
         textSize: 12,
         textMargin: 20,
         crossLine: {
-          style: Type.LineStyle.SOLID,
+          style: LineStyle.SOLID,
           dashValue: [8, 8],
           size: 1,
           color: '#505050',
@@ -143,7 +141,7 @@ class App extends PureComponent {
           }
         },
         indicatorData: {
-          displayRule: Type.IndicatorDisplayRule.ALWAYS,
+          displayRule: IndicatorDisplayRule.ALWAYS,
           valueFormatter: null,
           text: {
             size: 12,
@@ -152,7 +150,7 @@ class App extends PureComponent {
         }
       }
     })
-    kline.setDataList(this.getData())
+    chart.setDataList(this.getData())
   }
 
   getData () {

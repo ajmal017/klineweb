@@ -1,11 +1,13 @@
 import IndicatorChart from './IndicatorChart'
-import Type from '../constant/Type'
+import { LineStyle } from '../component/Component'
+import { IndicatorType } from '../component/Indicator'
+import { ChartStyle, CandleStyle } from '../component/Candle'
 
 class CandleChart extends IndicatorChart {
   constructor (candle, indicator, yAxis, dataBounds, viewPortHandler) {
     super(indicator, null, yAxis, dataBounds, viewPortHandler)
     this.candle = candle
-    this.indicatorType = Type.IndicatorType.MA
+    this.indicatorType = IndicatorType.MA
     // 最高价标记数据
     this.highestMarkData = {}
     // 最低价标记数据
@@ -17,7 +19,7 @@ class CandleChart extends IndicatorChart {
    * @param canvas
    */
   draw (canvas) {
-    let isTimeLineChart = this.candle.chartStyle === Type.ChartStyle.TIME_LINE
+    let isTimeLineChart = this.candle.chartStyle === ChartStyle.TIME_LINE
     this.yAxisChart.getYAxisDataMinMax(this.indicatorType, true, isTimeLineChart)
     this.yAxisChart.drawSeparatorLines(canvas)
     this.yAxisChart.drawTickLines(canvas)
@@ -79,7 +81,7 @@ class CandleChart extends IndicatorChart {
         canvas.fillStyle = this.candle.candleChart.decreasingColor
       }
 
-      if (this.candle.candleChart.candleStyle !== Type.CandleStyle.OHLC) {
+      if (this.candle.candleChart.candleStyle !== CandleStyle.OHLC) {
         let highLine = []
         let lowLine = []
         if (openY > closeY) {
@@ -113,15 +115,15 @@ class CandleChart extends IndicatorChart {
         canvas.stroke()
         canvas.closePath()
         switch (this.candle.candleChart.candleStyle) {
-          case Type.CandleStyle.SOLID: {
+          case CandleStyle.SOLID: {
             canvas.fillRect(rect[0], rect[1], rect[2], rect[3])
             break
           }
-          case Type.CandleStyle.STROKE: {
+          case CandleStyle.STROKE: {
             canvas.strokeRect(rect[0], rect[1], rect[2], rect[3])
             break
           }
-          case Type.CandleStyle.INCREASING_STROKE: {
+          case CandleStyle.INCREASING_STROKE: {
             if (model.close > model.open) {
               canvas.strokeRect(rect[0], rect[1], rect[2], rect[3])
             } else {
@@ -129,7 +131,7 @@ class CandleChart extends IndicatorChart {
             }
             break
           }
-          case Type.CandleStyle.DECREASING_STROKE: {
+          case CandleStyle.DECREASING_STROKE: {
             if (model.close > model.open) {
               canvas.fillRect(rect[0], rect[1], rect[2], rect[3])
             } else {
@@ -255,7 +257,7 @@ class CandleChart extends IndicatorChart {
 
     canvas.strokeStyle = this.candle.lastPriceMark.lineColor
     canvas.lineWidth = this.candle.lastPriceMark.lineSize
-    if (this.candle.lastPriceMark.lineStyle === Type.LineStyle.DASH) {
+    if (this.candle.lastPriceMark.lineStyle === LineStyle.DASH) {
       canvas.setLineDash(this.candle.lastPriceMark.dashValue)
     }
     canvas.beginPath()

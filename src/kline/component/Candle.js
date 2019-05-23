@@ -1,11 +1,56 @@
-import Type from '../constant/Type'
+import { LineStyle } from './Component'
+
+/**
+ * 蜡烛图样式
+ */
+export const CandleStyle = {
+  /**
+   * 全实心
+   */
+  SOLID: 'solid',
+
+  /**
+   * 全空心
+   */
+  STROKE: 'stroke',
+
+  /**
+   * 涨空心
+   */
+  INCREASING_STROKE: 'increasing_stroke',
+
+  /**
+   * 跌空心
+   */
+  DECREASING_STROKE: 'decreasing_stroke',
+
+  /**
+   * 美国线
+   */
+  OHLC: 'ohlc'
+}
+
+/**
+ * 图表类型
+ */
+export const ChartStyle = {
+  /**
+   * 蜡烛图
+   */
+  CANDLE: 'candle',
+
+  /**
+   * 分时线
+   */
+  TIME_LINE: 'time_line'
+}
 
 class Candle {
   constructor () {
     /**
      * 图类型
      */
-    this.chartStyle = Type.ChartStyle.CANDLE
+    this.chartStyle = ChartStyle.CANDLE
 
     /**
      * 分时图配置
@@ -39,7 +84,7 @@ class Candle {
       /**
        * 蜡烛图样式
        */
-      candleStyle: Type.CandleStyle.OHLC,
+      candleStyle: CandleStyle.OHLC,
       /**
        * 上涨颜色
        */
@@ -90,7 +135,7 @@ class Candle {
      */
     this.lastPriceMark = {
       display: true,
-      lineStyle: Type.LineStyle.DASH,
+      lineStyle: LineStyle.DASH,
       dashValue: [8, 8],
       lineSize: 1,
       lineColor: '#B9B9B9'

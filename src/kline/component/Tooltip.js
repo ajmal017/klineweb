@@ -1,4 +1,23 @@
-import Type from '../constant/Type'
+import { LineStyle } from './Component'
+
+/**
+ * 指标提示显示规则
+ */
+export const IndicatorDisplayRule = {
+  /**
+   * 总是显示
+   */
+  ALWAYS: 'always',
+  /**
+   * 跟随十字光标显示
+   */
+  FOLLOW_CROSS: 'follow_cross',
+
+  /**
+   * 一直不显示
+   */
+  NONE: 'none'
+}
 
 class Tooltip {
   constructor () {
@@ -11,7 +30,7 @@ class Tooltip {
      * 光标线配置
      */
     this.crossLine = {
-      style: Type.LineStyle.SOLID,
+      style: LineStyle.SOLID,
       dashValue: [8, 8],
       size: 1,
       color: '#505050',
@@ -44,7 +63,7 @@ class Tooltip {
      * 指标数据显示配置
      */
     this.indicatorData = {
-      displayRule: Type.IndicatorDisplayRule.ALWAYS,
+      displayRule: IndicatorDisplayRule.ALWAYS,
       valueFormatter: null,
       text: {
         size: 12,

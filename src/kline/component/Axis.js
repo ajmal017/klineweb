@@ -1,4 +1,5 @@
-import Type from '../constant/Type'
+import { LineStyle } from './Component'
+import { YAxisTextPosition } from './YAxis'
 
 class Axis {
   constructor () {
@@ -25,7 +26,7 @@ class Axis {
      */
     this.tickText = {
       display: true,
-      position: Type.YAxisTextPosition.OUTSIDE,
+      position: YAxisTextPosition.OUTSIDE,
       color: '#707070',
       size: 12,
       margin: 3,
@@ -48,7 +49,7 @@ class Axis {
       display: false,
       size: 1,
       color: '#B8B8B8',
-      style: Type.LineStyle.DASH,
+      style: LineStyle.DASH,
       dashValue: [8, 8]
     }
   }

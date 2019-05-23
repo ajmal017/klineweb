@@ -1,22 +1,21 @@
-import ViewPortHandler from './internal/ViewPortHandler'
-import DataBounds from './internal/DataBounds'
-import CandleChart from './chart/CandleChart'
-import IndicatorChart from './chart/IndicatorChart'
-import XAxisChart from './chart/XAxisChart'
-import TooltipChart from './chart/TooltipChart'
-import YAxis from './component/YAxis'
-import XAxis from './component/XAxis'
-import Candle from './component/Candle'
-import Indicator from './component/Indicator'
-import Tooltip from './component/Tooltip'
+import ViewPortHandler from '../internal/ViewPortHandler'
+import DataBounds from '../internal/DataBounds'
+import CandleChart from './CandleChart'
+import IndicatorChart from './IndicatorChart'
+import XAxisChart from './XAxisChart'
+import TooltipChart from './TooltipChart'
+import YAxis, { YAxisPosition } from '../component/YAxis'
+import XAxis from '../component/XAxis'
+import Candle from '../component/Candle'
+import Indicator, { IndicatorType } from '../component/Indicator'
+import Tooltip from '../component/Tooltip'
 
-import MotionEvent from './internal/MotionEvent'
-import Type from './constant/Type'
-import * as IndicatorCalculation from './utils/indicatorCalculation'
+import MotionEvent from '../internal/MotionEvent'
+import * as IndicatorCalculation from '../utils/indicatorCalculation'
 
-class KLine {
-  constructor () {
-    this.rootDom = null
+class KLineChart {
+  constructor (dom) {
+    this.rootDom = dom
     this.domWidth = 0
     this.domHeight = 0
     this.canvas = null
@@ -29,7 +28,7 @@ class KLine {
     this.indicator = new Indicator()
     this.tooltip = new Tooltip()
     this.candleChart = new CandleChart(this.candle, this.indicator, this.yAxis, this.dataBounds, this.viewPortHandler)
-    this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler, Type.IndicatorType.VOL)
+    this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler, IndicatorType.VOL)
     this.indicatorChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.xAxisChart = new XAxisChart(this.xAxis, this.dataBounds, this.viewPortHandler)
     this.tooltipChart = new TooltipChart(
@@ -48,14 +47,14 @@ class KLine {
     this.isShouldCalcOffset = true
     // 是否需要计算图的高度
     this.isShouldCalcChartHeight = true
+    this.init()
   }
 
   /**
    * 初始化
    * @param dom
    */
-  init (dom) {
-    this.rootDom = dom
+  init () {
     this.canvasDom = document.createElement('canvas')
     this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
     this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
@@ -65,7 +64,7 @@ class KLine {
     this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
     // Firefox
     this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
-    dom.appendChild(this.canvasDom)
+    this.rootDom.appendChild(this.canvasDom)
     this.resize()
   }
 
@@ -266,7 +265,7 @@ class KLine {
     if (this.yAxis.needsOffset()) {
       // 计算y轴最大宽度
       let yAxisRequireWidthSpace = this.yAxis.getRequiredWidthSpace()
-      if (this.yAxis.yAxisPosition === Type.YAxisPosition.LEFT) {
+      if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
         offsetLeft += yAxisRequireWidthSpace
       } else {
         offsetRight += yAxisRequireWidthSpace
@@ -318,87 +317,87 @@ class KLine {
    */
   calcIndicator (indicatorType) {
     switch (indicatorType) {
-      case Type.IndicatorType.MA: {
+      case IndicatorType.MA: {
         this.dataBounds.dataList = IndicatorCalculation.calculationMa(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.MACD: {
+      case IndicatorType.MACD: {
         this.dataBounds.dataList = IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.VOL: {
+      case IndicatorType.VOL: {
         this.dataBounds.dataList = IndicatorCalculation.calculationVol(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.BOLL: {
+      case IndicatorType.BOLL: {
         this.dataBounds.dataList = IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.BIAS: {
+      case IndicatorType.BIAS: {
         this.dataBounds.dataList = IndicatorCalculation.calculationBias(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.BRAR: {
+      case IndicatorType.BRAR: {
         this.dataBounds.dataList = IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.CCI: {
+      case IndicatorType.CCI: {
         this.dataBounds.dataList = IndicatorCalculation.calculationCci(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.CR: {
+      case IndicatorType.CR: {
         this.dataBounds.dataList = IndicatorCalculation.calculationCr(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.DMA: {
+      case IndicatorType.DMA: {
         this.dataBounds.dataList = IndicatorCalculation.calculationDma(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.DMI: {
+      case IndicatorType.DMI: {
         this.dataBounds.dataList = IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.KDJ: {
+      case IndicatorType.KDJ: {
         this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.KD: {
+      case IndicatorType.KD: {
         this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.RSI: {
+      case IndicatorType.RSI: {
         this.dataBounds.dataList = IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.PSY: {
+      case IndicatorType.PSY: {
         this.dataBounds.dataList = IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.TRIX: {
+      case IndicatorType.TRIX: {
         this.dataBounds.dataList = IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.OBV: {
+      case IndicatorType.OBV: {
         this.dataBounds.dataList = IndicatorCalculation.calculationObv(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.VR: {
+      case IndicatorType.VR: {
         this.dataBounds.dataList = IndicatorCalculation.calculationVr(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.WR: {
+      case IndicatorType.WR: {
         this.dataBounds.dataList = IndicatorCalculation.calculationWr(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.MTM: {
+      case IndicatorType.MTM: {
         this.dataBounds.dataList = IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.EMV: {
+      case IndicatorType.EMV: {
         this.dataBounds.dataList = IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
         break
       }
-      case Type.IndicatorType.SAR: {
+      case IndicatorType.SAR: {
         this.dataBounds.dataList = IndicatorCalculation.calculationSar(this.dataBounds.dataList)
         break
       }
@@ -413,7 +412,7 @@ class KLine {
       this.calcIndicator(this.candleChart.indicatorType)
     }
     if (this.isDisplayVolChart()) {
-      this.calcIndicator(Type.IndicatorType.VOL)
+      this.calcIndicator(IndicatorType.VOL)
     }
     if (this.isDisplayIndicatorChart()) {
       this.calcIndicator(this.indicatorChart.indicatorType)
@@ -450,8 +449,8 @@ class KLine {
    */
   setSubIndicatorType (indicatorType) {
     if (this.indicatorChart.indicatorType !== indicatorType) {
-      let shouldCalcChartHeight = (this.isDisplayIndicatorChart() && indicatorType === Type.IndicatorType.NO) ||
-        (!this.isDisplayIndicatorChart() && indicatorType !== Type.IndicatorType.NO)
+      let shouldCalcChartHeight = (this.isDisplayIndicatorChart() && indicatorType === IndicatorType.NO) ||
+        (!this.isDisplayIndicatorChart() && indicatorType !== IndicatorType.NO)
       this.indicatorChart.indicatorType = indicatorType
       if (shouldCalcChartHeight) {
         this.isShouldCalcChartHeight = true
@@ -468,10 +467,10 @@ class KLine {
   setShowVolIndicatorChart (isShow) {
     if (this.isDisplayVolChart() !== isShow) {
       if (isShow) {
-        this.volChart.indicatorType = Indicator.IndicatorType.VOL
-        this.calcIndicator(Indicator.IndicatorType.VOL)
+        this.volChart.indicatorType = IndicatorType.VOL
+        this.calcIndicator(IndicatorType.VOL)
       } else {
-        this.volChart.indicatorType = Indicator.IndicatorType.NO
+        this.volChart.indicatorType = IndicatorType.NO
       }
       this.isShouldCalcChartHeight = true
       this.freshen()
@@ -487,4 +486,4 @@ class KLine {
   }
 }
 
-export default KLine
+export default KLineChart
