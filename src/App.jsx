@@ -95,7 +95,7 @@ class App extends PureComponent {
         },
         tickText: {
           display: true,
-          position: YAxisTextPosition.OUTSIDE,
+          position: YAxisTextPosition.INSIDE,
           color: '#707070',
           size: 10,
           margin: 3,

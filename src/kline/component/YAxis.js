@@ -74,6 +74,9 @@ class YAxis extends Axis {
       width += this.axisLine.size
     }
 
+    if (width === this.axisLine.size) {
+      return width
+    }
     let maxWidth = width
     if (maxWidth > 0) {
       maxWidth = this.yAxisMaxWidth * 2

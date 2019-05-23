@@ -1,5 +1,6 @@
 import ViewPortHandler from '../internal/ViewPortHandler'
 import DataBounds from '../internal/DataBounds'
+import GridChart from './GridChart'
 import CandleChart from './CandleChart'
 import IndicatorChart from './IndicatorChart'
 import XAxisChart from './XAxisChart'
@@ -9,6 +10,7 @@ import XAxis from '../component/XAxis'
 import Candle from '../component/Candle'
 import Indicator, { IndicatorType } from '../component/Indicator'
 import Tooltip from '../component/Tooltip'
+import Grid from '../component/Grid'
 
 import MotionEvent from '../internal/MotionEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
@@ -22,11 +24,13 @@ class KLineChart {
     this.canvasDom = null
     this.viewPortHandler = new ViewPortHandler()
     this.dataBounds = new DataBounds(this.viewPortHandler)
+    this.grid = new Grid()
     this.yAxis = new YAxis()
     this.xAxis = new XAxis()
     this.candle = new Candle()
     this.indicator = new Indicator()
     this.tooltip = new Tooltip()
+    this.gridChart = new GridChart(this.grid, this.dataBounds, this.viewPortHandler)
     this.candleChart = new CandleChart(this.candle, this.indicator, this.yAxis, this.dataBounds, this.viewPortHandler)
     this.volChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler, IndicatorType.VOL)
     this.indicatorChart = new IndicatorChart(this.indicator, this.xAxis, this.yAxis, this.dataBounds, this.viewPortHandler)
@@ -100,6 +104,16 @@ class KLineChart {
           common.defaultVisibleRange > this.dataBounds.minRange - 1 &&
           common.defaultVisibleRange < this.dataBounds.maxRange + 1) {
           this.dataBounds.range = common.defaultVisibleRange
+        }
+      }
+      let grid = config.grid
+      if (grid) {
+        this.grid.display = grid.display
+        if (grid.lineSize > 0) {
+          this.grid.lineSize = grid.lineSize
+        }
+        if (grid.lineColor) {
+          this.grid.lineColor = grid.lineColor
         }
       }
       let candle = common.candle
@@ -191,6 +205,7 @@ class KLineChart {
         }
         if (yAxis.tickText) {
           this.yAxis.tickText = { ...this.yAxis.tickText, ...yAxis.tickText }
+          this.isShouldCalcOffset = true
         }
         if (yAxis.tickLine) {
           this.yAxis.tickLine = { ...this.yAxis.tickLine, ...yAxis.tickLine }
@@ -261,7 +276,6 @@ class KLineChart {
     let offsetRight = 0
     let offsetTop = 0
     let offsetBottom = 0
-
     if (this.yAxis.needsOffset()) {
       // 计算y轴最大宽度
       let yAxisRequireWidthSpace = this.yAxis.getRequiredWidthSpace()
@@ -304,6 +318,7 @@ class KLineChart {
    */
   draw () {
     this.dataBounds.space()
+    this.gridChart.draw(this.canvas)
     this.xAxisChart.draw(this.canvas)
     this.candleChart.draw(this.canvas)
     this.volChart.draw(this.canvas)
