@@ -12,8 +12,8 @@ import Indicator, { IndicatorType } from '../component/Indicator'
 import Tooltip from '../component/Tooltip'
 import Grid from '../component/Grid'
 
-import MouseEvent from '../internal/MouseEvent'
-import TouchEvent from '../internal/TouchEvent'
+import MouseEvent from '../internal/event/MouseEvent'
+import TouchEvent from '../internal/event/TouchEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
 
 const isMobile = /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)

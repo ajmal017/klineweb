@@ -1,13 +1,12 @@
+import Event from './Event'
 const CROSS = 'cross'
 const DRAG = 'drag'
 
-class MouseEvent {
+class MouseEvent extends Event {
   constructor (kline, dataBounds, viewPortHandler) {
-    this.kline = kline
-    this.dataBounds = dataBounds
-    this.viewPortHandler = viewPortHandler
+    super(kline, dataBounds, viewPortHandler)
     // 事件模型
-    this.eventMode = CROSS
+    this.mouseMode = CROSS
     this.mouseDownPoint = { x: 0, y: 0 }
   }
 
@@ -20,7 +19,7 @@ class MouseEvent {
     if (!this.isValidEvent(point)) {
       return
     }
-    this.eventMode = DRAG
+    this.mouseMode = DRAG
     this.mouseDownPoint.x = e.x
     this.mouseDownPoint.y = e.y
     this.kline.tooltipChart.setCross(point.y, false)
@@ -36,7 +35,7 @@ class MouseEvent {
     if (!this.isValidEvent(point)) {
       return
     }
-    this.eventMode = CROSS
+    this.mouseMode = CROSS
     this.kline.tooltipChart.setCross(point.y, true)
     this.kline.freshen()
   }
@@ -58,7 +57,7 @@ class MouseEvent {
       this.kline.freshen()
       return
     }
-    if (this.eventMode === DRAG) {
+    if (this.mouseMode === DRAG) {
       let moveDist = e.x - this.mouseDownPoint.x
       if (moveDist > this.dataBounds.dataSpace / 2) {
         if (this.dataBounds.min === 0 || this.dataBounds.dataList.length < this.dataBounds.range) {
@@ -95,7 +94,7 @@ class MouseEvent {
         }
         this.kline.freshen()
       }
-    } else if (this.eventMode === CROSS) {
+    } else if (this.mouseMode === CROSS) {
       this.dataBounds.calcCurrentDataIndex(point.x)
       this.kline.tooltipChart.setCross(point.y, true)
       this.kline.freshen()
@@ -141,18 +140,6 @@ class MouseEvent {
       this.dataBounds.min = 0
     }
     this.kline.freshen()
-  }
-
-  /**
-   * 是否是有效事件
-   * @param point
-   * @returns {boolean}
-   */
-  isValidEvent (point) {
-    return !(point.x < this.viewPortHandler.contentLeft() ||
-      point.x > this.viewPortHandler.contentRight() ||
-      point.y < this.viewPortHandler.contentTop() ||
-      point.y > this.viewPortHandler.contentBottom())
   }
 
   /**

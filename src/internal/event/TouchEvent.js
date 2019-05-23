@@ -1,3 +1,4 @@
+import Event from './Event'
 /**
  * 无
  */
@@ -28,11 +29,9 @@ const TOUCH_CROSS = 4
  */
 const TOUCH_CROSS_CANCEL = 5
 
-class TouchEvent {
+class TouchEvent extends Event {
   constructor (kline, dataBounds, viewPortHandler) {
-    this.kline = kline
-    this.dataBounds = dataBounds
-    this.viewPortHandler = viewPortHandler
+    super(kline, dataBounds, viewPortHandler)
     // 事件模型
     this.touchMode = TOUCH_NO
     this.touchStartPoint = { x: 0, y: 0 }
@@ -287,18 +286,6 @@ class TouchEvent {
       clearTimeout(this.delayTimeout)
       this.delayTimeout = null
     }
-  }
-
-  /**
-   * 是否是有效事件
-   * @param point
-   * @returns {boolean}
-   */
-  isValidEvent (point) {
-    return !(point.x < this.viewPortHandler.contentLeft() ||
-      point.x > this.viewPortHandler.contentRight() ||
-      point.y < this.viewPortHandler.contentTop() ||
-      point.y > this.viewPortHandler.contentBottom())
   }
 
   /**
