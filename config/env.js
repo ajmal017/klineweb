@@ -30,7 +30,7 @@ function getClientEnvironment() {
       },
       {
         NODE_ENV: process.env.NODE_ENV || 'development',
-        VERSION: paths.version
+        K_LINE_CHARTS_VERSION: paths.version
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin

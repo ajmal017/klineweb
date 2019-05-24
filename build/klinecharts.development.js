@@ -868,15 +868,8 @@ let yAxisRequireWidthSpace=this.yAxis.getRequiredWidthSpace();if(this.yAxis.yAxi
    * @param isShow Boolean
    */setShowVolIndicatorChart(isShow){if(this.isDisplayVolChart()!==isShow){if(isShow){this.volChart.indicatorType=IndicatorType.VOL;this.calcIndicator(IndicatorType.VOL);}else{this.volChart.indicatorType=IndicatorType.NO;}this.isShouldCalcChartHeight=true;this.freshen();}}isDisplayVolChart(){return this.volChart.isDisplayChart();}isDisplayIndicatorChart(){return this.indicatorChart.isDisplayChart();}}/* harmony default export */ var chart_KLineChart = (KLineChart_KLineChart);
 // CONCATENATED MODULE: ./src/klinecharts.js
-/* concated harmony reexport LineStyle */__webpack_require__.d(__webpack_exports__, "LineStyle", function() { return LineStyle; });
-/* concated harmony reexport ChartStyle */__webpack_require__.d(__webpack_exports__, "ChartStyle", function() { return ChartStyle; });
-/* concated harmony reexport CandleStyle */__webpack_require__.d(__webpack_exports__, "CandleStyle", function() { return CandleStyle; });
-/* concated harmony reexport IndicatorType */__webpack_require__.d(__webpack_exports__, "IndicatorType", function() { return IndicatorType; });
-/* concated harmony reexport YAxisTextPosition */__webpack_require__.d(__webpack_exports__, "YAxisTextPosition", function() { return YAxisTextPosition; });
-/* concated harmony reexport YAxisPosition */__webpack_require__.d(__webpack_exports__, "YAxisPosition", function() { return YAxisPosition; });
-/* concated harmony reexport IndicatorDisplayRule */__webpack_require__.d(__webpack_exports__, "IndicatorDisplayRule", function() { return IndicatorDisplayRule; });
 const klinecharts={init(dom){return new chart_KLineChart(dom);},version(){return "1.0.0";}};/* harmony default export */ var src_klinecharts = __webpack_exports__["default"] = (klinecharts);
 
 /***/ })
-/******/ ]);
+/******/ ])["default"];
 });

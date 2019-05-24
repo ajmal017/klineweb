@@ -24,7 +24,7 @@ module.exports = function() {
     },
     output: {
       path: paths.appBuild,
-      // libraryExport: 'default',
+      libraryExport: 'default',
       filename: '[name].js',
       libraryTarget: 'umd',
       umdNamedDefine: true

@@ -12,7 +12,8 @@ config = {
     lineColor: '#707070'
   },
   candle: {
-    chartType: ChartStyle.CANDLE,
+    // 'candle'|'time_line'
+    chartType: 'candle',
     timeChart: {
       timeLineSize: 1,
       timeLineColor: '#D8D8D8',
@@ -20,7 +21,8 @@ config = {
       timeAverageLineColor: '#F5A623'
     },
     candleChart: {
-      candleStyle: CandleStyle.SOLID,
+      // 'solid'|'stroke'|'increasing_stroke'|'decreasing_stroke'|'ohlc'
+      candleStyle: 'solid',
       increasingColor: '#5DB300',
       decreasingColor: '#FF4A4A'
     },
@@ -41,7 +43,8 @@ config = {
     },
     lastPriceMark: {
       display: true,
-      lineStyle: LineStyle.DASH,
+      // 'solid'|'dash'
+      lineStyle: 'dash',
       dashValue: [8, 8],
       lineSize: 1,
       lineColor: '#B9B9B9'    
@@ -85,7 +88,8 @@ config = {
   },
   yAxis: {
     display: true,
-    position: YAxisPosition.LEFT,
+    // 'left'|'right'
+    position: 'left',
     color: '#707070',
     maxWidth: 40,
     minWidth: 20,
@@ -96,7 +100,8 @@ config = {
     },
     tickText: {
       display: true,
-      position: YAxisTextPosition.INSIDE,
+      // 'inside'|'outside'
+      position: 'inside',
       color: '#707070',
       size: 10,
       margin: 3,
@@ -111,14 +116,16 @@ config = {
       display: false,
       size: 1,
       color: '#B8B8B8',
-      style: LineStyle.DASH,
+      // 'solid'|'dash'
+      style: 'dash',
       dashValue: [8, 8]
     }
   },
   tooltip: {
     textSize: 12,
     crossLine: {
-      style: LineStyle.SOLID,
+       // 'solid'|'dash'
+      style: 'solid',
       dashValue: [8, 8],
       size: 1,
       color: '#505050',
@@ -143,7 +150,8 @@ config = {
         }
       },
       indicatorData: {
-        displayRule: IndicatorDisplayRule.ALWAYS,
+        // 'always'|'follow_cross'|'none'
+        displayRule: 'always',
         valueFormatter: null,
         text: {
           size: 12,
