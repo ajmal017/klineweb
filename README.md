@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/liihuu/klineweb.svg?branch=master)](https://travis-ci.org/liihuu/klineweb)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8cc3d651f78143bf8232cb4f7bfac7c2)](https://www.codacy.com/app/liihuu/klineweb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=liihuu/klineweb&amp;utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)  
-A klinecharts library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
+A kline library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
 ## Browser Support
 The library is built on canvas, and as long as the browser supports canvas, it is theoretically supported.The same is true of mobile browsers.
 ## Installing
