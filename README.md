@@ -31,6 +31,7 @@ chart.setCofig(config)
 ##### data
 ```js
 chart.setDataList(dataList)
+chart.addData(data, index)
 ```
 DataList is an array in which objects within an array need to contain open, close, high, low, timestamp, volume and turnover.
 

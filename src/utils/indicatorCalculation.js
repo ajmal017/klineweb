@@ -184,7 +184,6 @@ export function calculationBoll (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
