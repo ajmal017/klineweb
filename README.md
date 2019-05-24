@@ -93,7 +93,7 @@ chart.setSubIndicatorType(indicatorType)
 </table>
 
 ## Sample
-[https://liihuu.github.io/klinecharts](https://liihuu.github.io/kline)
+[https://liihuu.github.io/#/kline](https://liihuu.github.io/#/kline)
 
 ## License
 Copyright (c) 2019 lihu
