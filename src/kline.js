@@ -10,6 +10,9 @@ export { LineStyle, ChartStyle, CandleStyle, IndicatorType, YAxisTextPosition, Y
 const kline = {
   init (dom) {
     return new KLineChart(dom)
+  },
+  version () {
+    return process.env.VERSION
   }
 }
 export default kline

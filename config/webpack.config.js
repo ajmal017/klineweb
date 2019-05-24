@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const isWsl = require('is-wsl');
 const webpack = require('webpack');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
@@ -8,10 +7,12 @@ const TerserPlugin = require('terser-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const getClientEnvironment = require('./env');
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function() {
+  const env = getClientEnvironment();
   return {
     mode: 'production',
     bail: true,
@@ -144,6 +145,7 @@ module.exports = function() {
     },
     plugins: [
       new ModuleNotFoundPlugin(paths.appPath),
+      new webpack.DefinePlugin(env.stringified),
       // You can remove this if you don't use Moment.js:
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     ].filter(Boolean),

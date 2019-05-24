@@ -875,7 +875,7 @@ let yAxisRequireWidthSpace=this.yAxis.getRequiredWidthSpace();if(this.yAxis.yAxi
 /* concated harmony reexport YAxisTextPosition */__webpack_require__.d(__webpack_exports__, "YAxisTextPosition", function() { return YAxisTextPosition; });
 /* concated harmony reexport YAxisPosition */__webpack_require__.d(__webpack_exports__, "YAxisPosition", function() { return YAxisPosition; });
 /* concated harmony reexport IndicatorDisplayRule */__webpack_require__.d(__webpack_exports__, "IndicatorDisplayRule", function() { return IndicatorDisplayRule; });
-const kline={init(dom){return new chart_KLineChart(dom);}};/* harmony default export */ var src_kline = __webpack_exports__["default"] = (kline);
+const kline={init(dom){return new chart_KLineChart(dom);},version(){return "1.0.0";}};/* harmony default export */ var src_kline = __webpack_exports__["default"] = (kline);
 
 /***/ })
 /******/ ]);

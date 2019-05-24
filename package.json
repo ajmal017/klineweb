@@ -2,18 +2,27 @@
   "name": "kline",
   "version": "1.0.0",
   "description": "A kline library for browser",
-  "main": "./index.js",
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js",
+    "build/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/liihuu/klineweb"
   },
   "keywords": [
-    "canvas", "component", "kline", "time-line"
+    "canvas",
+    "component",
+    "kline",
+    "time-line"
   ],
   "author": "liihuu",
   "license": "MIT",
   "private": true,
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "7.4.3",
     "@svgr/webpack": "4.1.0",
     "@typescript-eslint/eslint-plugin": "1.6.0",
@@ -38,7 +47,6 @@
     "eslint-plugin-react-hooks": "^1.5.0",
     "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "7.0.1",
-    "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",
     "pnp-webpack-plugin": "1.2.1",
     "react-dev-utils": "^9.0.1",

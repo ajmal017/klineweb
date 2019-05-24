@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const getVersion = appPackageJson => require(appPackageJson).version;
 
 const moduleFileExtensions = [
   'web.mjs',
@@ -33,9 +34,9 @@ const resolveModule = (resolveFn, filePath) => {
   return resolveFn(`${filePath}.js`);
 };
 
-// config after eject: we're in ./config/
 module.exports = {
   appPath: resolveApp('.'),
+  version: getVersion(resolveApp('package.json')),
   appBuild: resolveApp('build'),
   appIndexJs: resolveModule(resolveApp, 'src/kline'),
   appPackageJson: resolveApp('package.json'),
