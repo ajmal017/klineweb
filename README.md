@@ -17,11 +17,6 @@ Using yarn:
 $ yarn add klinecharts
 ```
 
-Using cdn:
-
-```html
-<script src="https://unpkg.com/klinecharts/build/klinecharts.production.js"></script>
-```
 ## API
 ##### init
 ```js
