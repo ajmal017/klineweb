@@ -2,9 +2,9 @@
 [![Build Status](https://travis-ci.org/liihuu/klineweb.svg?branch=master)](https://travis-ci.org/liihuu/klineweb)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)  
 A kline library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
-##Browser Support
+## Browser Support
 The library is built on canvas, and as long as the browser supports canvas, it is theoretically supported.The same is true of mobile browsers.
-##Installing
+## Installing
 Using npm:
 
 ```bash
@@ -22,28 +22,28 @@ Using cdn:
 ```html
 <script src="https://unpkg.com/kline/build/kline.production.js"></script>
 ```
-##API
-#####init
+## API
+##### init
 ```js
 var chart= kline.init(document.getElementById('div'))
 ```
-#####config([details](./CONFIG-DETAIL.md))
+##### config([details](./CONFIG-DETAIL.md))
 ```js
 chart.setCofig(config)
 ```
 
-#####data
+##### data
 ```js
 chart.setDataList(dataList)
 ```
 DataList is an array in which objects within an array need to contain open, close, high, low, timestamp, volume and turnover.
 
-#####setting indicator
+##### setting indicator
 ```js
 chart.setMainIndicatorType(indicatorType)
 chart.setSubIndicatorType(indicatorType)
 ```
-##Indicator Support
+## Indicator Support
 <table>
     <tbody>
         <tr>
@@ -97,10 +97,10 @@ chart.setSubIndicatorType(indicatorType)
     </tbody>
 </table>
 
-##Sample
+## Sample
 [https://liihuu.github.io/kline](https://liihuu.github.io/kline)
 
-##License
+## License
 Copyright (c) 2019 lihu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
