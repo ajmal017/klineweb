@@ -21,7 +21,7 @@
   ],
   "author": "liihuu",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "devDependencies": {
     "@babel/core": "7.4.3",
     "@svgr/webpack": "4.1.0",
