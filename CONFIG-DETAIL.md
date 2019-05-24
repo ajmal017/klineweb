@@ -1,4 +1,4 @@
-##Configuration Details
+## Configuration Details
 ```js
 config = {
   common: {
