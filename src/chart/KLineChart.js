@@ -172,7 +172,9 @@ class KLineChart {
       }
       let xAxis = config.xAxis
       if (xAxis) {
-        this.xAxis.display = xAxis.display
+        if (xAxis.display !== null && xAxis.display !== undefined) {
+          this.xAxis.display = xAxis.display
+        }
         if (this.xAxis.color) {
           this.xAxis.color = xAxis.color
         }
@@ -197,7 +199,9 @@ class KLineChart {
       }
       let yAxis = config.yAxis
       if (yAxis) {
-        this.yAxis.display = yAxis.display
+        if (yAxis.display !== null && yAxis.display !== undefined) {
+          this.yAxis.display = yAxis.display
+        }
         if (yAxis.position) {
           this.yAxis.yAxisPosition = yAxis.position
           this.isShouldCalcOffset = true

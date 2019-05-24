@@ -662,15 +662,15 @@ export function calculationDmi (data) {
       adxr = sum1 / 2
 
       if (i >= 14) {
-        sumMax.remove(0)
-        sumMaxDmp.remove(0)
-        sumMaxDmm.remove(0)
+        sumMax.splice(0, 1)
+        sumMaxDmp.splice(0, 1)
+        sumMaxDmm.splice(0, 1)
       }
       if (i >= 19) {
-        sumAdx.remove(0)
+        sumAdx.splice(0, 1)
       }
       if (i >= 25) {
-        sumAdxr.remove(0)
+        sumAdxr.splice(0, 1)
       }
     }
     data[i].dmi = { pdi, mdi, adx, adxr }
@@ -822,25 +822,25 @@ export function calculationCr (data) {
     ma60List.push(ma60)
 
     if (i < 5) {
-      ma1 = ma10List.get(0)
+      ma1 = ma10List[0]
     } else {
       ma1 = ma10List[i - 5]
     }
 
     if (i < 9) {
-      ma2 = ma20List.get(0)
+      ma2 = ma20List[0]
     } else {
       ma2 = ma20List[i - 9]
     }
 
     if (i < 17) {
-      ma3 = ma40List.get(0)
+      ma3 = ma40List[0]
     } else {
       ma3 = ma40List[i - 17]
     }
 
     if (i < 25) {
-      ma4 = ma60List.get(0)
+      ma4 = ma60List[0]
     } else {
       ma4 = ma60List[i - 25]
     }
@@ -927,7 +927,7 @@ export function calculationDma (data) {
     if (i < 50) {
       ma50 = ma50s / (i + 1)
     } else {
-      ma50s -= data.get[i - 50].close
+      ma50s -= data[i - 50].close
       ma50 = ma50s / 50
     }
     dif = ma10 - ma50

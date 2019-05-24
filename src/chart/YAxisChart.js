@@ -110,8 +110,8 @@ class YAxisChart extends AxisChart {
 
     let labelHeight = this.yAxis.tickText.size * 2
 
-    if (this.xAxis.separatorLine.style === LineStyle.DASH) {
-      canvas.setLineDash(this.xAxis.separatorLine.dashValue)
+    if (this.yAxis.separatorLine.style === LineStyle.DASH) {
+      canvas.setLineDash(this.yAxis.separatorLine.dashValue)
     }
 
     for (let i = 0; i < this.values.length; i++) {

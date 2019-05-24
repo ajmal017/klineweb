@@ -82,7 +82,8 @@ config = {
       display: false,
       size: 1,
       color: '#B8B8B8',
-      style: LineStyle.DASH,
+      // 'solid'|'dash'
+      style: 'dash',
       dashValue: [8, 8]
     }
   },

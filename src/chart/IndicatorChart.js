@@ -132,7 +132,7 @@ class IndicatorChart extends Chart {
       }
 
       case IndicatorType.KD: {
-        this.drawLines(canvas, 'kd', ['k', 'd'])
+        this.drawLines(canvas, 'kdj', ['k', 'd'])
         break
       }
 
