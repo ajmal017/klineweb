@@ -1,5 +1,6 @@
 # KLineChart
 [![Build Status](https://travis-ci.org/liihuu/klineweb.svg?branch=master)](https://travis-ci.org/liihuu/klineweb)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8cc3d651f78143bf8232cb4f7bfac7c2)](https://www.codacy.com/app/liihuu/klineweb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=liihuu/klineweb&amp;utm_campaign=Badge_Grade)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)  
 A klinecharts library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
 ## Browser Support
@@ -20,7 +21,7 @@ $ yarn add klinecharts
 ## API
 ##### init
 ```js
-var chart= klinecharts.init(document.getElementById('div'))
+var chart = klinecharts.init(document.getElementById('div'))
 ```
 ##### config([details](./CONFIG-DETAIL.md))
 ```js

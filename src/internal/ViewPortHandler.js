@@ -68,7 +68,7 @@ class ViewPortHandler {
   }
 
   isInBoundsRight (x) {
-    let tx = (parseInt(x * 100)) / 100
+    let tx = (+(x * 100).toFixed(0)) / 100
     return this.contentRect.right >= tx - 1
   }
 }
