@@ -464,10 +464,12 @@ class KLineChart {
    * @param dataList
    */
   setDataList (dataList) {
-    this.dataBounds.dataList = dataList
-    this.dataBounds.moveToLast()
-    this.calcChartIndicator()
-    this.freshen()
+    if (dataList && Array.isArray(dataList)) {
+      this.dataBounds.dataList = dataList
+      this.dataBounds.moveToLast()
+      this.calcChartIndicator()
+      this.freshen()
+    }
   }
 
   /**
