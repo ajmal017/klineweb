@@ -1,5 +1,5 @@
 {
-  "name": "kline",
+  "name": "klinecharts",
   "version": "1.0.0",
   "description": "A kline library for browser",
   "main": "index.js",

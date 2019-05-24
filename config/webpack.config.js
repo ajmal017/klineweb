@@ -16,10 +16,11 @@ module.exports = function() {
   return {
     mode: 'production',
     bail: true,
-    devtool: 'source-map',
+    // devtool: 'source-map',
+    devtool: false,
     entry: {
-      'kline.production': paths.appIndexJs,
-      'kline.development': paths.appIndexJs
+      'klinecharts.production': paths.appIndexJs,
+      'klinecharts.development': paths.appIndexJs
     },
     output: {
       path: paths.appBuild,

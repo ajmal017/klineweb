@@ -7,7 +7,7 @@ import { IndicatorDisplayRule } from './component/Tooltip'
 
 export { LineStyle, ChartStyle, CandleStyle, IndicatorType, YAxisTextPosition, YAxisPosition, IndicatorDisplayRule }
 
-const kline = {
+const klinecharts = {
   init (dom) {
     return new KLineChart(dom)
   },
@@ -15,4 +15,4 @@ const kline = {
     return process.env.VERSION
   }
 }
-export default kline
+export default klinecharts

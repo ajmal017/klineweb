@@ -1,31 +1,31 @@
 # KLineChart
 [![Build Status](https://travis-ci.org/liihuu/klineweb.svg?branch=master)](https://travis-ci.org/liihuu/klineweb)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)  
-A kline library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
+A klinecharts library for browser. As with [Android KLineChart](https://github.com/liihuu/kline).
 ## Browser Support
 The library is built on canvas, and as long as the browser supports canvas, it is theoretically supported.The same is true of mobile browsers.
 ## Installing
 Using npm:
 
 ```bash
-$ npm install kline
+$ npm install klinecharts
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add kline
+$ yarn add klinecharts
 ```
 
 Using cdn:
 
 ```html
-<script src="https://unpkg.com/kline/build/kline.production.js"></script>
+<script src="https://unpkg.com/klinecharts/build/klinecharts.production.js"></script>
 ```
 ## API
 ##### init
 ```js
-var chart= kline.init(document.getElementById('div'))
+var chart= klinecharts.init(document.getElementById('div'))
 ```
 ##### config([details](./CONFIG-DETAIL.md))
 ```js
@@ -98,7 +98,7 @@ chart.setSubIndicatorType(indicatorType)
 </table>
 
 ## Sample
-[https://liihuu.github.io/kline](https://liihuu.github.io/kline)
+[https://liihuu.github.io/klinecharts](https://liihuu.github.io/kline)
 
 ## License
 Copyright (c) 2019 lihu

@@ -38,7 +38,7 @@ module.exports = {
   appPath: resolveApp('.'),
   version: getVersion(resolveApp('package.json')),
   appBuild: resolveApp('build'),
-  appIndexJs: resolveModule(resolveApp, 'src/kline'),
+  appIndexJs: resolveModule(resolveApp, 'src/klinecharts'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appJsConfig: resolveApp('jsconfig.json'),
