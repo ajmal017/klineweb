@@ -18,7 +18,6 @@ export function calculationMa (data) {
   let totalVolume = 0.0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     totalVolume += data[i].volume
     totalTurnover += (data[i].turnover || 0)
     if (totalVolume !== 0) {
@@ -80,7 +79,6 @@ export function calculationVol (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -144,7 +142,6 @@ export function calculationMacd (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -239,7 +236,6 @@ export function calculationKdj (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -305,7 +301,6 @@ export function calculationRsi (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -381,7 +376,6 @@ export function calculationBias (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -449,7 +443,6 @@ export function calculationBrar (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -515,7 +508,6 @@ export function calculationCci (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -605,7 +597,6 @@ export function calculationDmi (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -732,7 +723,6 @@ export function calculationCr (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -875,7 +865,6 @@ export function calculationPsy (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -917,7 +906,6 @@ export function calculationDma (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -991,7 +979,6 @@ export function calculationTrix (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1052,7 +1039,6 @@ export function calculationObv (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1098,7 +1084,6 @@ export function calculationVr (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1174,7 +1159,6 @@ export function calculationWr (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1285,7 +1269,6 @@ export function calculationMtm (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1336,7 +1319,6 @@ export function calculationEmv (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1390,7 +1372,6 @@ export function calculationSar (data) {
   let totalVolume = 0
 
   for (let i = 0; i < data.length; i++) {
-    checkData(data[i])
     let turnover = data[i].turnover
     totalVolume += data[i].volume
     totalTurnover += turnover
@@ -1496,22 +1477,4 @@ function getLow (list) {
     }
   }
   return low
-}
-
-/**
- * 检查数据是否合法
- * @param data
- */
-function checkData (data) {
-  if (typeof data !== 'object' ||
-    data.open === null || data.open === undefined ||
-    data.close === null || data.close === undefined ||
-    data.high === null || data.high === undefined ||
-    data.low === null || data.low === undefined ||
-    data.timestamp === null || data.timestamp === undefined ||
-    data.volume === null || data.volume === undefined ||
-    data.turnover === null || data.turnover === undefined
-  ) {
-    throw new Error('The data must be object and need to contain open, close, high, low, timestamp, volume, and turnover fields')
-  }
 }

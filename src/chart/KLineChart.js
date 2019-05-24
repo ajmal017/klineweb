@@ -460,16 +460,52 @@ class KLineChart {
   }
 
   /**
+   * 检查数据是否合法
+   * @param data
+   */
+  checkData (data) {
+    if (typeof data !== 'object' ||
+      data.open === null || data.open === undefined ||
+      data.close === null || data.close === undefined ||
+      data.high === null || data.high === undefined ||
+      data.low === null || data.low === undefined ||
+      data.timestamp === null || data.timestamp === undefined ||
+      data.volume === null || data.volume === undefined ||
+      data.turnover === null || data.turnover === undefined
+    ) {
+      throw new Error('The data must be object and need to contain open, close, high, low, timestamp, volume, and turnover fields')
+    }
+  }
+
+  /**
    * 设置数据
    * @param dataList
    */
   setDataList (dataList) {
     if (dataList && Array.isArray(dataList)) {
+      for (let i = 0; i < dataList.length; i++) {
+        this.checkData(dataList[i])
+      }
       this.dataBounds.dataList = dataList
       this.dataBounds.moveToLast()
       this.calcChartIndicator()
       this.freshen()
     }
+  }
+
+  /**
+   * 添加数据
+   * @param data
+   * @param index
+   */
+  addData (data, index = this.dataBounds.dataList.length) {
+    this.checkData(data)
+    this.dataBounds.dataList[index] = data
+    if (this.dataBounds.min + this.dataBounds.range >= this.dataBounds.dataList.length - 1) {
+      this.dataBounds.moveToLast()
+    }
+    this.calcChartIndicator()
+    this.freshen()
   }
 
   /**
