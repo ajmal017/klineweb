@@ -875,7 +875,7 @@ let yAxisRequireWidthSpace=this.yAxis.getRequiredWidthSpace();if(this.yAxis.yAxi
    * @param isShow Boolean
    */setShowVolIndicatorChart(isShow){if(this.isDisplayVolChart()!==isShow){if(isShow){this.volChart.indicatorType=IndicatorType.VOL;this.calcIndicator(IndicatorType.VOL);}else{this.volChart.indicatorType=IndicatorType.NO;}this.isShouldCalcChartHeight=true;this.freshen();}}isDisplayVolChart(){return this.volChart.isDisplayChart();}isDisplayIndicatorChart(){return this.indicatorChart.isDisplayChart();}}/* harmony default export */ var chart_KLineChart = (KLineChart_KLineChart);
 // CONCATENATED MODULE: ./src/klinecharts.js
-const klinecharts={init(dom){return new chart_KLineChart(dom);},version(){return "1.0.0";}};/* harmony default export */ var src_klinecharts = __webpack_exports__["default"] = (klinecharts);
+const klinecharts={init(dom){return new chart_KLineChart(dom);},version(){return "1.0.1";}};/* harmony default export */ var src_klinecharts = __webpack_exports__["default"] = (klinecharts);
 
 /***/ })
 /******/ ])["default"];
