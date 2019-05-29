@@ -69,12 +69,11 @@ class YAxisChart extends AxisChart {
         }
       }
     }
-
+    canvas.textBaseline = 'middle'
     canvas.font = this.yAxis.tickText.size * 2 + 'px Arial'
     canvas.fillStyle = this.yAxis.tickText.color || this.yAxis.color
 
     let labelHeight = this.yAxis.tickText.size * 2
-    let halfLabelHeight = labelHeight / 2
 
     let formatter = this.yAxis.tickText.valueFormatter
     for (let i = 0; i < this.values.length; i++) {
@@ -90,8 +89,7 @@ class YAxisChart extends AxisChart {
         } else {
           canvas.textAlign = 'left'
         }
-        let startY = labelY + halfLabelHeight
-        canvas.fillText(label, initX, startY)
+        canvas.fillText(label, initX, labelY)
       }
     }
     canvas.textAlign = 'left'

@@ -238,7 +238,8 @@ class CandleChart extends IndicatorChart {
     if (valueFormatter) {
       value = valueFormatter(price) + ''
     }
-    canvas.fillText(value, startX + 14, priceY + (isHigh ? -textSize : textSize * 2))
+    canvas.textBaseline = 'middle'
+    canvas.fillText(value, startX + 14, startY)
     canvas.restore()
   }
 

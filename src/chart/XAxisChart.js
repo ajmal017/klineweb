@@ -45,14 +45,13 @@ class XAxisChart extends AxisChart {
     if (!this.xAxis.display || !this.xAxis.tickText.display) {
       return
     }
-
+    canvas.textBaseline = 'top'
     canvas.font = this.xAxis.tickText.size * 2 + 'px Arial'
     canvas.textAlign = 'center'
     canvas.fillStyle = this.xAxis.tickText.color || this.xAxis.color
 
     let positions = this.pointValuesToPixel()
-    let labelHeight = this.xAxis.tickText.size * 2
-    let startY = this.viewPortHandler.contentBottom() + this.xAxis.tickText.margin * 2 + labelHeight
+    let startY = this.viewPortHandler.contentBottom() + this.xAxis.tickText.margin * 2
     if (this.display && this.xAxis.tickLine.display) {
       startY += this.xAxis.tickLine.size * 2
     }

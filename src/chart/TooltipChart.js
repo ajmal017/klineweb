@@ -40,25 +40,26 @@ class TooltipChart extends Chart {
         let textHeight = (this.tooltip.indicatorData.text.size || this.tooltip.textSize) * 2
         let startX = this.viewPortHandler.contentLeft() + 10
         canvas.font = textHeight + 'px Arial'
+        canvas.textBaseline = 'top'
         this.drawGeneralDataTooltip(canvas, startX, kLineModel)
         if (this.candle.chartStyle !== ChartStyle.TIME_LINE) {
           // 绘制主图的指标提示文字
           this.drawIndicatorTooltip(
             canvas, startX,
-            this.candleChart.chartTop + 10 + textHeight + 10 + (this.tooltip.generalData.text.size || this.tooltip.textSize) * 2,
+            this.candleChart.chartTop + 4 + textHeight + 10,
             kLineModel, this.candleChart.indicatorType
           )
         }
         // 绘制成交量指标提示文字
         this.drawIndicatorTooltip(
           canvas, startX,
-          this.volChart.chartTop + 4 + textHeight,
+          this.volChart.chartTop + 4,
           kLineModel, this.volChart.indicatorType
         )
         // 绘制副图指标提示文字
         this.drawIndicatorTooltip(
           canvas, startX,
-          this.indicatorChart.chartTop + 4 + textHeight,
+          this.indicatorChart.chartTop + 4,
           kLineModel, this.indicatorChart.indicatorType
         )
       }
@@ -79,7 +80,7 @@ class TooltipChart extends Chart {
     let yAxisDataLabelWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', yAxisDataLabel)
     let halfLabelHeight = textSize
     let labelStartX
-    let labelStartY = this.crossPoint.y + halfLabelHeight
+    let labelStartY = this.crossPoint.y
 
     let lineStartX = this.viewPortHandler.contentLeft()
     let lineEndX = this.viewPortHandler.contentRight()
@@ -148,7 +149,7 @@ class TooltipChart extends Chart {
       }
     }
 
-    // 绘制十字光标垂直线
+    // 绘制十字光标水平线
     canvas.lineWidth = this.tooltip.crossLine.size
     canvas.strokeStyle = this.tooltip.crossLine.color
     if (this.tooltip.crossLine.style === LineStyle.DASH) {
@@ -162,7 +163,7 @@ class TooltipChart extends Chart {
     canvas.setLineDash([])
 
     // 绘制y轴文字外的边框
-    canvas.fillStyle = this.tooltip.crossLine.rectFillColor
+    canvas.fillStyle = this.tooltip.crossLine.text.rectFillColor
     canvas.beginPath()
     canvas.moveTo(this.yAxisLabelStrokePathPoints[0].x, this.yAxisLabelStrokePathPoints[0].y)
     for (let i = 1; i < this.yAxisLabelStrokePathPoints.length; i++) {
@@ -171,8 +172,8 @@ class TooltipChart extends Chart {
     canvas.closePath()
     canvas.fill()
 
-    canvas.lineWidth = this.tooltip.crossLine.rectStrokeLineSize
-    canvas.strokeStyle = this.tooltip.crossLine.rectStrokeLineColor
+    canvas.lineWidth = this.tooltip.crossLine.text.rectStrokeLineSize
+    canvas.strokeStyle = this.tooltip.crossLine.text.rectStrokeLineColor
     canvas.beginPath()
     canvas.moveTo(this.yAxisLabelStrokePathPoints[0].x, this.yAxisLabelStrokePathPoints[0].y)
     for (let i = 1; i < this.yAxisLabelStrokePathPoints.length; i++) {
@@ -181,6 +182,7 @@ class TooltipChart extends Chart {
     canvas.closePath()
     canvas.stroke()
 
+    canvas.textBaseline = 'middle'
     canvas.fillStyle = this.tooltip.crossLine.text.color
     canvas.fillText(yAxisDataLabel, labelStartX, labelStartY)
   }
@@ -281,15 +283,16 @@ class TooltipChart extends Chart {
     canvas.fillRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
 
     canvas.lineWidth = rectStrokeLineSize
-    canvas.strokeStyle = this.tooltip.crossLine.rectStrokeLineColor
+    canvas.strokeStyle = this.tooltip.crossLine.text.rectStrokeLineColor
     canvas.strokeRect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop)
 
     // 绘制轴上的提示文字
+    canvas.textBaseline = 'top'
     canvas.fillStyle = this.tooltip.crossLine.text.color
     canvas.fillText(
       label,
       xAxisLabelX,
-      this.viewPortHandler.contentBottom() + textSize * 2 + rectStrokeLineSize + crossTextMarginSpace
+      this.viewPortHandler.contentBottom() + rectStrokeLineSize + crossTextMarginSpace
     )
   }
 
@@ -327,7 +330,7 @@ class TooltipChart extends Chart {
       let label = (labels[i] || '--') + ': '
       let labelWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', label)
       canvas.fillStyle = textColor
-      canvas.fillText(label, startX, textSize * 2 + 4)
+      canvas.fillText(label, startX, 4)
       startX += labelWidth
 
       let value = values[i] || '--'
@@ -340,7 +343,7 @@ class TooltipChart extends Chart {
         text = value
       }
       let textWidth = utils.calcTextWidth(textSize * 2 + 'px Arial', text)
-      canvas.fillText(text, startX, textSize * 2 + 4)
+      canvas.fillText(text, startX, 4)
       startX += textWidth + this.tooltip.generalData.text.margin
     }
   }
