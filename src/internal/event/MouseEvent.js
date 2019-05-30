@@ -1,4 +1,6 @@
 import Event from './Event'
+import { FRESHEN_CHART, FRESHEN_TOOLTIP } from '../../chart/KLineChart'
+
 const CROSS = 'cross'
 const DRAG = 'drag'
 
@@ -24,7 +26,7 @@ class MouseEvent extends Event {
     this.mouseDownPoint.x = e.x
     this.mouseDownPoint.y = e.y
     this.kline.tooltipChart.setCross(point.y, false)
-    this.kline.freshen()
+    this.kline.freshen(FRESHEN_TOOLTIP)
   }
 
   /**
@@ -39,14 +41,14 @@ class MouseEvent extends Event {
     }
     this.mouseMode = CROSS
     this.kline.tooltipChart.setCross(point.y, true)
-    this.kline.freshen()
+    this.kline.freshen(FRESHEN_TOOLTIP)
   }
 
   mouseLeave (e) {
     e.preventDefault()
     let point = this.getCanvasPoint(e)
     this.kline.tooltipChart.setCross(point.y, false)
-    this.kline.freshen()
+    this.kline.freshen(FRESHEN_TOOLTIP)
   }
 
   /**
@@ -58,7 +60,7 @@ class MouseEvent extends Event {
     let point = this.getCanvasPoint(e)
     if (!this.isValidEvent(point)) {
       this.kline.tooltipChart.setCross(point.y, false)
-      this.kline.freshen()
+      this.kline.freshen(FRESHEN_TOOLTIP)
       return
     }
     if (this.mouseMode === DRAG) {
@@ -79,7 +81,7 @@ class MouseEvent extends Event {
         if (this.dataBounds.min <= 0) {
           this.dataBounds.min = 0
         }
-        this.kline.freshen()
+        this.kline.freshen(FRESHEN_CHART)
       } else if (moveDist < 0 - this.dataBounds.dataSpace / 2) {
         if (this.dataBounds.min + this.dataBounds.range === this.dataBounds.dataList.length || this.dataBounds.dataList.length < this.dataBounds.range) {
           return false
@@ -101,7 +103,7 @@ class MouseEvent extends Event {
     } else if (this.mouseMode === CROSS) {
       this.dataBounds.calcCurrentDataIndex(point.x)
       this.kline.tooltipChart.setCross(point.y, true)
-      this.kline.freshen()
+      this.kline.freshen(FRESHEN_TOOLTIP)
     }
   }
 
@@ -144,19 +146,7 @@ class MouseEvent extends Event {
     if (this.dataBounds.min < 0) {
       this.dataBounds.min = 0
     }
-    this.kline.freshen()
-  }
-
-  /**
-   * 获取事件对应画布上的点
-   * @param e
-   * @returns {{x: number, y: number}}
-   */
-  getCanvasPoint (e) {
-    let rect = this.kline.tooltipCanvasDom.getBoundingClientRect()
-    let x = Math.round(e.clientX - rect.left)
-    let y = Math.round(e.clientY - rect.top)
-    return { x: x * 2, y: y * 2 }
+    this.kline.freshen(FRESHEN_CHART)
   }
 }
 

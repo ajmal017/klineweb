@@ -16,6 +16,18 @@ class Event {
       point.y < this.viewPortHandler.contentTop() ||
       point.y > this.viewPortHandler.contentBottom())
   }
+
+  /**
+   * 获取事件对应画布上的点
+   * @param e
+   * @returns {{x: number, y: number}}
+   */
+  getCanvasPoint (e) {
+    let rect = this.kline.tooltipCanvasDom.getBoundingClientRect()
+    let x = Math.round(e.clientX - rect.left)
+    let y = Math.round(e.clientY - rect.top)
+    return { x: x * 2, y: y * 2 }
+  }
 }
 
 export default Event

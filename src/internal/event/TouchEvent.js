@@ -64,14 +64,15 @@ class TouchEvent extends Event {
    */
   touchStart (e) {
     if (e.targetTouches.length === 1) {
-      this.touchStartPoint = { x: e.targetTouches[0].clientX * 2, y: e.targetTouches[0].clientY * 2 }
-      this.touchMovePoint = { x: e.targetTouches[0].clientX * 2, y: e.targetTouches[0].clientY * 2 }
+      let point = this.getCanvasPoint(e.targetTouches[0])
+      this.touchStartPoint = { x: point.x, y: point.y }
+      this.touchMovePoint = { x: point.x, y: point.y }
       if (!this.isValidEvent(this.touchStartPoint)) {
         return
       }
       if (this.touchMode === TOUCH_CROSS) {
         e.preventDefault()
-        let crossRadius = this.distance(e.targetTouches[0].clientX * 2, this.touchCrossPoint.x, e.targetTouches[0].clientY * 2, this.touchCrossPoint.y)
+        let crossRadius = this.distance(point.x, this.touchCrossPoint.x, point.y, this.touchCrossPoint.y)
         if (crossRadius < 10) {
           this.performCross(e)
         } else {
@@ -130,10 +131,11 @@ class TouchEvent extends Event {
         break
       }
       case TOUCH_NO: {
-        let distance = Math.abs(this.distance(e.targetTouches[0].clientX * 2, this.touchStartPoint.x, e.targetTouches[0].clientY * 2, this.touchStartPoint.y))
+        let point = this.getCanvasPoint(e.targetTouches[0])
+        let distance = Math.abs(this.distance(point.x, this.touchStartPoint.x, point.y, this.touchStartPoint.y))
         if (distance > 10) {
-          let distanceX = Math.abs(e.targetTouches[0].clientX * 2 - this.touchStartPoint.x)
-          let distanceY = Math.abs(e.targetTouches[0].clientY * 2 - this.touchStartPoint.y)
+          let distanceX = Math.abs(point.x - this.touchStartPoint.x)
+          let distanceY = Math.abs(point.y - this.touchStartPoint.y)
           if (distanceY <= distanceX) {
             e.preventDefault()
             this.kline.tooltipChart.setCross(0, false)
@@ -178,13 +180,14 @@ class TouchEvent extends Event {
    */
   performDrag (e) {
     // 左右滑动事件
-    let moveDist = e.targetTouches[0].clientX * 2 - this.touchMovePoint.x
+    let point = this.getCanvasPoint(e.targetTouches[0])
+    let moveDist = point.x - this.touchMovePoint.x
     if (moveDist < 0 - this.dataBounds.dataSpace / 2) {
       if (this.dataBounds.min + this.dataBounds.range === this.dataBounds.dataList.length || this.dataBounds.dataList.length < this.dataBounds.range) {
         return false
       }
 
-      this.touchMovePoint.x = e.targetTouches[0].clientX * 2
+      this.touchMovePoint.x = point.x
 
       let moveRange = +Math.abs(moveDist / this.dataBounds.dataSpace).toFixed(0)
       if (moveRange === 0) {
@@ -201,7 +204,7 @@ class TouchEvent extends Event {
         return false
       }
 
-      this.touchMovePoint.x = e.targetTouches[0].clientX * 2
+      this.touchMovePoint.x = point.x
 
       let moveRange = +Math.abs(moveDist / this.dataBounds.dataSpace).toFixed(0)
       if (moveRange === 0) {
@@ -267,7 +270,8 @@ class TouchEvent extends Event {
    * @returns {boolean}
    */
   performCross (e) {
-    this.touchCrossPoint = { x: e.targetTouches[0].clientX * 2, y: e.targetTouches[0].clientY * 2 }
+    let point = this.getCanvasPoint(e.targetTouches[0])
+    this.touchCrossPoint = { x: point.x, y: point.y }
     this.dataBounds.calcCurrentDataIndex(this.touchCrossPoint.x)
     this.kline.tooltipChart.setCross(this.touchCrossPoint.y, true)
     this.kline.freshen(FRESHEN_TOOLTIP)
@@ -313,8 +317,10 @@ class TouchEvent extends Event {
     if (e.targetTouches.length < 2) {
       return 0
     }
-    let x = Math.abs(e.targetTouches[0].clientX * 2 - e.targetTouches[1].clientX * 2)
-    let y = Math.abs(e.targetTouches[0].clientY * 2 - e.targetTouches[1].clientY * 2)
+    let point1 = this.getCanvasPoint(e.targetTouches[0])
+    let point2 = this.getCanvasPoint(e.targetTouches[1])
+    let x = Math.abs(point1.x - point2.x)
+    let y = Math.abs(point1.y - point2.y)
     return Math.sqrt(x * x + y * y)
   }
 
@@ -324,7 +330,9 @@ class TouchEvent extends Event {
    * @returns {number}
    */
   getXDist (e) {
-    return Math.abs(e.targetTouches[0].clientX * 2 - e.targetTouches[1].clientX * 2)
+    let point1 = this.getCanvasPoint(e.targetTouches[0])
+    let point2 = this.getCanvasPoint(e.targetTouches[1])
+    return Math.abs(point1.x - point2.y)
   }
 }
 

@@ -328,9 +328,7 @@ class KLineChart {
         offsetRight += yAxisRequireWidthSpace
       }
     }
-
-    let requireXAxisHeight = this.xAxis.getRequiredHeightSpace()
-    offsetBottom += requireXAxisHeight
+    offsetBottom += this.xAxis.getRequiredHeightSpace()
 
     this.viewPortHandler.restrainViewPort(
       offsetLeft, offsetTop, offsetRight, offsetBottom
