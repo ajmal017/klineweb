@@ -23,7 +23,7 @@ const FRESHEN_CANDLE_CHART = 'candle_chart'
 const FRESHEN_VOL_CHART = 'vol_chart'
 const FRESHEN_INDICATOR_CHART = 'indicator_chart'
 
-export { FRESHEN_ALL, FRESHEN_TOOLTIP, FRESHEN_CHART }
+export { FRESHEN_TOOLTIP, FRESHEN_CHART }
 
 const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|UCBrowser/i.test(navigator.userAgent)
 
@@ -106,6 +106,286 @@ class KLineChart {
     this.rootDom.appendChild(this.tooltipCanvasDom)
     this.tooltipCanvas = this.tooltipCanvasDom.getContext('2d')
     this.resize()
+  }
+
+  /**
+   * 计算图表高度
+   */
+  calcChartHeight (domHeight) {
+    let xChartHeight = this.xAxis.getRequiredHeightSpace()
+    let chartHeight = domHeight - xChartHeight
+    let isDisplayVolChart = this.volChart.isDisplayChart()
+    let isDisplayIndicatorChart = this.indicatorChart.isDisplayChart()
+    let volChartHeight = 0
+    let indicatorChartHeight = 0
+
+    if (isDisplayVolChart && isDisplayIndicatorChart) {
+      let height = chartHeight * 0.2
+      volChartHeight = height
+      indicatorChartHeight = height
+    } else if (isDisplayVolChart && !isDisplayIndicatorChart) {
+      volChartHeight = chartHeight * 0.3
+    } else if (!isDisplayVolChart && isDisplayIndicatorChart) {
+      indicatorChartHeight = chartHeight * 0.3
+    }
+
+    let candleChartHeight = chartHeight - volChartHeight - indicatorChartHeight
+    let contentTop = 0
+    this.candleChart.setChartDimens(candleChartHeight, contentTop)
+
+    contentTop += candleChartHeight
+    this.volChart.setChartDimens(volChartHeight, contentTop)
+
+    contentTop += volChartHeight
+    this.indicatorChart.setChartDimens(indicatorChartHeight, contentTop)
+
+    contentTop += indicatorChartHeight
+    this.xAxisChart.setChartDimens(xChartHeight, contentTop)
+  }
+
+  /**
+   * 计算不包括x轴y轴的绘制区域的尺寸
+   */
+  calcOffsets () {
+    let offsetLeft = 0
+    let offsetRight = 0
+    let offsetTop = 0
+    let offsetBottom = 0
+    if (this.yAxis.needsOffset()) {
+      // 计算y轴最大宽度
+      let yAxisRequireWidthSpace = this.yAxis.getRequiredWidthSpace()
+      if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
+        offsetLeft += yAxisRequireWidthSpace
+      } else {
+        offsetRight += yAxisRequireWidthSpace
+      }
+    }
+    offsetBottom += this.xAxis.getRequiredHeightSpace()
+
+    this.viewPortHandler.restrainViewPort(
+      offsetLeft, offsetTop, offsetRight, offsetBottom
+    )
+  }
+
+  /**
+   * 刷新
+   * @param freshenType 刷新类型
+   */
+  freshen (freshenType = FRESHEN_ALL) {
+    const rootDomWidth = this.rootDom.offsetWidth
+    const rootDomHeight = this.rootDom.offsetHeight
+    // 根据刷新类型来清空画布区域
+    switch (freshenType) {
+      case FRESHEN_CHART: {
+        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_TOOLTIP: {
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_ALL: {
+        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_CANDLE_CHART: {
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        this.chartCanvas.clearRect(0, this.candleChart.chartTop, rootDomWidth * 2, this.candleChart.chartHeight)
+        break
+      }
+      case FRESHEN_VOL_CHART: {
+        if (this.volChart.isDisplayChart()) {
+          this.chartCanvas.clearRect(0, this.volChart.chartTop, rootDomWidth * 2, this.volChart.chartHeight)
+        }
+        break
+      }
+      case FRESHEN_INDICATOR_CHART: {
+        if (this.indicatorChart.isDisplayChart()) {
+          this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+          this.chartCanvas.clearRect(0, this.indicatorChart.chartTop, rootDomWidth * 2, this.indicatorChart.chartHeight)
+        }
+        break
+      }
+    }
+
+    if (this.isShouldCalcChartHeight) {
+      this.calcChartHeight(rootDomHeight * 2)
+      this.isShouldCalcChartHeight = false
+    }
+    if (this.isShouldCalcOffset) {
+      this.chartCanvasDom.width = rootDomWidth * 2
+      this.chartCanvasDom.height = rootDomHeight * 2
+      this.chartCanvasDom.style.width = rootDomWidth + 'px'
+      this.chartCanvasDom.style.height = rootDomHeight + 'px'
+
+      this.tooltipCanvasDom.width = rootDomWidth * 2
+      this.tooltipCanvasDom.height = rootDomHeight * 2
+      this.tooltipCanvasDom.style.width = rootDomWidth + 'px'
+      this.tooltipCanvasDom.style.height = rootDomHeight + 'px'
+
+      this.viewPortHandler.setChartDimens(rootDomWidth * 2, rootDomHeight * 2)
+      this.calcOffsets()
+      this.isShouldCalcOffset = false
+    }
+    this.draw(freshenType)
+  }
+
+  /**
+   * 绘制图
+   */
+  draw (freshenType) {
+    this.dataBounds.space()
+    if (freshenType === FRESHEN_VOL_CHART) {
+      this.volChart.draw(this.chartCanvas)
+    } else if (freshenType === FRESHEN_INDICATOR_CHART) {
+      this.indicatorChart.draw(this.chartCanvas)
+      this.tooltipChart.draw(this.tooltipCanvas)
+    } else if (freshenType === FRESHEN_CANDLE_CHART) {
+      this.candleChart.draw(this.chartCanvas)
+      this.tooltipChart.draw(this.tooltipCanvas)
+    } else {
+      if (freshenType === FRESHEN_CHART || freshenType === FRESHEN_ALL) {
+        this.gridChart.draw(this.chartCanvas)
+        this.xAxisChart.draw(this.chartCanvas)
+        this.candleChart.draw(this.chartCanvas)
+        this.volChart.draw(this.chartCanvas)
+        this.indicatorChart.draw(this.chartCanvas)
+      }
+      if (freshenType === FRESHEN_TOOLTIP || freshenType === FRESHEN_ALL) {
+        this.tooltipChart.draw(this.tooltipCanvas)
+      }
+    }
+  }
+
+  /**
+   * 计算指标数据
+   * @param indicatorType Int
+   */
+  calcIndicator (indicatorType) {
+    switch (indicatorType) {
+      case IndicatorType.MA: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMa(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.MACD: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.VOL: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationVol(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.BOLL: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.BIAS: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBias(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.BRAR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.CCI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationCci(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.CR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationCr(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.DMA: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationDma(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.DMI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.KDJ: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.KD: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.RSI: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.PSY: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.TRIX: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.OBV: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationObv(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.VR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationVr(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.WR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationWr(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.MTM: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.EMV: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
+        break
+      }
+      case IndicatorType.SAR: {
+        this.dataBounds.dataList = IndicatorCalculation.calculationSar(this.dataBounds.dataList)
+        break
+      }
+    }
+  }
+
+  /**
+   * 计算各图指标
+   */
+  calcChartIndicator () {
+    let isDisplayCandleIndicator = this.candleChart.isDisplayChart()
+    let isDisplayVol = this.volChart.isDisplayChart()
+    let isDisplayIndicator = this.indicatorChart.isDisplayChart()
+    if (isDisplayCandleIndicator) {
+      this.calcIndicator(this.candleChart.indicatorType)
+    }
+    if (isDisplayVol) {
+      this.calcIndicator(IndicatorType.VOL)
+    }
+    if (isDisplayIndicator) {
+      this.calcIndicator(this.indicatorChart.indicatorType)
+    }
+    this.freshen()
+  }
+
+  /**
+   * 检查数据是否合法
+   * @param data
+   */
+  checkData (data) {
+    if (typeof data !== 'object' ||
+      data.open === null || data.open === undefined ||
+      data.close === null || data.close === undefined ||
+      data.high === null || data.high === undefined ||
+      data.low === null || data.low === undefined ||
+      data.timestamp === null || data.timestamp === undefined ||
+      data.volume === null || data.volume === undefined ||
+      data.turnover === null || data.turnover === undefined
+    ) {
+      throw new Error('The data must be object and need to contain open, close, high, low, timestamp, volume, and turnover fields')
+    }
   }
 
   /**
@@ -277,280 +557,6 @@ class KLineChart {
   }
 
   /**
-   * 计算图表高度
-   */
-  calcChartHeight (domHeight) {
-    let xChartHeight = this.xAxis.getRequiredHeightSpace()
-    let chartHeight = domHeight - xChartHeight
-    let isDisplayVolChart = this.volChart.isDisplayChart()
-    let isDisplayIndicatorChart = this.indicatorChart.isDisplayChart()
-    let volChartHeight = 0
-    let indicatorChartHeight = 0
-
-    if (isDisplayVolChart && isDisplayIndicatorChart) {
-      let height = chartHeight * 0.2
-      volChartHeight = height
-      indicatorChartHeight = height
-    } else if (isDisplayVolChart && !isDisplayIndicatorChart) {
-      volChartHeight = chartHeight * 0.3
-    } else if (!isDisplayVolChart && isDisplayIndicatorChart) {
-      indicatorChartHeight = chartHeight * 0.3
-    }
-
-    let candleChartHeight = chartHeight - volChartHeight - indicatorChartHeight
-    let contentTop = 0
-    this.candleChart.setChartDimens(candleChartHeight, contentTop)
-
-    contentTop += candleChartHeight
-    this.volChart.setChartDimens(volChartHeight, contentTop)
-
-    contentTop += volChartHeight
-    this.indicatorChart.setChartDimens(indicatorChartHeight, contentTop)
-
-    contentTop += indicatorChartHeight
-    this.xAxisChart.setChartDimens(xChartHeight, contentTop)
-  }
-
-  /**
-   * 计算不包括x轴y轴的绘制区域的尺寸
-   */
-  calcOffsets () {
-    let offsetLeft = 0
-    let offsetRight = 0
-    let offsetTop = 0
-    let offsetBottom = 0
-    if (this.yAxis.needsOffset()) {
-      // 计算y轴最大宽度
-      let yAxisRequireWidthSpace = this.yAxis.getRequiredWidthSpace()
-      if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
-        offsetLeft += yAxisRequireWidthSpace
-      } else {
-        offsetRight += yAxisRequireWidthSpace
-      }
-    }
-    offsetBottom += this.xAxis.getRequiredHeightSpace()
-
-    this.viewPortHandler.restrainViewPort(
-      offsetLeft, offsetTop, offsetRight, offsetBottom
-    )
-  }
-
-  /**
-   * 刷新
-   */
-  freshen (freshenType = FRESHEN_ALL) {
-    const rootDomWidth = this.rootDom.offsetWidth
-    const rootDomHeight = this.rootDom.offsetHeight
-    switch (freshenType) {
-      case FRESHEN_CHART: {
-        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-        break
-      }
-      case FRESHEN_TOOLTIP: {
-        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-        break
-      }
-      case FRESHEN_ALL: {
-        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-        break
-      }
-      case FRESHEN_CANDLE_CHART: {
-        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-        this.chartCanvas.clearRect(0, this.candleChart.chartTop, rootDomWidth * 2, this.candleChart.chartHeight)
-        break
-      }
-      case FRESHEN_VOL_CHART: {
-        if (this.volChart.isDisplayChart()) {
-          this.chartCanvas.clearRect(0, this.volChart.chartTop, rootDomWidth * 2, this.volChart.chartHeight)
-        }
-        break
-      }
-      case FRESHEN_INDICATOR_CHART: {
-        if (this.indicatorChart.isDisplayChart()) {
-          this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
-          this.chartCanvas.clearRect(0, this.indicatorChart.chartTop, rootDomWidth * 2, this.indicatorChart.chartHeight)
-        }
-      }
-    }
-
-    if (this.isShouldCalcChartHeight) {
-      this.calcChartHeight(rootDomHeight * 2)
-      this.isShouldCalcChartHeight = false
-    }
-    if (this.isShouldCalcOffset) {
-      this.chartCanvasDom.width = rootDomWidth * 2
-      this.chartCanvasDom.height = rootDomHeight * 2
-      this.chartCanvasDom.style.width = rootDomWidth + 'px'
-      this.chartCanvasDom.style.height = rootDomHeight + 'px'
-
-      this.tooltipCanvasDom.width = rootDomWidth * 2
-      this.tooltipCanvasDom.height = rootDomHeight * 2
-      this.tooltipCanvasDom.style.width = rootDomWidth + 'px'
-      this.tooltipCanvasDom.style.height = rootDomHeight + 'px'
-
-      this.viewPortHandler.setChartDimens(rootDomWidth * 2, rootDomHeight * 2)
-      this.calcOffsets()
-      this.isShouldCalcOffset = false
-    }
-    this.draw(freshenType)
-  }
-
-  /**
-   * 绘制图
-   */
-  draw (freshenType) {
-    this.dataBounds.space()
-    if (freshenType === FRESHEN_VOL_CHART) {
-      this.volChart.draw(this.chartCanvas)
-    } else if (freshenType === FRESHEN_INDICATOR_CHART) {
-      this.indicatorChart.draw(this.chartCanvas)
-      this.tooltipChart.draw(this.tooltipCanvas)
-    } else if (freshenType === FRESHEN_CANDLE_CHART) {
-      this.candleChart.draw(this.chartCanvas)
-      this.tooltipChart.draw(this.tooltipCanvas)
-    } else {
-      if (freshenType === FRESHEN_CHART || freshenType === FRESHEN_ALL) {
-        this.gridChart.draw(this.chartCanvas)
-        this.xAxisChart.draw(this.chartCanvas)
-        this.candleChart.draw(this.chartCanvas)
-        this.volChart.draw(this.chartCanvas)
-        this.indicatorChart.draw(this.chartCanvas)
-      }
-      if (freshenType === FRESHEN_TOOLTIP || freshenType === FRESHEN_ALL) {
-        this.tooltipChart.draw(this.tooltipCanvas)
-      }
-    }
-  }
-
-  /**
-   * 计算指标数据
-   * @param indicatorType Int
-   */
-  calcIndicator (indicatorType) {
-    switch (indicatorType) {
-      case IndicatorType.MA: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationMa(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.MACD: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.VOL: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationVol(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.BOLL: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.BIAS: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationBias(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.BRAR: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.CCI: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationCci(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.CR: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationCr(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.DMA: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationDma(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.DMI: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.KDJ: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.KD: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.RSI: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.PSY: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.TRIX: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.OBV: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationObv(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.VR: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationVr(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.WR: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationWr(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.MTM: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.EMV: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
-        break
-      }
-      case IndicatorType.SAR: {
-        this.dataBounds.dataList = IndicatorCalculation.calculationSar(this.dataBounds.dataList)
-        break
-      }
-    }
-  }
-
-  /**
-   * 计算各图指标
-   */
-  calcChartIndicator () {
-    if (this.candleChart.isDisplayChart()) {
-      this.calcIndicator(this.candleChart.indicatorType)
-    }
-    if (this.volChart.isDisplayChart()) {
-      this.calcIndicator(IndicatorType.VOL)
-    }
-    if (this.indicatorChart.isDisplayChart()) {
-      this.calcIndicator(this.indicatorChart.indicatorType)
-    }
-    this.freshen()
-  }
-
-  /**
-   * 检查数据是否合法
-   * @param data
-   */
-  checkData (data) {
-    if (typeof data !== 'object' ||
-      data.open === null || data.open === undefined ||
-      data.close === null || data.close === undefined ||
-      data.high === null || data.high === undefined ||
-      data.low === null || data.low === undefined ||
-      data.timestamp === null || data.timestamp === undefined ||
-      data.volume === null || data.volume === undefined ||
-      data.turnover === null || data.turnover === undefined
-    ) {
-      throw new Error('The data must be object and need to contain open, close, high, low, timestamp, volume, and turnover fields')
-    }
-  }
-
-  /**
    * 设置数据
    * @param dataList
    */
@@ -606,7 +612,7 @@ class KLineChart {
         this.isShouldCalcChartHeight = true
       }
       this.calcIndicator(indicatorType)
-      this.freshen(FRESHEN_INDICATOR_CHART)
+      this.freshen(this.isShouldCalcChartHeight ? FRESHEN_ALL : FRESHEN_INDICATOR_CHART)
     }
   }
 
