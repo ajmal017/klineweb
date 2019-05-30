@@ -1,4 +1,6 @@
 import Event from './Event'
+import { FRESHEN_CHART, FRESHEN_TOOLTIP } from '../../chart/KLineChart'
+
 /**
  * 无
  */
@@ -50,7 +52,7 @@ class TouchEvent extends Event {
           this.touchCrossPoint = { x: this.touchStartPoint.x, y: this.touchStartPoint.y }
           dataBounds.calcCurrentDataIndex(this.touchCrossPoint.x)
           this.kline.tooltipChart.setCross(this.touchCrossPoint.y, true)
-          this.kline.freshen()
+          this.kline.freshen(FRESHEN_TOOLTIP)
         }
       }
     }
@@ -75,7 +77,7 @@ class TouchEvent extends Event {
         } else {
           this.touchMode = TOUCH_CROSS_CANCEL
           this.kline.tooltipChart.setCross(0, false)
-          this.kline.freshen()
+          this.kline.freshen(FRESHEN_TOOLTIP)
         }
       } else {
         this.touchMode = TOUCH_NO
@@ -136,7 +138,7 @@ class TouchEvent extends Event {
             e.preventDefault()
             this.kline.tooltipChart.setCross(0, false)
             this.touchMode = TOUCH_DRAG
-            this.kline.freshen()
+            this.kline.freshen(FRESHEN_TOOLTIP)
           }
         }
         this.removeDelayActiveCross()
@@ -164,7 +166,7 @@ class TouchEvent extends Event {
         // 拿起
         this.touchMode = TOUCH_NO
         this.kline.tooltipChart.setCross(0, false)
-        this.kline.freshen()
+        this.kline.freshen(FRESHEN_TOOLTIP)
       }
     }
   }
@@ -193,7 +195,7 @@ class TouchEvent extends Event {
       if (this.dataBounds.min >= this.dataBounds.dataList.length - this.dataBounds.range) {
         this.dataBounds.min = this.dataBounds.dataList.length - this.dataBounds.range
       }
-      this.kline.freshen()
+      this.kline.freshen(FRESHEN_CHART)
     } else if (moveDist > this.dataBounds.dataSpace / 2) {
       if (this.dataBounds.min === 0 || this.dataBounds.dataList.length < this.dataBounds.range) {
         return false
@@ -210,7 +212,7 @@ class TouchEvent extends Event {
       if (this.dataBounds.min <= 0) {
         this.dataBounds.min = 0
       }
-      this.kline.freshen()
+      this.kline.freshen(FRESHEN_CHART)
     }
   }
 
@@ -254,7 +256,7 @@ class TouchEvent extends Event {
         if (this.dataBounds.min < 0) {
           this.dataBounds.min = 0
         }
-        this.kline.freshen()
+        this.kline.freshen(FRESHEN_CHART)
       }
     }
   }
@@ -268,7 +270,7 @@ class TouchEvent extends Event {
     this.touchCrossPoint = { x: e.targetTouches[0].clientX * 2, y: e.targetTouches[0].clientY * 2 }
     this.dataBounds.calcCurrentDataIndex(this.touchCrossPoint.x)
     this.kline.tooltipChart.setCross(this.touchCrossPoint.y, true)
-    this.kline.freshen()
+    this.kline.freshen(FRESHEN_TOOLTIP)
   }
 
   /**

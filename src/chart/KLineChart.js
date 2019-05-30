@@ -16,15 +16,24 @@ import MouseEvent from '../internal/event/MouseEvent'
 import TouchEvent from '../internal/event/TouchEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
 
+const FRESHEN_ALL = 'all'
+const FRESHEN_TOOLTIP = 'tooltip'
+const FRESHEN_CHART = 'chart'
+const FRESHEN_CANDLE_CHART = 'candle_chart'
+const FRESHEN_VOL_CHART = 'vol_chart'
+const FRESHEN_INDICATOR_CHART = 'indicator_chart'
+
+export { FRESHEN_ALL, FRESHEN_TOOLTIP, FRESHEN_CHART }
+
 const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|UCBrowser/i.test(navigator.userAgent)
 
 class KLineChart {
   constructor (dom) {
     this.rootDom = dom
-    this.domWidth = 0
-    this.domHeight = 0
-    this.canvas = null
-    this.canvasDom = null
+    this.chartCanvasDom = null
+    this.chartCanvas = null
+    this.tooltipCanvasDom = null
+    this.tooltipCanvas = null
     this.viewPortHandler = new ViewPortHandler()
     this.dataBounds = new DataBounds(this.viewPortHandler)
     this.grid = new Grid()
@@ -61,27 +70,41 @@ class KLineChart {
 
   /**
    * 初始化
-   * @param dom
    */
   init () {
-    this.canvasDom = document.createElement('canvas')
+    this.rootDom.style.position = 'relative'
+    this.chartCanvasDom = document.createElement('canvas')
+    this.chartCanvasDom.style.position = 'absolute'
+    this.chartCanvasDom.style.top = '0'
+    this.chartCanvasDom.style.right = '0'
+    this.chartCanvasDom.style.bottom = '0'
+    this.chartCanvasDom.style.left = '0'
+    this.tooltipCanvasDom = document.createElement('canvas')
+    this.tooltipCanvasDom.style.position = 'absolute'
+    this.tooltipCanvasDom.style.top = '0'
+    this.tooltipCanvasDom.style.right = '0'
+    this.tooltipCanvasDom.style.bottom = '0'
+    this.tooltipCanvasDom.style.left = '0'
     try {
       if (isMobile) {
-        this.canvasDom.addEventListener('touchstart', (e) => { this.motionEvent.touchStart(e) }, false)
-        this.canvasDom.addEventListener('touchmove', (e) => { this.motionEvent.touchMove(e) }, false)
-        this.canvasDom.addEventListener('touchend', (e) => { this.motionEvent.touchEnd(e) }, false)
+        this.tooltipCanvasDom.addEventListener('touchstart', (e) => { this.motionEvent.touchStart(e) }, false)
+        this.tooltipCanvasDom.addEventListener('touchmove', (e) => { this.motionEvent.touchMove(e) }, false)
+        this.tooltipCanvasDom.addEventListener('touchend', (e) => { this.motionEvent.touchEnd(e) }, false)
       } else {
-        this.canvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
-        this.canvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
-        this.canvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
-        this.canvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
+        this.tooltipCanvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
+        this.tooltipCanvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
+        this.tooltipCanvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
+        this.tooltipCanvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
         // IE9, Chrome, Safari, Opera
-        this.canvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
+        this.tooltipCanvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
         // Firefox
-        this.canvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
+        this.tooltipCanvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
       }
     } catch (e) {}
-    this.rootDom.appendChild(this.canvasDom)
+    this.rootDom.appendChild(this.chartCanvasDom)
+    this.chartCanvas = this.chartCanvasDom.getContext('2d')
+    this.rootDom.appendChild(this.tooltipCanvasDom)
+    this.tooltipCanvas = this.tooltipCanvasDom.getContext('2d')
     this.resize()
   }
 
@@ -90,10 +113,6 @@ class KLineChart {
    */
   resize () {
     this.isShouldCalcOffset = true
-    this.domWidth = this.rootDom.offsetWidth * 2
-    this.domHeight = this.rootDom.offsetHeight * 2
-    this.canvasDom.style.width = this.rootDom.offsetWidth + 'px'
-    this.canvasDom.style.height = this.rootDom.offsetHeight + 'px'
     this.freshen()
   }
 
@@ -263,8 +282,8 @@ class KLineChart {
   calcChartHeight (domHeight) {
     let xChartHeight = this.xAxis.getRequiredHeightSpace()
     let chartHeight = domHeight - xChartHeight
-    let isDisplayVolChart = this.isDisplayVolChart()
-    let isDisplayIndicatorChart = this.isDisplayIndicatorChart()
+    let isDisplayVolChart = this.volChart.isDisplayChart()
+    let isDisplayIndicatorChart = this.indicatorChart.isDisplayChart()
     let volChartHeight = 0
     let indicatorChartHeight = 0
 
@@ -321,33 +340,89 @@ class KLineChart {
   /**
    * 刷新
    */
-  freshen () {
-    this.canvasDom.width = this.domWidth
-    this.canvasDom.height = this.domHeight
-    this.canvas = this.canvasDom.getContext('2d')
+  freshen (freshenType = FRESHEN_ALL) {
+    const rootDomWidth = this.rootDom.offsetWidth
+    const rootDomHeight = this.rootDom.offsetHeight
+    switch (freshenType) {
+      case FRESHEN_CHART: {
+        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_TOOLTIP: {
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_ALL: {
+        this.chartCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        break
+      }
+      case FRESHEN_CANDLE_CHART: {
+        this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        this.chartCanvas.clearRect(0, this.candleChart.chartTop, rootDomWidth * 2, this.candleChart.chartHeight)
+        break
+      }
+      case FRESHEN_VOL_CHART: {
+        if (this.volChart.isDisplayChart()) {
+          this.chartCanvas.clearRect(0, this.volChart.chartTop, rootDomWidth * 2, this.volChart.chartHeight)
+        }
+        break
+      }
+      case FRESHEN_INDICATOR_CHART: {
+        if (this.indicatorChart.isDisplayChart()) {
+          this.tooltipCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+          this.chartCanvas.clearRect(0, this.indicatorChart.chartTop, rootDomWidth * 2, this.indicatorChart.chartHeight)
+        }
+      }
+    }
+
     if (this.isShouldCalcChartHeight) {
-      this.calcChartHeight(this.domHeight)
+      this.calcChartHeight(rootDomHeight * 2)
       this.isShouldCalcChartHeight = false
     }
     if (this.isShouldCalcOffset) {
-      this.viewPortHandler.setChartDimens(this.domWidth, this.domHeight)
+      this.chartCanvasDom.width = rootDomWidth * 2
+      this.chartCanvasDom.height = rootDomHeight * 2
+      this.chartCanvasDom.style.width = rootDomWidth + 'px'
+      this.chartCanvasDom.style.height = rootDomHeight + 'px'
+
+      this.tooltipCanvasDom.width = rootDomWidth * 2
+      this.tooltipCanvasDom.height = rootDomHeight * 2
+      this.tooltipCanvasDom.style.width = rootDomWidth + 'px'
+      this.tooltipCanvasDom.style.height = rootDomHeight + 'px'
+
+      this.viewPortHandler.setChartDimens(rootDomWidth * 2, rootDomHeight * 2)
       this.calcOffsets()
       this.isShouldCalcOffset = false
     }
-    this.draw()
+    this.draw(freshenType)
   }
 
   /**
-   * 绘制
+   * 绘制图
    */
-  draw () {
+  draw (freshenType) {
     this.dataBounds.space()
-    this.gridChart.draw(this.canvas)
-    this.xAxisChart.draw(this.canvas)
-    this.candleChart.draw(this.canvas)
-    this.volChart.draw(this.canvas)
-    this.indicatorChart.draw(this.canvas)
-    this.tooltipChart.draw(this.canvas)
+    if (freshenType === FRESHEN_VOL_CHART) {
+      this.volChart.draw(this.chartCanvas)
+    } else if (freshenType === FRESHEN_INDICATOR_CHART) {
+      this.indicatorChart.draw(this.chartCanvas)
+      this.tooltipChart.draw(this.tooltipCanvas)
+    } else if (freshenType === FRESHEN_CANDLE_CHART) {
+      this.candleChart.draw(this.chartCanvas)
+      this.tooltipChart.draw(this.tooltipCanvas)
+    } else {
+      if (freshenType === FRESHEN_CHART || freshenType === FRESHEN_ALL) {
+        this.gridChart.draw(this.chartCanvas)
+        this.xAxisChart.draw(this.chartCanvas)
+        this.candleChart.draw(this.chartCanvas)
+        this.volChart.draw(this.chartCanvas)
+        this.indicatorChart.draw(this.chartCanvas)
+      }
+      if (freshenType === FRESHEN_TOOLTIP || freshenType === FRESHEN_ALL) {
+        this.tooltipChart.draw(this.tooltipCanvas)
+      }
+    }
   }
 
   /**
@@ -450,10 +525,10 @@ class KLineChart {
     if (this.candleChart.isDisplayChart()) {
       this.calcIndicator(this.candleChart.indicatorType)
     }
-    if (this.isDisplayVolChart()) {
+    if (this.volChart.isDisplayChart()) {
       this.calcIndicator(IndicatorType.VOL)
     }
-    if (this.isDisplayIndicatorChart()) {
+    if (this.indicatorChart.isDisplayChart()) {
       this.calcIndicator(this.indicatorChart.indicatorType)
     }
     this.freshen()
@@ -516,7 +591,7 @@ class KLineChart {
     if (this.candleChart.indicatorType !== indicatorType) {
       this.candleChart.indicatorType = indicatorType
       this.calcIndicator(indicatorType)
-      this.freshen()
+      this.freshen(FRESHEN_CANDLE_CHART)
     }
   }
 
@@ -526,14 +601,14 @@ class KLineChart {
    */
   setSubIndicatorType (indicatorType) {
     if (this.indicatorChart.indicatorType !== indicatorType) {
-      let shouldCalcChartHeight = (this.isDisplayIndicatorChart() && indicatorType === IndicatorType.NO) ||
-        (!this.isDisplayIndicatorChart() && indicatorType !== IndicatorType.NO)
+      let shouldCalcChartHeight = (this.indicatorChart.isDisplayChart() && indicatorType === IndicatorType.NO) ||
+        (!this.indicatorChart.isDisplayChart() && indicatorType !== IndicatorType.NO)
       this.indicatorChart.indicatorType = indicatorType
       if (shouldCalcChartHeight) {
         this.isShouldCalcChartHeight = true
       }
       this.calcIndicator(indicatorType)
-      this.freshen()
+      this.freshen(FRESHEN_INDICATOR_CHART)
     }
   }
 
@@ -542,7 +617,7 @@ class KLineChart {
    * @param isShow Boolean
    */
   setShowVolIndicatorChart (isShow) {
-    if (this.isDisplayVolChart() !== isShow) {
+    if (this.volChart.isDisplayChart() !== isShow) {
       if (isShow) {
         this.volChart.indicatorType = IndicatorType.VOL
         this.calcIndicator(IndicatorType.VOL)
@@ -550,16 +625,8 @@ class KLineChart {
         this.volChart.indicatorType = IndicatorType.NO
       }
       this.isShouldCalcChartHeight = true
-      this.freshen()
+      this.freshen(FRESHEN_VOL_CHART)
     }
-  }
-
-  isDisplayVolChart () {
-    return this.volChart.isDisplayChart()
-  }
-
-  isDisplayIndicatorChart () {
-    return this.indicatorChart.isDisplayChart()
   }
 }
 

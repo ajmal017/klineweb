@@ -17,15 +17,17 @@ class IndicatorChart extends Chart {
   }
 
   draw (canvas) {
-    this.drawChartHorizontalSeparatorLine(canvas)
-    this.yAxisChart.getYAxisDataMinMax(this.indicatorType)
-    this.yAxisChart.drawSeparatorLines(canvas)
-    this.yAxisChart.drawTickLines(canvas)
+    if (this.isDisplayChart()) {
+      this.drawChartHorizontalSeparatorLine(canvas)
+      this.yAxisChart.getYAxisDataMinMax(this.indicatorType)
+      this.yAxisChart.drawSeparatorLines(canvas)
+      this.yAxisChart.drawTickLines(canvas)
 
-    this.drawIndicator(canvas)
+      this.drawIndicator(canvas)
 
-    this.yAxisChart.drawAxisLine(canvas)
-    this.yAxisChart.drawAxisLabels(canvas)
+      this.yAxisChart.drawAxisLine(canvas)
+      this.yAxisChart.drawAxisLabels(canvas)
+    }
   }
 
   /**
