@@ -59,7 +59,8 @@
     "workbox-webpack-plugin": "4.2.0"
   },
   "scripts": {
-    "publish": "node scripts/build.js && npm publish"
+    "publish": "node scripts/build.js && npm publish",
+    "build": "node scripts/build.js"
   },
   "browserslist": {
     "production": [

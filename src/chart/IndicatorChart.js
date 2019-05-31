@@ -35,13 +35,13 @@ class IndicatorChart extends Chart {
    * @param canvas
    */
   drawChartHorizontalSeparatorLine (canvas) {
+    canvas.strokeStyle = this.xAxis.axisLine.color || this.xAxis.color
     canvas.lineWidth = this.xAxis.axisLine.size
-    canvas.strokeStyle = this.xAxis.axisLine.color
     canvas.beginPath()
     canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
     canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop)
-    canvas.closePath()
     canvas.stroke()
+    canvas.closePath()
   }
 
   /**

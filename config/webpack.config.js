@@ -26,6 +26,7 @@ module.exports = function() {
       path: paths.appBuild,
       libraryExport: 'default',
       filename: '[name].js',
+      library: 'klinecharts',
       libraryTarget: 'umd',
       umdNamedDefine: true
     },

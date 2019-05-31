@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else {
-		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
+		define("klinecharts", [], factory);
+	else if(typeof exports === 'object')
+		exports["klinecharts"] = factory();
+	else
+		root["klinecharts"] = factory();
 })(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -878,7 +878,7 @@ switch(freshenType){case FRESHEN_CHART:{this.chartCanvas.clearRect(0,0,rootDomWi
    * @param isShow Boolean
    */setShowVolIndicatorChart(isShow){if(this.volChart.isDisplayChart()!==isShow){if(isShow){this.volChart.indicatorType=IndicatorType.VOL;this.calcIndicator(IndicatorType.VOL);}else{this.volChart.indicatorType=IndicatorType.NO;}this.isShouldCalcChartHeight=true;this.freshen(FRESHEN_VOL_CHART);}}}/* harmony default export */ var chart_KLineChart = (KLineChart_KLineChart);
 // CONCATENATED MODULE: ./src/klinecharts.js
-const klinecharts={init(dom){return new chart_KLineChart(dom);},version(){return "1.1.1";}};/* harmony default export */ var src_klinecharts = __webpack_exports__["default"] = (klinecharts);
+const klinecharts={IndicatorType: IndicatorType,LineStyle: LineStyle,YAxisTextPosition: YAxisTextPosition,YAxisPosition: YAxisPosition,CandleStyle: CandleStyle,ChartStyle: ChartStyle,IndicatorDisplayRule: IndicatorDisplayRule,init(dom){return new chart_KLineChart(dom);},version(){return "1.1.1";}};/* harmony default export */ var src_klinecharts = __webpack_exports__["default"] = (klinecharts);
 
 /***/ })
 /******/ ])["default"];
