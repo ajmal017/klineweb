@@ -28,6 +28,23 @@ class Event {
     let y = Math.round(e.clientY - rect.top)
     return { x: x * 2, y: y * 2 }
   }
+
+  /**
+   * 阻止事件
+   * @param e
+   */
+  stopEvent (e) {
+    if (e && e.stopPropagation) {
+      e.stopPropagation()
+    } else {
+      window.event.cancelBubble = true
+    }
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    } else {
+      window.event.returnValue = false
+    }
+  }
 }
 
 export default Event

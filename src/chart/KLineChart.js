@@ -74,38 +74,41 @@ class KLineChart {
   init () {
     this.rootDom.style.position = 'relative'
     this.chartCanvasDom = document.createElement('canvas')
-    this.chartCanvasDom.style.position = 'absolute'
-    this.chartCanvasDom.style.top = '0'
-    this.chartCanvasDom.style.right = '0'
-    this.chartCanvasDom.style.bottom = '0'
-    this.chartCanvasDom.style.left = '0'
+    this.initCanvas(this.chartCanvasDom)
+    this.chartCanvas = this.chartCanvasDom.getContext('2d')
     this.tooltipCanvasDom = document.createElement('canvas')
-    this.tooltipCanvasDom.style.position = 'absolute'
-    this.tooltipCanvasDom.style.top = '0'
-    this.tooltipCanvasDom.style.right = '0'
-    this.tooltipCanvasDom.style.bottom = '0'
-    this.tooltipCanvasDom.style.left = '0'
+    this.initCanvas(this.tooltipCanvasDom)
+    this.tooltipCanvas = this.tooltipCanvasDom.getContext('2d')
+
     try {
       if (isMobile) {
         this.tooltipCanvasDom.addEventListener('touchstart', (e) => { this.motionEvent.touchStart(e) }, false)
         this.tooltipCanvasDom.addEventListener('touchmove', (e) => { this.motionEvent.touchMove(e) }, false)
         this.tooltipCanvasDom.addEventListener('touchend', (e) => { this.motionEvent.touchEnd(e) }, false)
       } else {
-        this.tooltipCanvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) })
-        this.tooltipCanvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) })
-        this.tooltipCanvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) })
-        this.tooltipCanvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) })
+        this.tooltipCanvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) }, false)
+        this.tooltipCanvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) }, false)
+        this.tooltipCanvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) }, false)
+        this.tooltipCanvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) }, false)
         // IE9, Chrome, Safari, Opera
         this.tooltipCanvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
         // Firefox
         this.tooltipCanvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
       }
     } catch (e) {}
-    this.rootDom.appendChild(this.chartCanvasDom)
-    this.chartCanvas = this.chartCanvasDom.getContext('2d')
-    this.rootDom.appendChild(this.tooltipCanvasDom)
-    this.tooltipCanvas = this.tooltipCanvasDom.getContext('2d')
     this.resize()
+  }
+
+  /**
+   * 初始化画布
+   */
+  initCanvas (canvasDom) {
+    canvasDom.style.position = 'absolute'
+    canvasDom.style.top = '0'
+    canvasDom.style.right = '0'
+    canvasDom.style.bottom = '0'
+    canvasDom.style.left = '0'
+    this.rootDom.appendChild(canvasDom)
   }
 
   /**
@@ -422,7 +425,9 @@ class KLineChart {
       }
       let grid = config.grid
       if (grid) {
-        this.grid.display = grid.display
+        if (grid.display !== undefined) {
+          this.grid.display = grid.display
+        }
         if (grid.lineSize > 0) {
           this.grid.lineSize = grid.lineSize
         }

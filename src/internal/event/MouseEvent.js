@@ -17,16 +17,18 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseDown (e) {
-    e.preventDefault()
-    let point = this.getCanvasPoint(e)
-    if (!this.isValidEvent(point)) {
-      return
+    if (e.button === 0) {
+      let point = this.getCanvasPoint(e)
+      if (!this.isValidEvent(point)) {
+        return
+      }
+      this.stopEvent(e)
+      this.mouseMode = DRAG
+      this.mouseDownPoint.x = e.x
+      this.mouseDownPoint.y = e.y
+      this.kline.tooltipChart.setCross(point.y, false)
+      this.kline.freshen(FRESHEN_TOOLTIP)
     }
-    this.mouseMode = DRAG
-    this.mouseDownPoint.x = e.x
-    this.mouseDownPoint.y = e.y
-    this.kline.tooltipChart.setCross(point.y, false)
-    this.kline.freshen(FRESHEN_TOOLTIP)
   }
 
   /**
@@ -34,7 +36,7 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseUp (e) {
-    e.preventDefault()
+    this.stopEvent(e)
     let point = this.getCanvasPoint(e)
     if (!this.isValidEvent(point)) {
       return
@@ -45,7 +47,7 @@ class MouseEvent extends Event {
   }
 
   mouseLeave (e) {
-    e.preventDefault()
+    this.stopEvent(e)
     let point = this.getCanvasPoint(e)
     this.kline.tooltipChart.setCross(point.y, false)
     this.kline.freshen(FRESHEN_TOOLTIP)
@@ -56,13 +58,13 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseMove (e) {
-    e.preventDefault()
     let point = this.getCanvasPoint(e)
     if (!this.isValidEvent(point)) {
       this.kline.tooltipChart.setCross(point.y, false)
       this.kline.freshen(FRESHEN_TOOLTIP)
       return
     }
+    this.stopEvent(e)
     if (this.mouseMode === DRAG) {
       let moveDist = e.x - this.mouseDownPoint.x
       if (moveDist > this.dataBounds.dataSpace / 2) {
@@ -112,7 +114,11 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseWheel (e) {
-    e.preventDefault()
+    let point = this.getCanvasPoint(e)
+    if (!this.isValidEvent(point)) {
+      return
+    }
+    this.stopEvent(e)
     let touchStartPosition = this.dataBounds.min
     let touchRange = this.dataBounds.range
     let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)))

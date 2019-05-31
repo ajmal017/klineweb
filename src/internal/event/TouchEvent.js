@@ -71,7 +71,7 @@ class TouchEvent extends Event {
         return
       }
       if (this.touchMode === TOUCH_CROSS) {
-        e.preventDefault()
+        this.stopEvent(e)
         let crossRadius = this.distance(point.x, this.touchCrossPoint.x, point.y, this.touchCrossPoint.y)
         if (crossRadius < 10) {
           this.performCross(e)
@@ -90,7 +90,7 @@ class TouchEvent extends Event {
         return
       }
       if (this.touchMode !== TOUCH_CROSS) {
-        e.preventDefault()
+        this.stopEvent(e)
         this.savedDist = this.spacing(e)
         this.savedXDist = this.getXDist(e)
         if (this.savedDist > 3) {
@@ -112,17 +112,17 @@ class TouchEvent extends Event {
     }
     switch (this.touchMode) {
       case TOUCH_ZOOM: {
-        e.preventDefault()
+        this.stopEvent(e)
         this.performZoom(e)
         break
       }
       case TOUCH_DRAG: {
-        e.preventDefault()
+        this.stopEvent(e)
         this.performDrag(e)
         break
       }
       case TOUCH_CROSS: {
-        e.preventDefault()
+        this.stopEvent(e)
         this.performCross(e)
         break
       }
@@ -137,7 +137,7 @@ class TouchEvent extends Event {
           let distanceX = Math.abs(point.x - this.touchStartPoint.x)
           let distanceY = Math.abs(point.y - this.touchStartPoint.y)
           if (distanceY <= distanceX) {
-            e.preventDefault()
+            this.stopEvent(e)
             this.kline.tooltipChart.setCross(0, false)
             this.touchMode = TOUCH_DRAG
             this.kline.freshen(FRESHEN_TOOLTIP)
@@ -156,6 +156,7 @@ class TouchEvent extends Event {
     if (!this.isValidEvent(this.touchStartPoint)) {
       return
     }
+    this.stopEvent(e)
     if (e.targetTouches.length > 0) {
       if (this.touchMode === TOUCH_CROSS) {
         this.performCross(e)
