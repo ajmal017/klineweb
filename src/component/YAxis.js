@@ -64,7 +64,7 @@ class YAxis extends Axis {
   getRequiredWidthSpace () {
     let width = 0
     if (this.tickText.position === YAxisTextPosition.OUTSIDE) {
-      width += utils.calcTextWidth(this.tickText.size * 2, '0000000') + this.tickText.margin * 2
+      width += utils.calcTextWidth(`${this.tickText.size * 2}px Arial`, '0000000') + this.tickText.margin * 2
       if (this.display && this.tickLine.display) {
         width += this.tickLine.size * 2
       }

@@ -264,7 +264,7 @@ class KLineChart {
    * @param freshenType
    * @returns {Promise<void>}
    */
-  async calcIndicator (indicatorType, freshenType = FRESHEN_ALL) {
+  async calcIndicator (indicatorType, freshenType = FRESHEN_CHART) {
     try {
       switch (indicatorType) {
         case IndicatorType.MA: {
@@ -364,13 +364,13 @@ class KLineChart {
     let isDisplayVol = this.volChart.isDisplayChart()
     let isDisplayIndicator = this.indicatorChart.isDisplayChart()
     if (isDisplayCandleIndicator) {
-      this.calcIndicator(this.candleChart.indicatorType, FRESHEN_CANDLE_CHART)
+      this.calcIndicator(this.candleChart.indicatorType)
     }
     if (isDisplayVol) {
-      this.calcIndicator(IndicatorType.VOL, FRESHEN_VOL_CHART)
+      this.calcIndicator(IndicatorType.VOL)
     }
     if (isDisplayIndicator) {
-      this.calcIndicator(this.indicatorChart.indicatorType, FRESHEN_INDICATOR_CHART)
+      this.calcIndicator(this.indicatorChart.indicatorType)
     }
   }
 
@@ -572,7 +572,6 @@ class KLineChart {
       this.dataBounds.dataList = dataList
       this.dataBounds.moveToLast()
       this.calcChartIndicator()
-      this.freshen()
     }
   }
 
@@ -588,7 +587,6 @@ class KLineChart {
       this.dataBounds.moveToLast()
     }
     this.calcChartIndicator()
-    this.freshen()
   }
 
   /**
