@@ -31,12 +31,14 @@ class TooltipChart extends Chart {
           this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2
         canvas.font = (this.tooltip.crossLine.text.size || this.tooltip.textSize) * 2 + 'px Arial'
 
-        this.drawCrossHorizontalLine(canvas)
-        this.drawCrossVerticalLine(canvas, kLineModel)
+        if (this.tooltip.crossLine.display) {
+          this.drawCrossHorizontalLine(canvas)
+          this.drawCrossVerticalLine(canvas, kLineModel)
+        }
       }
 
       if (this.tooltip.indicatorData.displayRule === IndicatorDisplayRule.ALWAYS ||
-        (this.tooltip.indicatorData.displayRule === IndicatorDisplayRule.FOLLOW_CROSS && this.displayCross)) {
+        (this.tooltip.indicatorData.displayRule === IndicatorDisplayRule.FOLLOW_CROSS)) {
         let textHeight = (this.tooltip.indicatorData.text.size || this.tooltip.textSize) * 2
         let startX = this.viewPortHandler.contentLeft() + 10
         canvas.font = textHeight + 'px Arial'

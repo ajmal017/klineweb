@@ -17,12 +17,12 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseDown (e) {
+    this.stopEvent(e)
     if (e.button === 0) {
       let point = this.getCanvasPoint(e)
       if (!this.isValidEvent(point)) {
         return
       }
-      this.stopEvent(e)
       this.mouseMode = DRAG
       this.mouseDownPoint.x = e.x
       this.mouseDownPoint.y = e.y
@@ -58,13 +58,13 @@ class MouseEvent extends Event {
    * @param e
    */
   mouseMove (e) {
+    this.stopEvent(e)
     let point = this.getCanvasPoint(e)
     if (!this.isValidEvent(point)) {
       this.kline.tooltipChart.setCross(point.y, false)
       this.kline.freshen(FRESHEN_TOOLTIP)
       return
     }
-    this.stopEvent(e)
     if (this.mouseMode === DRAG) {
       let moveDist = e.x - this.mouseDownPoint.x
       if (moveDist > this.dataBounds.dataSpace / 2) {

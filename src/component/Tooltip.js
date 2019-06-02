@@ -30,6 +30,7 @@ class Tooltip {
      * 光标线配置
      */
     this.crossLine = {
+      display: true,
       style: LineStyle.SOLID,
       dashValue: [8, 8],
       size: 1,
