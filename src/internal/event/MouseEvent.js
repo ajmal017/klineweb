@@ -121,7 +121,7 @@ class MouseEvent extends Event {
     this.stopEvent(e)
     let touchStartPosition = this.dataBounds.min
     let touchRange = this.dataBounds.range
-    let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)))
+    let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.deltaY)))
     // 是否缩小
     let isZoomingOut = delta === 1
     let scaleX = 1

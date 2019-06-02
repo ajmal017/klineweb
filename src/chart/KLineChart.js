@@ -82,18 +82,31 @@ class KLineChart {
 
     try {
       if (isMobile) {
-        this.tooltipCanvasDom.addEventListener('touchstart', (e) => { this.motionEvent.touchStart(e) }, false)
-        this.tooltipCanvasDom.addEventListener('touchmove', (e) => { this.motionEvent.touchMove(e) }, false)
-        this.tooltipCanvasDom.addEventListener('touchend', (e) => { this.motionEvent.touchEnd(e) }, false)
+        this.tooltipCanvasDom.ontouchstart = (e) => {
+          this.motionEvent.touchStart(e)
+        }
+        this.tooltipCanvasDom.ontouchmove = (e) => {
+          this.motionEvent.touchMove(e)
+        }
+        this.tooltipCanvasDom.ontouchend = (e) => {
+          this.motionEvent.touchEnd(e)
+        }
       } else {
-        this.tooltipCanvasDom.addEventListener('mousedown', (e) => { this.motionEvent.mouseDown(e) }, false)
-        this.tooltipCanvasDom.addEventListener('mouseup', (e) => { this.motionEvent.mouseUp(e) }, false)
-        this.tooltipCanvasDom.addEventListener('mousemove', (e) => { this.motionEvent.mouseMove(e) }, false)
-        this.tooltipCanvasDom.addEventListener('mouseleave', (e) => { this.motionEvent.mouseLeave(e) }, false)
-        // IE9, Chrome, Safari, Opera
-        this.tooltipCanvasDom.addEventListener('mousewheel', (e) => { this.motionEvent.mouseWheel(e) }, false)
-        // Firefox
-        this.tooltipCanvasDom.addEventListener('DOMMouseScroll', (e) => { this.motionEvent.mouseWheel(e) }, false)
+        this.tooltipCanvasDom.onmousedown = (e) => {
+          this.motionEvent.mouseDown(e)
+        }
+        this.tooltipCanvasDom.onmouseup = (e) => {
+          this.motionEvent.mouseUp(e)
+        }
+        this.tooltipCanvasDom.onmousemove = (e) => {
+          this.motionEvent.mouseMove(e)
+        }
+        this.tooltipCanvasDom.onmouseleave = (e) => {
+          this.motionEvent.mouseLeave(e)
+        }
+        this.tooltipCanvasDom.onwheel = (e) => {
+          this.motionEvent.mouseWheel(e)
+        }
       }
     } catch (e) {}
     this.resize()
