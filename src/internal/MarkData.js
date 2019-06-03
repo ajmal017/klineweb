@@ -1,4 +1,4 @@
-export const DrawLineType = {
+export const MarkType = {
   /**
    * 无
    */
@@ -40,13 +40,19 @@ export const DrawLineType = {
   ARROW_LINE: 'arrow_line'
 }
 
-class DrawLineData {
+export const ActiveType = {
+  LINE: 'line',
+  POINT: 'point',
+  NONE: 'none'
+}
+
+class MarkData {
   constructor () {
-    this.drawingLineType = DrawLineType.NONE
+    this.markingType = MarkType.NONE
     // 开始绘制时的点
-    this.startDrawPoint = { x: 0, y: 0 }
-    // 正在绘制的线数据
-    this.drawingLineDatas = []
+    this.startMarkPoint = { x: 0, y: 0 }
+    // 正在绘制的数据
+    this.markingDatas = []
     // 绘制的水平线数据集合
     this.horizontalLineDatas = []
     // 绘制的垂直线数据集合
@@ -64,4 +70,4 @@ class DrawLineData {
   }
 }
 
-export default DrawLineData
+export default MarkData

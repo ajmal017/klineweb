@@ -5,18 +5,19 @@ import CandleChart from './CandleChart'
 import IndicatorChart from './IndicatorChart'
 import XAxisChart from './XAxisChart'
 import TooltipChart from './TooltipChart'
-import DrawLineChart from './DrawLineChart'
+import MarkChart from './MarkChart'
 import YAxis, { YAxisPosition } from '../component/YAxis'
 import XAxis from '../component/XAxis'
 import Candle from '../component/Candle'
 import Indicator, { IndicatorType } from '../component/Indicator'
 import Tooltip from '../component/Tooltip'
 import Grid from '../component/Grid'
-import DrawLineData from '../internal/DrawLineData'
+import Mark from '../component/Mark'
+import MarkData from '../internal/MarkData'
 
 import MouseEvent from '../internal/event/MouseEvent'
 import TouchEvent from '../internal/event/TouchEvent'
-import DrawLineEvent from '../internal/event/DrawLineEvent'
+import MarkEvent from '../internal/event/MarkEvent'
 import * as IndicatorCalculation from '../utils/indicatorCalculation'
 
 const FRESHEN_ALL = 'all'
@@ -36,8 +37,8 @@ class KLineChart {
     this.chartCanvas = null
     this.tooltipCanvasDom = null
     this.tooltipCanvas = null
-    this.drawLineCanvasDom = null
-    this.drawLineCanvas = null
+    this.markCanvasDom = null
+    this.markCanvas = null
     this.viewPortHandler = new ViewPortHandler()
     this.dataBounds = new DataBounds(this.viewPortHandler)
     this.grid = new Grid()
@@ -62,8 +63,9 @@ class KLineChart {
       this.dataBounds,
       this.viewPortHandler
     )
-    this.drawLineData = new DrawLineData()
-    this.drawLineChart = new DrawLineChart(this.drawLineData, this.dataBounds, this.viewPortHandler)
+    this.mark = new Mark()
+    this.markData = new MarkData()
+    this.markChart = new MarkChart(this.mark, this.markData, this.dataBounds, this.viewPortHandler)
     // 是否需要计算整个绘图区域的尺寸
     this.isShouldCalcOffset = true
     // 是否需要计算图的高度
@@ -79,9 +81,9 @@ class KLineChart {
     this.chartCanvasDom = document.createElement('canvas')
     this.initCanvas(this.chartCanvasDom)
     this.chartCanvas = this.chartCanvasDom.getContext('2d')
-    this.drawLineCanvasDom = document.createElement('canvas')
-    this.initCanvas(this.drawLineCanvasDom)
-    this.drawLineCanvas = this.drawLineCanvasDom.getContext('2d')
+    this.markCanvasDom = document.createElement('canvas')
+    this.initCanvas(this.markCanvasDom)
+    this.markCanvas = this.markCanvasDom.getContext('2d')
     this.tooltipCanvasDom = document.createElement('canvas')
     this.initCanvas(this.tooltipCanvasDom)
     this.tooltipCanvas = this.tooltipCanvasDom.getContext('2d')
@@ -121,15 +123,17 @@ class KLineChart {
         }
       } else {
         let motionEvent = new MouseEvent(this, this.dataBounds, this.viewPortHandler)
-        let drawLineEvent = new DrawLineEvent(this, this.drawLineData, this.dataBounds, this.viewPortHandler)
+        this.markEvent = new MarkEvent(this, this.markData, this.dataBounds, this.viewPortHandler)
         this.tooltipCanvasDom.onmousedown = (e) => {
           motionEvent.mouseDown(e)
+          this.markEvent.mouseDown(e)
         }
         this.tooltipCanvasDom.onmouseup = (e) => {
           motionEvent.mouseUp(e)
         }
         this.tooltipCanvasDom.onmousemove = (e) => {
           motionEvent.mouseMove(e)
+          this.markEvent.mouseMove(e)
         }
         this.tooltipCanvasDom.onmouseleave = (e) => {
           motionEvent.mouseLeave(e)
@@ -137,21 +141,23 @@ class KLineChart {
         this.tooltipCanvasDom.onwheel = (e) => {
           motionEvent.mouseWheel(e)
         }
-        this.drawLineCanvasDom.onmousedown = (e) => {
-          drawLineEvent.mouseDown(e)
+        this.tooltipCanvasDom.oncontextmenu = () => { return false }
+        this.markCanvasDom.onmousedown = (e) => {
+          this.markEvent.mouseDown(e)
         }
-        this.drawLineCanvasDom.onmouseup = (e) => {
-          drawLineEvent.mouseUp(e)
+        this.markCanvasDom.onmouseup = (e) => {
+          this.markEvent.mouseUp(e)
         }
-        this.drawLineCanvasDom.onmousemove = (e) => {
-          drawLineEvent.mouseMove(e)
+        this.markCanvasDom.onmousemove = (e) => {
+          this.markEvent.mouseMove(e)
         }
-        this.drawLineCanvasDom.onmouseleave = (e) => {
-          drawLineEvent.mouseLeave(e)
+        this.markCanvasDom.onmouseleave = (e) => {
+          this.markEvent.mouseLeave(e)
         }
-        this.drawLineCanvasDom.onwheel = (e) => {
-          drawLineEvent.mouseWheel(e)
+        this.markCanvasDom.onwheel = (e) => {
+          this.markEvent.mouseWheel(e)
         }
+        this.markCanvasDom.oncontextmenu = () => { return false }
       }
     } catch (e) {}
   }
@@ -269,7 +275,7 @@ class KLineChart {
         break
       }
       case FRESHEN_DRAW_LINE_CHART: {
-        this.drawLineCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
+        this.markCanvas.clearRect(0, 0, rootDomWidth * 2, rootDomHeight * 2)
       }
     }
   }
@@ -290,7 +296,7 @@ class KLineChart {
     }
     if (this.isShouldCalcOffset) {
       this.setCanvasDomSize(this.chartCanvasDom, rootDomWidth, rootDomHeight)
-      this.setCanvasDomSize(this.drawLineCanvasDom, rootDomWidth, rootDomHeight)
+      this.setCanvasDomSize(this.markCanvasDom, rootDomWidth, rootDomHeight)
       this.setCanvasDomSize(this.tooltipCanvasDom, rootDomWidth, rootDomHeight)
 
       this.viewPortHandler.setChartDimens(rootDomWidth * 2, rootDomHeight * 2)
@@ -314,7 +320,7 @@ class KLineChart {
       this.candleChart.draw(this.chartCanvas)
       this.tooltipChart.draw(this.tooltipCanvas)
     } else if (freshenType === FRESHEN_DRAW_LINE_CHART) {
-      this.drawLineChart.draw(this.drawLineCanvas)
+      this.markChart.draw(this.markCanvas)
     } else {
       if (freshenType === FRESHEN_CHART || freshenType === FRESHEN_ALL) {
         this.gridChart.draw(this.chartCanvas)
@@ -632,6 +638,22 @@ class KLineChart {
           this.tooltip.indicatorData = { ...this.tooltip.indicatorData, ...tooltip.indicatorData }
         }
       }
+      let mark = config.mark
+      if (mark) {
+        if (mark.line) {
+          if (mark.line.highlight) {
+            mark.line.highlight = { ...this.mark.line.highlight, ...mark.line.highlight }
+          }
+          this.mark.line = { ...this.mark.line, ...mark.line }
+        }
+        if (mark.point) {
+          if (mark.point.highlight) {
+            mark.point.highlight = { ...this.mark.point.highlight, ...mark.point.highlight }
+          }
+          this.mark.point = { ...this.mark.point, ...mark.point }
+        }
+      }
+
       this.freshen()
     }
   }
@@ -712,12 +734,10 @@ class KLineChart {
 
   /**
    * 绘制线
-   * @param lineType
+   * @param markingType
    */
-  drawLine (lineType) {
-    this.drawLineData.drawingLineType = lineType
-    this.drawLineData.drawingLineDatas = []
-    this.tooltipCanvasDom.style.display = 'none'
+  markLine (markingType) {
+    this.markEvent.drawLineStart(markingType)
   }
 }
 
