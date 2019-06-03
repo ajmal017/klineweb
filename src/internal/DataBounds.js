@@ -40,7 +40,7 @@ class DataBounds {
    * @param x
    */
   calcCurrentDataIndex (x) {
-    let range = +Math.ceil(x / this.dataSpace).toFixed(0)
+    let range = +Math.ceil((x - this.viewPortHandler.contentLeft()) / this.dataSpace).toFixed(0)
     this.currentDataPos = this.min + range - 1
   }
 }
