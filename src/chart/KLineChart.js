@@ -186,6 +186,7 @@ class KLineChart {
     let candleChartHeight = chartHeight - volChartHeight - indicatorChartHeight
     let contentTop = 0
     this.candleChart.setChartDimens(candleChartHeight, contentTop)
+    this.markChart.setChartDimens(candleChartHeight, contentTop)
 
     contentTop += candleChartHeight
     this.volChart.setChartDimens(volChartHeight, contentTop)

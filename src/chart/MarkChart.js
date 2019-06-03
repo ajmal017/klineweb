@@ -9,8 +9,20 @@ class MarkChart extends Chart {
   }
 
   draw (canvas) {
+    canvas.save()
+    canvas.beginPath()
+    canvas.rect(
+      this.viewPortHandler.contentLeft(),
+      this.chartTop,
+      this.viewPortHandler.contentRight() - this.viewPortHandler.contentLeft(),
+      this.chartHeight
+    )
+    canvas.closePath()
+    canvas.clip()
+
     this.drawStartPoint(canvas)
-    this.drawHorizontalLine(canvas)
+    this.drawHorizontalVerticalLine(canvas, this.markData.horizontalLineDatas, MarkType.HORIZONTAL_LINE)
+    this.drawHorizontalVerticalLine(canvas, this.markData.verticalLineDatas, MarkType.VERTICAL_LINE)
     this.drawVerticalLine(canvas)
   }
 
@@ -47,42 +59,51 @@ class MarkChart extends Chart {
   }
 
   /**
-   * 绘制水平直线
+   * 绘制垂直直线
    * @param canvas
    */
-  drawHorizontalLine (canvas) {
-    let horizontalLineDataLength = this.markData.horizontalLineDatas.length
-    for (let i = 0; i < horizontalLineDataLength; i++) {
-      let point = this.markData.horizontalLineDatas[i]
+  drawVerticalLine (canvas) {
+  }
+
+  /**
+   * 绘制水平直线
+   */
+  drawHorizontalVerticalLine (canvas, lineDatas, markType) {
+    let lineDataLength = lineDatas.length
+    for (let i = 0; i < lineDataLength; i++) {
+      let point = lineDatas[i]
       canvas.lineWidth = 1
       if (point.activeType === ActiveType.LINE || point.activeType === ActiveType.POINT) {
         this.drawPoint(canvas, point, point.activeType === ActiveType.POINT)
         canvas.strokeStyle = this.mark.line.highlight.color
       }
       canvas.beginPath()
-      canvas.moveTo(this.viewPortHandler.contentLeft(), point.y)
-      canvas.lineTo(this.viewPortHandler.contentRight(), point.y)
+      if (markType === MarkType.HORIZONTAL_LINE) {
+        canvas.moveTo(this.viewPortHandler.contentLeft(), point.y)
+        canvas.lineTo(this.viewPortHandler.contentRight(), point.y)
+      } else {
+        canvas.moveTo(point.x, this.viewPortHandler.contentTop())
+        canvas.lineTo(point.x, this.viewPortHandler.contentBottom())
+      }
       canvas.stroke()
       canvas.closePath()
     }
     let point = this.markData.markingDatas[0]
-    if (point && this.markData.markingType === MarkType.HORIZONTAL_LINE) {
+    if (point && this.markData.markingType === markType) {
       canvas.lineWidth = 1
       canvas.strokeStyle = this.mark.line.highlight.color
       canvas.beginPath()
-      canvas.moveTo(this.viewPortHandler.contentLeft(), point.y)
-      canvas.lineTo(this.viewPortHandler.contentRight(), point.y)
+      if (markType === MarkType.HORIZONTAL_LINE) {
+        canvas.moveTo(this.viewPortHandler.contentLeft(), point.y)
+        canvas.lineTo(this.viewPortHandler.contentRight(), point.y)
+      } else {
+        canvas.moveTo(point.x, this.viewPortHandler.contentTop())
+        canvas.lineTo(point.x, this.viewPortHandler.contentBottom())
+      }
       canvas.stroke()
       canvas.closePath()
       this.drawPoint(canvas, point, true)
     }
-  }
-
-  /**
-   * 绘制垂直直线
-   * @param canvas
-   */
-  drawVerticalLine (canvas) {
   }
 }
 
