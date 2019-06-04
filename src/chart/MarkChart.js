@@ -105,7 +105,7 @@ class MarkChart extends Chart {
    */
   drawLine (canvas) {
     let lineDataLength = this.markData.lineDatas.length
-    canvas.lineWidth = 2
+    canvas.lineWidth = 1
     canvas.strokeStyle = '#ffffff'
     for (let i = 0; i < lineDataLength; i++) {
       let lineData = this.markData.lineDatas[i]
@@ -115,6 +115,20 @@ class MarkChart extends Chart {
       canvas.lineTo(this.viewPortHandler.contentRight(), this.getY(this.viewPortHandler.contentRight(), points[0], points[1]))
       canvas.stroke()
       canvas.closePath()
+    }
+    let markingPointSize = this.markData.markingDatas.length
+    if (markingPointSize > 0 && this.markData.markingType === MarkType.LINE) {
+      if (markingPointSize === 1) {
+        this.drawPoint(canvas, this.markData.markingDatas[0], true)
+      } else {
+        this.drawPoint(canvas, this.markData.markingDatas[0], false)
+        this.drawPoint(canvas, this.markData.markingDatas[1], true)
+        canvas.beginPath()
+        canvas.moveTo(this.viewPortHandler.contentLeft(), this.getY(this.viewPortHandler.contentLeft(), this.markData.markingDatas[0], this.markData.markingDatas[1]))
+        canvas.lineTo(this.viewPortHandler.contentRight(), this.getY(this.viewPortHandler.contentRight(), this.markData.markingDatas[0], this.markData.markingDatas[1]))
+        canvas.stroke()
+        canvas.closePath()
+      }
     }
   }
 

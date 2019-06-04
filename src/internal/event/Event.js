@@ -23,7 +23,7 @@ class Event {
    * @returns {{x: number, y: number}}
    */
   getCanvasPoint (e) {
-    let rect = this.kline.tooltipCanvasDom.getBoundingClientRect()
+    let rect = this.kline.markCanvasDom.getBoundingClientRect()
     let x = Math.round(e.clientX - rect.left)
     let y = Math.round(e.clientY - rect.top)
     return { x: x * 2, y: y * 2 }

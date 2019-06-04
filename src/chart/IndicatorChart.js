@@ -375,14 +375,14 @@ class IndicatorChart extends Chart {
     canvas.closePath()
 
     canvas.beginPath()
-    canvas.moveTo(x - halfBarSpace, openY)
-    canvas.lineTo(x, openY)
+    canvas.moveTo(x - halfBarSpace, openY + 0.5)
+    canvas.lineTo(x, openY + 0.5)
     canvas.stroke()
     canvas.closePath()
 
     canvas.beginPath()
-    canvas.moveTo(x + halfBarSpace, closeY)
-    canvas.lineTo(x, closeY)
+    canvas.moveTo(x + halfBarSpace, closeY + 0.5)
+    canvas.lineTo(x, closeY + 0.5)
     canvas.stroke()
     canvas.closePath()
   }

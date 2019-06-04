@@ -43,6 +43,7 @@ class MarkEvent extends Event {
           this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
           return
         }
+        return
       }
       if (this.markData.markingDatas.length === 0) {
         this.markData.markingDatas[0] = point
