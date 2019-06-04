@@ -48,16 +48,18 @@ class MarkEvent extends Event {
         this.markData.markingDatas[0] = point
         this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
       } else if (this.markData.markingDatas.length === 1) {
-        switch (this.markData.markingType) {
-          case MarkType.HORIZONTAL_LINE: {
+        if (this.markData.markingType === MarkType.HORIZONTAL_LINE ||
+          this.markData.markingType === MarkType.VERTICAL_LINE) {
+          if (this.markData.markingType === MarkType.HORIZONTAL_LINE) {
             this.markData.horizontalLineDatas.push(point)
-            break
-          }
-          case MarkType.VERTICAL_LINE: {
+          } else {
             this.markData.verticalLineDatas.push(point)
-            break
           }
+          this.drawLineEnd()
         }
+        this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
+      } else if (this.markData.markingDatas.length === 2) {
+        this.markData.lineDatas.push({ points: [this.markData.markingDatas[0], point] })
         this.drawLineEnd()
         this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
       }
@@ -205,7 +207,15 @@ class MarkEvent extends Event {
       this.markData.startMarkPoint = point
       this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
     } else if (this.markData.markingDatas.length === 1) {
-      this.markData.markingDatas[0] = point
+      if (this.markData.markingType === MarkType.HORIZONTAL_LINE ||
+        this.markData.markingType === MarkType.VERTICAL_LINE) {
+        this.markData.markingDatas[0] = point
+      } else {
+        this.markData.markingDatas[1] = point
+      }
+      this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
+    } else if (this.markData.markingDatas.length === 2) {
+      this.markData.markingDatas[1] = point
       this.kline.freshen(FRESHEN_DRAW_LINE_CHART)
     }
   }

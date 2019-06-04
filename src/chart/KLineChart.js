@@ -174,13 +174,13 @@ class KLineChart {
     let indicatorChartHeight = 0
 
     if (isDisplayVolChart && isDisplayIndicatorChart) {
-      let height = chartHeight * 0.2
+      let height = parseInt(chartHeight * 0.2)
       volChartHeight = height
       indicatorChartHeight = height
     } else if (isDisplayVolChart && !isDisplayIndicatorChart) {
-      volChartHeight = chartHeight * 0.3
+      volChartHeight = parseInt(chartHeight * 0.3)
     } else if (!isDisplayVolChart && isDisplayIndicatorChart) {
-      indicatorChartHeight = chartHeight * 0.3
+      indicatorChartHeight = parseInt(chartHeight * 0.3)
     }
 
     let candleChartHeight = chartHeight - volChartHeight - indicatorChartHeight

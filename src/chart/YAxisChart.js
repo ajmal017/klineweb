@@ -20,11 +20,11 @@ class YAxisChart extends AxisChart {
     canvas.lineWidth = this.yAxis.axisLine.size
     canvas.beginPath()
     if (this.yAxis.yAxisPosition === YAxisPosition.LEFT) {
-      canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
-      canvas.lineTo(this.viewPortHandler.contentLeft(), this.chartTop + this.chartHeight)
+      canvas.moveTo(this.viewPortHandler.contentLeft() + 0.5, this.chartTop)
+      canvas.lineTo(this.viewPortHandler.contentLeft() + 0.5, this.chartTop + this.chartHeight)
     } else {
-      canvas.moveTo(this.viewPortHandler.contentRight(), this.chartTop)
-      canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop + this.chartHeight)
+      canvas.moveTo(this.viewPortHandler.contentRight() + 0.5, this.chartTop)
+      canvas.lineTo(this.viewPortHandler.contentRight() + 0.5, this.chartTop + this.chartHeight)
     }
     canvas.stroke()
     canvas.closePath()
@@ -116,8 +116,8 @@ class YAxisChart extends AxisChart {
       let y = this.getValueY(this.values[i])
       if (this.checkShowLabel(y, labelHeight)) {
         canvas.beginPath()
-        canvas.moveTo(this.viewPortHandler.contentLeft(), y)
-        canvas.lineTo(this.viewPortHandler.contentRight(), y)
+        canvas.moveTo(this.viewPortHandler.contentLeft(), y + 0.5)
+        canvas.lineTo(this.viewPortHandler.contentRight(), y + 0.5)
         canvas.stroke()
         canvas.closePath()
       }
@@ -157,8 +157,8 @@ class YAxisChart extends AxisChart {
       let y = this.getValueY(this.values[i])
       if (this.checkShowLabel(y, labelHeight)) {
         canvas.beginPath()
-        canvas.moveTo(startX, y)
-        canvas.lineTo(endX, y)
+        canvas.moveTo(startX, y + 0.5)
+        canvas.lineTo(endX, y + 0.5)
         canvas.stroke()
         canvas.closePath()
       }

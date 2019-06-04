@@ -31,7 +31,7 @@ class XAxis extends Axis {
       maxHeight = this.xAxisMaxHeight * 2
     }
     height = Math.max(this.xAxisMinHeight * 2, Math.min(height, maxHeight))
-    return height
+    return parseInt(height)
   }
 }
 

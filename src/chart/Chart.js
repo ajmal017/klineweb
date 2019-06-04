@@ -24,7 +24,7 @@ class Chart {
    * @returns {number}
    */
   getY (yValue, yMin, interval) {
-    return this.chartTop + (1 - (yValue - yMin) / interval) * this.chartHeight
+    return +(this.chartTop + (1 - (yValue - yMin) / interval) * this.chartHeight).toFixed(0)
   }
 }
 

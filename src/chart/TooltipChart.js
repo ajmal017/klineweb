@@ -158,8 +158,8 @@ class TooltipChart extends Chart {
       canvas.setLineDash(this.tooltip.crossLine.dashValue)
     }
     canvas.beginPath()
-    canvas.moveTo(lineStartX, this.crossPoint.y)
-    canvas.lineTo(lineEndX, this.crossPoint.y)
+    canvas.moveTo(lineStartX, this.crossPoint.y + 0.5)
+    canvas.lineTo(lineEndX, this.crossPoint.y + 0.5)
     canvas.stroke()
     canvas.closePath()
     canvas.setLineDash([])
@@ -254,8 +254,8 @@ class TooltipChart extends Chart {
     }
 
     canvas.beginPath()
-    canvas.moveTo(this.crossPoint.x, this.viewPortHandler.contentTop())
-    canvas.lineTo(this.crossPoint.x, this.viewPortHandler.contentBottom())
+    canvas.moveTo(this.crossPoint.x + 0.5, this.viewPortHandler.contentTop())
+    canvas.lineTo(this.crossPoint.x + 0.5, this.viewPortHandler.contentBottom())
     canvas.stroke()
     canvas.closePath()
     canvas.setLineDash([])

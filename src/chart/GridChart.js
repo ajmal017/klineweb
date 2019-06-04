@@ -13,11 +13,26 @@ class GridChart extends Chart {
     canvas.strokeStyle = this.grid.lineColor
     canvas.lineWidth = this.grid.lineSize
     canvas.beginPath()
-    canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentTop())
-    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentTop())
-    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom())
-    canvas.lineTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom())
-    canvas.lineTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentTop())
+    canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentTop() + 0.5)
+    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentTop() + 0.5)
+    canvas.stroke()
+    canvas.closePath()
+
+    canvas.beginPath()
+    canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom() + 0.5)
+    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom() + 0.5)
+    canvas.stroke()
+    canvas.closePath()
+
+    canvas.beginPath()
+    canvas.moveTo(this.viewPortHandler.contentLeft() + 0.5, this.viewPortHandler.contentTop())
+    canvas.lineTo(this.viewPortHandler.contentLeft() + 0.5, this.viewPortHandler.contentBottom())
+    canvas.stroke()
+    canvas.closePath()
+
+    canvas.beginPath()
+    canvas.moveTo(this.viewPortHandler.contentRight() - 0.5, this.viewPortHandler.contentTop())
+    canvas.lineTo(this.viewPortHandler.contentRight() - 0.5, this.viewPortHandler.contentBottom())
     canvas.stroke()
     canvas.closePath()
   }

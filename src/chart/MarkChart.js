@@ -23,7 +23,7 @@ class MarkChart extends Chart {
     this.drawStartPoint(canvas)
     this.drawHorizontalVerticalLine(canvas, this.markData.horizontalLineDatas, MarkType.HORIZONTAL_LINE)
     this.drawHorizontalVerticalLine(canvas, this.markData.verticalLineDatas, MarkType.VERTICAL_LINE)
-    this.drawVerticalLine(canvas)
+    this.drawLine(canvas)
   }
 
   /**
@@ -56,13 +56,6 @@ class MarkChart extends Chart {
       let point = this.markData.startMarkPoint
       this.drawPoint(canvas, point, true)
     }
-  }
-
-  /**
-   * 绘制垂直直线
-   * @param canvas
-   */
-  drawVerticalLine (canvas) {
   }
 
   /**
@@ -104,6 +97,36 @@ class MarkChart extends Chart {
       canvas.closePath()
       this.drawPoint(canvas, point, true)
     }
+  }
+
+  /**
+   * 绘制直线
+   * @param canvas
+   */
+  drawLine (canvas) {
+    let lineDataLength = this.markData.lineDatas.length
+    canvas.lineWidth = 2
+    canvas.strokeStyle = '#ffffff'
+    for (let i = 0; i < lineDataLength; i++) {
+      let lineData = this.markData.lineDatas[i]
+      let points = lineData.points
+      canvas.beginPath()
+      canvas.moveTo(this.viewPortHandler.contentLeft(), this.getY(this.viewPortHandler.contentLeft(), points[0], points[1]))
+      canvas.lineTo(this.viewPortHandler.contentRight(), this.getY(this.viewPortHandler.contentRight(), points[0], points[1]))
+      canvas.stroke()
+      canvas.closePath()
+    }
+  }
+
+  /**
+   * 获取x点对应的y轴坐标
+   * @param x
+   * @param point1
+   * @param point2
+   * @returns {number}
+   */
+  getY (x, point1, point2) {
+    return (point2.y - point1.y) / (point2.x - point1.x) * x + point1.y - (point2.y - point1.y) / (point2.x - point1.x) * point1.x
   }
 }
 

@@ -38,8 +38,8 @@ class IndicatorChart extends Chart {
     canvas.strokeStyle = this.xAxis.axisLine.color || this.xAxis.color
     canvas.lineWidth = this.xAxis.axisLine.size
     canvas.beginPath()
-    canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop)
-    canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop)
+    canvas.moveTo(this.viewPortHandler.contentLeft(), this.chartTop + 0.5)
+    canvas.lineTo(this.viewPortHandler.contentRight(), this.chartTop + 0.5)
     canvas.stroke()
     canvas.closePath()
   }

@@ -1,6 +1,6 @@
 class Grid {
   constructor () {
-    this.display = false
+    this.display = true
 
     /**
      * 边框线尺寸

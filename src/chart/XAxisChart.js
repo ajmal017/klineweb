@@ -31,8 +31,8 @@ class XAxisChart extends AxisChart {
     canvas.strokeStyle = this.xAxis.axisLine.color || this.xAxis.color
     canvas.lineWidth = this.xAxis.axisLine.size
     canvas.beginPath()
-    canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom())
-    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom())
+    canvas.moveTo(this.viewPortHandler.contentLeft(), this.viewPortHandler.contentBottom() + 0.5)
+    canvas.lineTo(this.viewPortHandler.contentRight(), this.viewPortHandler.contentBottom() + 0.5)
     canvas.stroke()
     canvas.closePath()
   }
@@ -92,8 +92,8 @@ class XAxisChart extends AxisChart {
 
       if (this.viewPortHandler.isInBoundsX(x)) {
         canvas.beginPath()
-        canvas.moveTo(x, this.viewPortHandler.contentTop())
-        canvas.lineTo(x, this.viewPortHandler.contentBottom())
+        canvas.moveTo(x + 0.5, this.viewPortHandler.contentTop())
+        canvas.lineTo(x + 0.5, this.viewPortHandler.contentBottom())
         canvas.stroke()
         canvas.closePath()
       }
@@ -118,11 +118,10 @@ class XAxisChart extends AxisChart {
 
     for (let i = 0; i < positions.length; i += 2) {
       let x = positions[i]
-
       if (this.viewPortHandler.isInBoundsX(x)) {
         canvas.beginPath()
-        canvas.moveTo(x, startY)
-        canvas.lineTo(x, endY)
+        canvas.moveTo(x + 0.5, startY)
+        canvas.lineTo(x + 0.5, endY)
         canvas.stroke()
         canvas.closePath()
       }
@@ -137,7 +136,7 @@ class XAxisChart extends AxisChart {
     let positions = []
     for (let i = 0; i < this.valueCount * 2; i += 2) {
       let pos = this.values[i / 2]
-      positions[i] = (pos - this.dataBounds.min) * this.dataBounds.dataSpace + this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2
+      positions[i] = parseInt((pos - this.dataBounds.min) * this.dataBounds.dataSpace + this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2)
     }
     return positions
   }

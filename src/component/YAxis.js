@@ -75,14 +75,14 @@ class YAxis extends Axis {
     }
 
     if (width === this.axisLine.size) {
-      return width
+      return parseInt(width)
     }
     let maxWidth = width
     if (maxWidth > 0) {
       maxWidth = this.yAxisMaxWidth * 2
       width = Math.min(maxWidth, Math.max(width, this.yAxisMinWidth * 2))
     }
-    return width
+    return parseInt(width)
   }
 }
 

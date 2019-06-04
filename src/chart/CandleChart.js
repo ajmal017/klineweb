@@ -203,33 +203,33 @@ class CandleChart extends IndicatorChart {
     canvas.clip()
     let priceY = this.getValueY(price)
     let startX = x
-    let startY = priceY + (isHigh ? -4 : 4)
+    let startY = priceY + (isHigh ? -4 : 4) + 0.5
     canvas.textAlign = 'left'
     canvas.lineWidth = 1
     canvas.strokeStyle = color
     canvas.fillStyle = color
     canvas.beginPath()
-    canvas.moveTo(startX, startY)
-    canvas.lineTo(startX - 4, startY + (isHigh ? -4 : 4))
+    canvas.moveTo(startX + 0.5, startY + 0.5)
+    canvas.lineTo(startX - 4 + 0.5, startY + (isHigh ? -4 : 4) + 0.5)
     canvas.stroke()
     canvas.closePath()
 
     canvas.beginPath()
-    canvas.moveTo(startX, startY)
-    canvas.lineTo(startX + 4, startY + (isHigh ? -4 : 4))
+    canvas.moveTo(startX + 0.5, startY + 0.5)
+    canvas.lineTo(startX + 4 + 0.5, startY + (isHigh ? -4 : 4) + 0.5)
     canvas.stroke()
     canvas.closePath()
     // 绘制竖线
     canvas.beginPath()
-    canvas.moveTo(startX, startY)
+    canvas.moveTo(startX + 0.5, startY)
     startY = startY + (isHigh ? -10 : 10)
-    canvas.lineTo(startX, startY)
+    canvas.lineTo(startX + 0.5, startY)
     canvas.stroke()
     canvas.closePath()
 
     canvas.beginPath()
-    canvas.moveTo(startX, startY)
-    canvas.lineTo(startX + 10, startY)
+    canvas.moveTo(startX, startY + 0.5)
+    canvas.lineTo(startX + 10, startY + 0.5)
     canvas.stroke()
     canvas.closePath()
 
@@ -254,16 +254,15 @@ class CandleChart extends IndicatorChart {
 
     let lastPrice = this.dataBounds.dataList[this.dataBounds.dataList.length - 1].close
     let priceY = this.getValueY(lastPrice)
-    priceY = Math.max(this.chartTop + this.chartHeight * 0.05, Math.min(priceY, this.chartTop + this.chartHeight * 0.98))
-
+    priceY = +(Math.max(this.chartTop + this.chartHeight * 0.05, Math.min(priceY, this.chartTop + this.chartHeight * 0.98))).toFixed(0)
     canvas.strokeStyle = this.candle.lastPriceMark.lineColor
     canvas.lineWidth = this.candle.lastPriceMark.lineSize
     if (this.candle.lastPriceMark.lineStyle === LineStyle.DASH) {
       canvas.setLineDash(this.candle.lastPriceMark.dashValue)
     }
     canvas.beginPath()
-    canvas.moveTo(this.viewPortHandler.contentLeft(), priceY)
-    canvas.lineTo(this.viewPortHandler.contentRight(), priceY)
+    canvas.moveTo(this.viewPortHandler.contentLeft(), priceY + 0.5)
+    canvas.lineTo(this.viewPortHandler.contentRight(), priceY + 0.5)
     canvas.stroke()
     canvas.closePath()
     canvas.setLineDash([])
@@ -286,7 +285,7 @@ class CandleChart extends IndicatorChart {
     let dataSpace = this.dataBounds.dataSpace - this.dataBounds.dataMarginSpaceRate * this.dataBounds.dataSpace
     while (i < this.dataBounds.dataList.length && i < this.dataBounds.min + this.dataBounds.range) {
       let endX = startX + dataSpace
-      let x = (startX + endX) / 2
+      let x = +((startX + endX) / 2).toFixed(0)
       let model = kLineDataList[i]
       let closeY = this.getValueY(model.close)
       let averagePriceY = this.getValueY(model.averagePrice)
