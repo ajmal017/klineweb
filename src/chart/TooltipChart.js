@@ -26,9 +26,9 @@ class TooltipChart extends Chart {
     if (this.dataBounds.currentDataPos < this.dataBounds.dataList.length) {
       let kLineModel = this.dataBounds.dataList[this.dataBounds.currentDataPos]
       if (this.displayCross) {
-        this.crossPoint.x = this.viewPortHandler.contentLeft() +
+        this.crossPoint.x = +(this.viewPortHandler.contentLeft() +
           this.dataBounds.dataSpace * (this.dataBounds.currentDataPos - this.dataBounds.min) +
-          this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2
+          this.dataBounds.dataSpace * (1 - this.dataBounds.dataMarginSpaceRate) / 2).toFixed(0)
         canvas.font = (this.tooltip.crossLine.text.size || this.tooltip.textSize) * 2 + 'px Arial'
 
         if (this.tooltip.crossLine.display) {

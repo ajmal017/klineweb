@@ -3,7 +3,7 @@
  * @param data
  * @returns {*}
  */
-export async function calculationMa (data) {
+export function calculationMa (data) {
   let ma5Num = 0.0
   let ma10Num = 0.0
   let ma20Num = 0.0
@@ -67,7 +67,7 @@ export async function calculationMa (data) {
  * @param data
  * @return
  */
-export async function calculationVol (data) {
+export function calculationVol (data) {
   let ma5s = 0
   let ma10s = 0
   let ma20s = 0
@@ -122,7 +122,7 @@ export async function calculationVol (data) {
  * @param data
  * @return
  */
-export async function calculationMacd (data) {
+export function calculationMacd (data) {
   // MACD：参数快线移动平均、慢线移动平均、移动平均，
   // 参数值12、26、9。
   // 公式：⒈首先分别计算出收盘价12日指数平滑移动平均线与26日指数平滑移动平均线，分别记为EMA(12）与EMA(26）。
@@ -171,7 +171,7 @@ export async function calculationMacd (data) {
  * @param data
  * @return
  */
-export async function calculationBoll (data) {
+export function calculationBoll (data) {
   let closes26 = 0// MA
   let closes25 = 0
   let ma// 中轨线
@@ -221,7 +221,7 @@ export async function calculationBoll (data) {
  * @param data
  * @return
  */
-export async function calculationKdj (data) {
+export function calculationKdj (data) {
   let k
   let d
   let j
@@ -271,7 +271,7 @@ export async function calculationKdj (data) {
  * @param data
  * @return
  */
-export async function calculationRsi (data) {
+export function calculationRsi (data) {
   // N日RSI =
   // N日内收盘涨幅的平均值/(N日内收盘涨幅均值+N日内收盘跌幅均值) ×100%
   let rsi1 = 0// 参数6
@@ -361,7 +361,7 @@ export async function calculationRsi (data) {
  * @param data
  * @return
  */
-export async function calculationBias (data) {
+export function calculationBias (data) {
   // 乖离率=[(当日收盘价-N日平均价)/N日平均价]*100%
   // 参数：6，12、24
   let bias1
@@ -425,7 +425,7 @@ export async function calculationBias (data) {
  * @param data
  * @return
  */
-export async function calculationBrar (data) {
+export function calculationBrar (data) {
   // 参数是26。
   // 公式N日BR=N日内（H－CY）之和除以N日内（CY－L）之和*100，
   // 其中，H为当日最高价，L为当日最低价，CY为前一交易日的收盘价，N为设定的时间参数。
@@ -492,7 +492,7 @@ export async function calculationBrar (data) {
  * @param data
  * @return
  */
-export async function calculationCci (data) {
+export function calculationCci (data) {
   // 中价与 中价的N日内移动平均 的差 除以 N日内中价的平均绝对偏差
   // 其中，中价等于最高价、最低价和收盘价之和除以3
   // ={【79-（79+62+45+90+25）/5）】
@@ -556,7 +556,7 @@ export async function calculationCci (data) {
  * @param data
  * @return
  */
-export async function calculationDmi (data) {
+export function calculationDmi (data) {
   // 参数 14，6
   // MTR:=EXPMEMA(MAX(MAX(HIGH-LOW,ABS(HIGH-REF(CLOSE,1))),ABS(REF(CLOSE,1)-LOW)),N)
   // HD :=HIGH-REF(HIGH,1);
@@ -684,7 +684,7 @@ export async function calculationDmi (data) {
  * @param data
  * @return
  */
-export async function calculationCr (data) {
+export function calculationCr (data) {
   // 参数26、10、20、40、60
   // MID:=REF(HIGH+LOW,1)/2;
   // CR:SUM(MAX(0,HIGH-MID),N)/SUM(MAX(0,MID-LOW),N)*100;
@@ -855,7 +855,7 @@ export async function calculationCr (data) {
  * @param data
  * @return
  */
-export async function calculationPsy (data) {
+export function calculationPsy (data) {
   // PSY：参数是12。公式：PSY=N日内的上涨天数/N×100%。
   let psy = 0
   let upDay = 0
@@ -891,7 +891,7 @@ export async function calculationPsy (data) {
  * @param data
  * @return
  */
-export async function calculationDma (data) {
+export function calculationDma (data) {
   // 参数是10、50、10。公式：DIF:MA(CLOSE,N1)-MA(CLOSE,N2);DIFMA:MA(DIF,M)
   let dif
   let difMa
@@ -951,7 +951,7 @@ export async function calculationDma (data) {
  * @param data
  * @return
  */
-export async function calculationTrix (data) {
+export function calculationTrix (data) {
   // TR=收盘价的N日指数移动平均的N日指数移动平均的N日指数移动平均；
   // TRIX=(TR-昨日TR)/昨日TR*100；
   // MATRIX=TRIX的M日简单移动平均；
@@ -1030,7 +1030,7 @@ export async function calculationTrix (data) {
  * @param data
  * @return
  */
-export async function calculationObv (data) {
+export function calculationObv (data) {
   let sumObv = 0
   let maObv
 
@@ -1071,7 +1071,7 @@ export async function calculationObv (data) {
  * @param data
  * @return
  */
-export async function calculationVr (data) {
+export function calculationVr (data) {
   let avs = 0
   let bvs = 0
   let cvs = 0
@@ -1143,7 +1143,7 @@ export async function calculationVr (data) {
  * @param data
  * @return
  */
-export async function calculationWr (data) {
+export function calculationWr (data) {
   let wr1 = 0
   let wr2 = 0
   let wr3 = 0
@@ -1259,7 +1259,7 @@ export async function calculationWr (data) {
  * @param data
  * @return
  */
-export async function calculationMtm (data) {
+export function calculationMtm (data) {
   let mtm
   let mtmSum = 0
   let mtmMa
@@ -1306,7 +1306,7 @@ export async function calculationMtm (data) {
  * @param data
  * @return
  */
-export async function calculationEmv (data) {
+export function calculationEmv (data) {
   let emv = 0
   let maEmv
   let sumEmv = 0
@@ -1358,7 +1358,7 @@ export async function calculationEmv (data) {
  * @param data
  * @return
  */
-export async function calculationSar (data) {
+export function calculationSar (data) {
   // 加速因子
   let af = 0
   // 极值

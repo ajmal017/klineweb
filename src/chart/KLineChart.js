@@ -342,96 +342,98 @@ class KLineChart {
    * @param freshenType
    * @returns {Promise<void>}
    */
-  async calcIndicator (indicatorType, freshenType = FRESHEN_CHART) {
-    try {
-      switch (indicatorType) {
-        case IndicatorType.MA: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationMa(this.dataBounds.dataList)
-          break
+  calcIndicator (indicatorType, freshenType = FRESHEN_CHART) {
+    Promise.resolve().then(() => {
+      try {
+        switch (indicatorType) {
+          case IndicatorType.MA: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationMa(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.MACD: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.VOL: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationVol(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.BOLL: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.BIAS: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationBias(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.BRAR: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.CCI: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationCci(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.CR: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationCr(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.DMA: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationDma(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.DMI: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.KDJ: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.KD: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.RSI: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.PSY: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.TRIX: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.OBV: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationObv(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.VR: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationVr(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.WR: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationWr(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.MTM: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.EMV: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
+            break
+          }
+          case IndicatorType.SAR: {
+            this.dataBounds.dataList = IndicatorCalculation.calculationSar(this.dataBounds.dataList)
+            break
+          }
         }
-        case IndicatorType.MACD: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationMacd(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.VOL: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationVol(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.BOLL: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationBoll(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.BIAS: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationBias(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.BRAR: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationBrar(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.CCI: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationCci(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.CR: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationCr(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.DMA: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationDma(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.DMI: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationDmi(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.KDJ: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.KD: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationKdj(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.RSI: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationRsi(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.PSY: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationPsy(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.TRIX: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationTrix(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.OBV: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationObv(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.VR: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationVr(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.WR: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationWr(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.MTM: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationMtm(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.EMV: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationEmv(this.dataBounds.dataList)
-          break
-        }
-        case IndicatorType.SAR: {
-          this.dataBounds.dataList = await IndicatorCalculation.calculationSar(this.dataBounds.dataList)
-          break
-        }
-      }
-      this.freshen(freshenType)
-    } catch (e) {}
+        this.freshen(freshenType)
+      } catch (e) {}
+    })
   }
 
   /**
