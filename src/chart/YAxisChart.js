@@ -188,10 +188,8 @@ class YAxisChart extends AxisChart {
     if (isTimeLine) {
       for (let i = min; i < max; i++) {
         let model = dataList[i]
-        minMaxArray[0] = Math.min(model.averagePrice, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.close, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.averagePrice, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.close, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.averagePrice, model.close, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.averagePrice, model.close, minMaxArray[1]])
       }
     } else {
       for (let i = min; i < max; i++) {
@@ -221,61 +219,33 @@ class YAxisChart extends AxisChart {
   calcIndexMinMax (model, indexType, minMaxArray) {
     switch (indexType) {
       case IndicatorType.MA: {
-        minMaxArray[0] = Math.min(model.ma.ma5, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.ma.ma10, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.ma.ma20, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.ma.ma60, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.ma.ma5, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.ma.ma10, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.ma.ma20, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.ma.ma60, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.ma.ma5, model.ma.ma10, model.ma.ma20, model.ma.ma60, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.ma.ma5, model.ma.ma10, model.ma.ma20, model.ma.ma60, minMaxArray[1]])
         break
       }
       case IndicatorType.MACD: {
-        minMaxArray[0] = Math.min(model.macd.dea, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.macd.diff, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.macd.macd, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.macd.dea, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.macd.diff, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.macd.macd, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.macd.dea, model.macd.diff, model.macd.macd, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.macd.dea, model.macd.diff, model.macd.macd, minMaxArray[1]])
         break
       }
       case IndicatorType.VOL: {
-        minMaxArray[0] = Math.min(model.vol.ma5, 0)
-        minMaxArray[0] = Math.min(model.vol.ma10, 0)
-        minMaxArray[0] = Math.min(model.vol.ma20, 0)
-        minMaxArray[0] = Math.min(model.vol.num, 0)
-        minMaxArray[1] = Math.max(model.vol.ma5, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.vol.ma10, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.vol.ma20, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.vol.num, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.vol.ma5, model.vol.ma10, model.vol.ma20, model.vol.num, 0])
+        minMaxArray[1] = Math.max.apply(null, [model.vol.ma5, model.vol.ma10, model.vol.ma20, model.vol.num, minMaxArray[1]])
         break
       }
       case IndicatorType.BOLL: {
-        minMaxArray[0] = Math.min(model.boll.up, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.boll.mid, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.boll.dn, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.low, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.boll.up, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.boll.mid, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.boll.dn, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.high, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.boll.up, model.boll.mid, model.boll.dn, model.low, minMaxArray[0]])
+        minMaxArray[0] = Math.max.apply(null, [model.boll.up, model.boll.mid, model.boll.dn, model.high, minMaxArray[1]])
         break
       }
       case IndicatorType.BIAS: {
-        minMaxArray[0] = Math.min(model.bias.bias1, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.bias.bias2, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.bias.bias3, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.bias.bias1, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.bias.bias2, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.bias.bias3, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.bias.bias1, model.bias.bias2, model.bias.bias3, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.bias.bias1, model.bias.bias2, model.bias.bias3, minMaxArray[1]])
         break
       }
       case IndicatorType.BRAR: {
-        minMaxArray[0] = Math.min(model.brar.br, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.brar.ar, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.brar.br, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.brar.ar, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.brar.br, model.brar.ar, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.brar.br, model.brar.ar, minMaxArray[1]])
         break
       }
       case IndicatorType.CCI: {
@@ -284,59 +254,33 @@ class YAxisChart extends AxisChart {
         break
       }
       case IndicatorType.CR: {
-        minMaxArray[0] = Math.min(model.cr.cr, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.cr.ma1, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.cr.ma2, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.cr.ma3, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.cr.ma4, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.cr.cr, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.cr.ma1, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.cr.ma2, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.cr.ma3, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.cr.ma4, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.cr.cr, model.cr.ma1, model.cr.ma2, model.cr.ma3, model.cr.ma4, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.cr.cr, model.cr.ma1, model.cr.ma2, model.cr.ma3, model.cr.ma4, minMaxArray[1]])
         break
       }
       case IndicatorType.DMA: {
-        minMaxArray[0] = Math.min(model.dma.dif, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.dma.difMa, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.dma.dif, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.dma.difMa, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.dma.dif, model.dma.difMa, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.dma.dif, model.dma.difMa, minMaxArray[1]])
         break
       }
       case IndicatorType.DMI: {
-        minMaxArray[0] = Math.min(model.dmi.pdi, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.dmi.mdi, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.dmi.adx, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.dmi.adxr, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.dmi.pdi, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.dmi.mdi, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.dmi.adx, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.dmi.adxr, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.dmi.pdi, model.dmi.mdi, model.dmi.adx, model.dmi.adxr, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.dmi.pdi, model.dmi.mdi, model.dmi.adx, model.dmi.adxr, minMaxArray[1]])
         break
       }
       case IndicatorType.KDJ: {
-        minMaxArray[0] = Math.min(model.kdj.k, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.kdj.d, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.kdj.j, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.kdj.k, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.kdj.d, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.kdj.j, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.kdj.k, model.kdj.d, model.kdj.j, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.kdj.k, model.kdj.d, model.kdj.j, minMaxArray[1]])
         break
       }
       case IndicatorType.KD: {
-        minMaxArray[0] = Math.min(model.kdj.k, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.kdj.d, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.kdj.k, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.kdj.d, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.kdj.k, model.kdj.d, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.kdj.k, model.kdj.d, minMaxArray[1]])
         break
       }
       case IndicatorType.RSI: {
-        minMaxArray[0] = Math.min(model.rsi.rsi1, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.rsi.rsi2, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.rsi.rsi3, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.rsi.rsi1, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.rsi.rsi2, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.rsi.rsi3, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.rsi.rsi1, model.rsi.rsi2, model.rsi.rsi3, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.rsi.rsi1, model.rsi.rsi2, model.rsi.rsi3, minMaxArray[1]])
         break
       }
       case IndicatorType.PSY: {
@@ -345,54 +289,38 @@ class YAxisChart extends AxisChart {
         break
       }
       case IndicatorType.TRIX: {
-        minMaxArray[0] = Math.min(model.trix.trix, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.trix.maTrix, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.trix.trix, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.trix.maTrix, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.trix.trix, model.trix.maTrix, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.trix.trix, model.trix.maTrix, minMaxArray[1]])
         break
       }
       case IndicatorType.OBV: {
-        minMaxArray[0] = Math.min(model.obv.obv, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.obv.maObv, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.obv.obv, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.obv.maObv, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.obv.obv, model.obv.maObv, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.obv.obv, model.obv.maObv, minMaxArray[1]])
         break
       }
       case IndicatorType.VR: {
-        minMaxArray[0] = Math.min(model.vr.vr, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.vr.maVr, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.vr.vr, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.vr.maVr, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.vr.vr, model.vr.maVr, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.vr.vr, model.vr.maVr, minMaxArray[1]])
         break
       }
       case IndicatorType.WR: {
-        minMaxArray[0] = Math.min(model.wr.wr1, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.wr.wr2, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.wr.wr3, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.wr.wr1, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.wr.wr2, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.wr.wr3, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.wr.wr1, model.wr.wr2, model.wr.wr3, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.wr.wr1, model.wr.wr2, model.wr.wr3, minMaxArray[1]])
         break
       }
       case IndicatorType.MTM: {
-        minMaxArray[0] = Math.min(model.mtm.mtm, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.mtm.mtmMa, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.mtm.mtm, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.mtm.mtmMa, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.mtm.mtm, model.mtm.mtmMa, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.mtm.mtm, model.mtm.mtmMa, minMaxArray[1]])
         break
       }
       case IndicatorType.EMV: {
-        minMaxArray[0] = Math.min(model.emv.emv, minMaxArray[0])
-        minMaxArray[0] = Math.min(model.emv.maEmv, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.emv.emv, minMaxArray[1])
-        minMaxArray[1] = Math.max(model.emv.maEmv, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.emv.emv, model.emv.maEmv, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.emv.emv, model.emv.maEmv, minMaxArray[1]])
         break
       }
       case IndicatorType.SAR: {
-        minMaxArray[0] = Math.min(model.sar.sar, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.sar.sar, minMaxArray[1])
-        minMaxArray[0] = Math.min(model.low, minMaxArray[0])
-        minMaxArray[1] = Math.max(model.high, minMaxArray[1])
+        minMaxArray[0] = Math.min.apply(null, [model.sar.sar, model.low, minMaxArray[0]])
+        minMaxArray[1] = Math.max.apply(null, [model.sar.sar, model.high, minMaxArray[1]])
         break
       }
     }
